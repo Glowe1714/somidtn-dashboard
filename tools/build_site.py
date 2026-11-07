@@ -34,6 +34,9 @@ def blob(d):
 if a.plan:
     need = [blob(d) for i, d in docs.items() if d.get('source', {}).get('kind') == 'file'
             and (prev.get(i, {}).get('source_blob') != blob(d) or not os.path.exists(os.path.join(data_dir, i + '.json')))]
+    # The employer Sheet is published filtered (see below), so its full copy is needed on every build.
+    if 'employers' in docs and docs['employers'].get('source', {}).get('kind') == 'file' and blob(docs['employers']) not in need:
+        need.append(blob(docs['employers']))
     print('\n'.join(need))
     sys.exit(0)
 
@@ -112,6 +115,21 @@ if a.pages:
             shell = open(os.path.join(a.out, 'tools', 'shell.html')).read()
             text = shell.replace('<!--BODY-->', body)
         open(os.path.join(a.out, name), 'w').write(text)
+
+# Publish only the employer rows the dashboard would show: in the 13 counties, not repeated, and with a web
+# source (a link in Greg's Sheet, or a source found by a monthly web check). Unsourced research rows stay private.
+emp_path, chk_path = os.path.join(data_dir, 'employers.json'), os.path.join(data_dir, 'employer_checks.json')
+if os.path.exists(emp_path) and 'employers' in docs:
+    src = os.path.join(a.assets or '', blob(docs['employers']) + '.json')
+    if not (a.assets and os.path.exists(src)):
+        problems.append('employers: the full Sheet copy %s was not downloaded' % blob(docs['employers']))
+    else:
+        checks = json.load(open(chk_path)) if os.path.exists(chk_path) else []
+        ok_checks = {(str(c.get('county')).lower(), str(c.get('company')).lower().strip()) for c in checks
+                     if c.get('status') in ('confirmed', 'changed', 'closed') and c.get('source_url')}
+        rows = [e for e in json.load(open(src)) if e.get('in_region') and not e.get('duplicate')
+                and (e.get('has_url') or (str(e.get('county')).lower(), str(e.get('company')).lower().strip()) in ok_checks)]
+        json.dump(rows, open(emp_path, 'w'), ensure_ascii=False, separators=(',', ':'))
 
 if problems:
     print('BUILD FAILED:'); print('\n'.join('  - ' + x for x in problems)); sys.exit(1)
