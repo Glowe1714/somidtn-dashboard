@@ -26,8 +26,9 @@
   <div class="sm-searchbar" role="search">
     <label class="sm-vh" for="sm-q">Search the dashboard</label>
     <input id="sm-q" class="sm-sitesearch" type="search" placeholder="Search the dashboard: counties, people, projects, grants, employers, news…" autocomplete="off" spellcheck="false">
-    <div id="sm-results" class="sm-results" hidden></div>
+    <div id="sm-results" class="sm-results is-off" data-draw="sm_search" data-source="counties projects programs events intel warn stories radar_feed resources edu_colleges notebooks actions sp_employers awards"></div>
   </div>
+  <div class="sm-toast is-off" id="sm-toast" role="status" aria-live="polite" data-draw="sm_toast"></div>
 
   <nav class="sm-tabs" role="tablist" aria-label="Dashboard sections">
     <button class="sm-tab" role="tab" type="button" data-tab="overview" aria-selected="true">Overview</button>
@@ -51,6 +52,12 @@
 
   <!-- ================= OVERVIEW ================= -->
   <section class="sm-page" id="overview" role="tabpanel">
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi" id="kpi-region-unemp">
         <span class="sm-kpi-label">Region unemployment</span>
@@ -86,6 +93,7 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-map">
         <h3>County map</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Schematic, not to scale. Darker = higher. Click a county to open its profile.</p>
         <div class="sm-seg" role="group" aria-label="Map metric">
           <button type="button" data-map="rate" aria-pressed="true">Unemployment</button>
@@ -108,6 +116,7 @@
       </div>
       <div class="sm-card" id="card-county-unemp">
         <h3>Unemployment by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Latest month, not seasonally adjusted. Dashed line = Tennessee (same basis).</p>
         <div class="sm-chart" data-draw="ov_urn_bars" data-source="labor_latest"></div>
         <div class="sm-more"><a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">Learn more: BLS LAUS ↗</a></div>
@@ -117,11 +126,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-coming-up">
         <h3>Coming up</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Deadlines and events in the next 60 days.</p>
         <ul class="sm-list" data-draw="ov_deadlines" data-source="deadlines"></ul>
       </div>
       <div class="sm-card" id="card-intel">
         <h3>Latest intelligence</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Verified items from your daily brief. Open “Read more” for detail.</p>
         <ul class="sm-list" data-draw="ov_intel" data-source="intel"></ul>
       </div>
@@ -137,11 +148,13 @@
       <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
       <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
       <button class="sm-btn sm-btn-sm" type="button" data-fmt="pptx">PowerPoint</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
     </div>
     <div class="sm-kpis" data-draw="sp_kpis" data-source="sp_facts"></div>
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-swot">
         <h3>Where the region stands</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Strengths, weaknesses, opportunities and threats, each tied to a number and its source.</p>
         <div data-draw="sp_swot" data-source="sp_facts sp_counties sp_clusters programs markets_tape"></div>
       </div>
@@ -149,6 +162,7 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-plan">
         <h3>Action plan</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Plan start: Monday, Nov 9, 2026. Target dates are fixed from that day. Steps are suggestions and appear only when the data calls for them; the counties and programs named in each step update with the data.</p>
         <ul class="sm-list" data-draw="sp_plan" data-source="sp_facts sp_counties sp_clusters programs warn"></ul>
       </div>
@@ -156,6 +170,7 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-matrix">
         <h3>County focus</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">How the focus is chosen. <b>Retain &amp; expand</b>: a WARN notice in the last 24 months, factory jobs down 5% or more from a year earlier, or manufacturing at 3 or more times the national share with jobs falling. <b>Build on wins</b>: announced projects in the last 24 months with 100 or more stated jobs. <b>Market the workforce</b>: unemployment at or above Tennessee's. <b>Prepare sites &amp; product</b>: none of these. Click a row to open that county's profile.</p>
         <div class="sm-tablebox" data-draw="sp_matrix" data-source="sp_counties"></div>
       </div>
@@ -163,6 +178,7 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-bre">
         <h3>Retention and expansion watch list</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Counties flagged <b>Retain &amp; expand</b>, with their largest manufacturing subsectors, the place to start employer visits. BLS withholds some county figures for privacy.</p>
         <div class="sm-tablebox" data-draw="sp_bre" data-source="sp_counties sp_employers"></div>
       </div>
@@ -170,6 +186,7 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-employers">
         <h3>Major employers</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">From Greg's employer Sheet (notebook research), checked on the web one county a day on the 1st to 13th of each month. A company appears only when it has a web source; employee counts are as stated by that source. Statuses show whether and when each one was web-checked.</p>
         <div data-draw="sp_employers_tbl" data-source="sp_employers"></div>
       </div>
@@ -177,6 +194,7 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-sp-clusters">
         <h3>Recruitment targets: clusters the region already has</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Manufacturing subsectors ranked by jobs across the 13 counties (BLS QCEW, disclosed figures only, so totals are lower bounds). Suppliers to these clusters are natural recruitment targets.</p>
         <div class="sm-tablebox" data-draw="sp_clusters_tbl" data-source="sp_clusters"></div>
         <h3>Recent wins to build on</h3>
@@ -184,6 +202,7 @@
       </div>
       <div class="sm-card" id="card-sp-measures">
         <h3>Measures to track</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Current values update with each data refresh.</p>
         <div class="sm-tablebox" data-draw="sp_measures" data-source="sp_facts sp_counties"></div>
         <h3>Funding and programs to use</h3>
@@ -193,6 +212,7 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-notebooks">
         <h3>Your Gemini Notebooks</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Research notebooks behind this plan. They open only for you or people you have shared each notebook with. Notebook answers are AI summaries, so facts used on this dashboard cite the original sources.</p>
         <ul class="sm-list" data-draw="sp_notebooks" data-source="notebooks counties"></ul>
         <div class="sm-more" data-draw="sp_nb_counties" data-source="counties"></div>
@@ -203,6 +223,12 @@
 
   <!-- ================= NEWS ================= -->
   <section class="sm-page" id="news" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <h2 class="sm-h2">Stories of interest</h2>
     <p class="sm-note">Verified stories, each with its source, picked for Southern Middle Tennessee economic development and your interests. A Claude scheduled task adds new ones every day. Newest first.</p>
     <div class="sm-seg" id="nw-filter" role="group" aria-label="Filter stories by category">
@@ -222,6 +248,12 @@
 
   <!-- ================= LABOR & WORKFORCE ================= -->
   <section class="sm-page" id="workforce" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Tennessee nonfarm jobs</span>
@@ -246,17 +278,20 @@
     </div>
     <div class="sm-card" id="card-multiples">
       <h3>Unemployment by county, last two years</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Same scale on every chart. Dashed line = Tennessee. Not seasonally adjusted. October 2025 is blank because BLS did not collect it during the federal shutdown.</p>
       <div class="sm-mult" data-draw="w_mult" data-source="urn_trend"></div>
     </div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-region-trend">
         <h3>Region vs. Tennessee</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Region rate weights each county by its labor force.</p>
         <div class="sm-chart" data-draw="w_region_line" data-source="urn_trend"></div>
       </div>
       <div class="sm-card" id="card-labor-table">
         <h3>Labor force detail</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Click a column to sort.</p>
         <div class="sm-tablebox">
           <table class="sm-table" data-source="labor_latest" data-row-key="county" data-sort-table="labor">
@@ -275,12 +310,14 @@
     </div>
     <div class="sm-card" id="card-warn">
       <h3>Layoff watch: WARN notices in the region</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Verified WARN layoff and closure notices in the 13 counties, last 24 months: <b data-draw="w_warn_total" data-source="warn_total" data-field="workers" data-row="0">—</b> workers in <b data-draw="w_warn_n" data-source="warn_total" data-field="notices" data-row="0">—</b> notices. Newest first.</p>
       <ul class="sm-list" data-draw="w_warn" data-source="warn"></ul>
       <div class="sm-more"><a href="https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html" target="_blank" rel="noopener">Learn more: TN WARN reports ↗</a></div>
     </div>
     <div class="sm-card" id="card-wf-signals">
       <h3>Workforce signals by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">From your county profiles. Items marked “Unverified” have not been re-checked against a source.</p>
       <ul class="sm-list" data-draw="w_signals" data-source="counties"></ul>
       <div class="sm-more"><a href="https://www.jobs4tn.gov/" target="_blank" rel="noopener">Jobs4TN ↗</a><a href="https://www.tn.gov/workforce.html" target="_blank" rel="noopener">TN Labor &amp; Workforce ↗</a></div>
@@ -289,6 +326,12 @@
 
   <!-- ================= PEOPLE & INCOME ================= -->
   <section class="sm-page" id="people" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Region population, <span data-draw="p_year" data-source="pop_region" data-field="year" data-row="0">—</span></span>
@@ -314,16 +357,19 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-pop">
         <h3>Population by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Census estimates, July 1 (live from FRED).</p>
         <div class="sm-chart" data-draw="p_pop_bars" data-source="pop_county"></div>
       </div>
       <div class="sm-card" id="card-pop-growth">
         <h3>Population growth</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change since <span data-draw="p_growth_base" data-source="pop_county" data-field="base_year" data-row="0">—</span>, Census estimates.</p>
         <div class="sm-chart" data-draw="p_growth_bars" data-source="pop_county"></div>
       </div>
       <div class="sm-card" id="card-pop-region">
         <h3>Region population by year</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">All 13 counties combined.</p>
         <div class="sm-chart" data-draw="p_region_cols" data-source="pop_region"></div>
       </div>
@@ -331,16 +377,19 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-mhi">
         <h3>Median household income</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Census SAIPE. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="p_mhi_bars" data-source="income_county"></div>
       </div>
       <div class="sm-card" id="card-poverty">
         <h3>Poverty rate</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">All ages, Census SAIPE. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="p_pov_bars" data-source="income_county"></div>
       </div>
       <div class="sm-card" id="card-pcpi">
         <h3>Per-capita personal income</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">BEA. Dashed line = Tennessee, same year.</p>
         <div class="sm-chart" data-draw="p_pcpi_bars" data-source="income_county"></div>
       </div>
@@ -350,36 +399,43 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-acs-lfpr">
         <h3>Labor force participation</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of people 16 and older working or looking for work. Rates include people living in prisons and nursing homes, which can pull rural counties down.</p>
         <div class="sm-chart" data-draw="acs_lfpr" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-age">
         <h3>Median age</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Hover for the share of residents 65 and older.</p>
         <div class="sm-chart" data-draw="acs_age" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-commute">
         <h3>Average commute</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Minutes to work, one way. Hover for the share who work from home.</p>
         <div class="sm-chart" data-draw="acs_commute" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-mfgw">
         <h3>Residents who work in manufacturing</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of employed residents, wherever their job is.</p>
         <div class="sm-chart" data-draw="acs_mfgw" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-bb">
         <h3>Households with broadband</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of households with a broadband internet subscription.</p>
         <div class="sm-chart" data-draw="acs_bb" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-vets">
         <h3>Veterans</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of civilian adults who are veterans.</p>
         <div class="sm-chart" data-draw="acs_vets" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-unins">
         <h3>No health insurance</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of residents without health coverage.</p>
         <div class="sm-chart" data-draw="acs_unins" data-source="acs_county"></div>
       </div>
@@ -389,6 +445,12 @@
 
   <!-- ================= ECONOMY & BUSINESS ================= -->
   <section class="sm-page" id="economy" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Region real GDP, <span data-draw="e_year" data-source="gdp_region" data-field="year" data-row="0">—</span></span>
@@ -419,21 +481,25 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-gdp">
         <h3>Real GDP by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Billions of 2017 dollars, BEA.</p>
         <div class="sm-chart" data-draw="e_gdp_bars" data-source="gdp_county"></div>
       </div>
       <div class="sm-card" id="card-gdp-growth">
         <h3>Real GDP growth</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change since <span data-draw="e_growth_base" data-source="gdp_county" data-field="base_year" data-row="0">—</span>, inflation-adjusted.</p>
         <div class="sm-chart" data-draw="e_gdp_growth" data-source="gdp_county"></div>
       </div>
       <div class="sm-card" id="card-gdp-region">
         <h3>Region real GDP by year</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Billions of 2017 dollars.</p>
         <div class="sm-chart" data-draw="e_gdp_cols" data-source="gdp_region"></div>
       </div>
       <div class="sm-card" id="card-biz">
         <h3>Private business establishments</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">BLS QCEW, latest quarter. Label shows change vs a year earlier.</p>
         <div class="sm-chart" data-draw="e_biz_bars" data-source="biz_county"></div>
       </div>
@@ -442,17 +508,20 @@
     <p class="sm-note">BEA GDP by industry, <span data-draw="e_mix_year" data-source="industry_mix" data-field="year" data-row="0">—</span>, current dollars. "Not disclosed" is the part BEA withholds to protect individual employers. Finance &amp; real estate includes the rental value of owner-occupied homes.</p>
     <div class="sm-card" id="card-econ-mix">
       <h3>Economy mix by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Each bar is 100% of the county's GDP. Hover a segment for its dollar value.</p>
       <div class="sm-chart" data-draw="e_mix" data-source="industry_mix"></div>
     </div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-mfg-gdp">
         <h3>Manufacturing's share of the local economy</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Manufacturing GDP as a share of all GDP. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="e_mfg_gdp" data-source="mfg_gdp"></div>
       </div>
       <div class="sm-card" id="card-top-ind">
         <h3>Largest industries in each county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Top three by share of GDP, among industries BEA publishes.</p>
         <ul class="sm-list" data-draw="e_top_ind" data-source="industry_mix"></ul>
       </div>
@@ -462,21 +531,30 @@
 
   <!-- ================= U.S. ECONOMY (EconVitals) ================= -->
   <section class="sm-page" id="useconomy" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <p class="sm-note">National numbers from EconVitals (public domain), built from BLS, BEA, Census, Treasury and FRED data. Refreshed every morning.</p>
     <div class="sm-kpis" data-draw="ev_glance" data-source="econvitals"></div>
     <div class="sm-grid">
       <div class="sm-card" id="card-ev-nowcast">
         <h3>GDP nowcasts for this quarter</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Annualized growth rate each tracker expects. Hover for the date.</p>
         <div class="sm-chart" data-draw="ev_nowcast" data-source="econvitals"></div>
       </div>
       <div class="sm-card" id="card-ev-jobs">
         <h3>U.S. job gains by sector</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Average jobs added per month over the last 3 months, thousands. Hover for 1-month and 12-month figures.</p>
         <div class="sm-chart" data-draw="ev_jobs" data-source="econvitals"></div>
       </div>
       <div class="sm-card" id="card-ev-yields">
         <h3>Treasury yields</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Borrowing costs that set the tone for industrial and spec-building finance. Hover for the weekly change.</p>
         <div class="sm-chart" data-draw="ev_yields" data-source="econvitals"></div>
       </div>
@@ -486,17 +564,25 @@
 
   <!-- ================= MARKETS & MACRO ================= -->
   <section class="sm-page" id="markets" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <p class="sm-note">Interest rates, credit, currencies, commodities, the federal budget and other central banks. The daily market tape comes from EconVitals (public domain, built from Treasury, Federal Reserve, CME and exchange data) and refreshes every morning. Bond spreads, yield history and the federal budget are live FRED series. Each figure carries its own date. Data only, not investment advice.</p>
     <p class="sm-note" data-draw="mk_asof" data-source="markets_tape"></p>
     <div class="sm-kpis" data-draw="mk_kpis" data-source="markets_tape"></div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-mk-rates">
         <h3>Rates, inflation pricing and credit</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Yield and spread changes are in basis points (bp; 100 bp = 1 percentage point). VIX and NFCI changes are index points.</p>
         <div class="sm-tablebox" data-draw="mk_rates_tbl" data-source="markets_tape mk_spreads"></div>
       </div>
       <div class="sm-card" id="card-mk-global">
         <h3>Central banks and economies abroad</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Policy rate, 10-year government bond yield, inflation (12 months), unemployment and GDP growth over 4 quarters, percent (EconVitals; each country's latest month). The U.S. policy rate is the top of the Fed's range.</p>
         <div class="sm-tablebox" data-draw="mk_intl_tbl" data-source="markets_tape"></div>
       </div>
@@ -504,16 +590,19 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-mk-curve">
         <h3>Treasury yields, past year</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Daily 2-, 10- and 30-year Treasury yields, percent (FRED). Hover for any day.</p>
         <div class="sm-chart" data-draw="mk_yields_chart" data-source="mk_dgs2 mk_dgs10 mk_dgs30"></div>
       </div>
       <div class="sm-card" id="card-mk-oas">
         <h3>Corporate bond spreads, past year</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Extra yield companies pay over Treasuries (option-adjusted spread, percentage points; ICE BofA via FRED). Wider spreads mean costlier credit for expansions.</p>
         <div class="sm-chart" data-draw="mk_oas_chart" data-source="mk_ig mk_hy"></div>
       </div>
       <div class="sm-card" id="card-mk-infl">
         <h3>U.S. inflation</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Change over 12 months, and the last 3 months at an annual rate (EconVitals, from BLS and BEA).</p>
         <div class="sm-tablebox" data-draw="mk_infl_tbl" data-source="markets_tape"></div>
       </div>
@@ -521,11 +610,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-mk-fx">
         <h3>Currencies and commodities</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Changes in percent. Commodity prices are front-month futures.</p>
         <div class="sm-tablebox" data-draw="mk_fx_tbl" data-source="markets_tape"></div>
       </div>
       <div class="sm-card" id="card-mk-fiscal">
         <h3>Federal budget, share of GDP</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Latest fiscal year compared with the average of the last 60 fiscal years (OMB and BEA via FRED). The line shows the surplus or deficit each year; the dashed line is the 60-year average.</p>
         <div class="sm-tablebox" data-draw="mk_fiscal_tbl" data-source="mk_fiscal"></div>
         <div class="sm-chart" data-draw="mk_deficit_chart" data-source="mk_fiscal mk_deficit"></div>
@@ -548,14 +639,22 @@
 
   <!-- ================= EDUCATION & TRAINING ================= -->
   <section class="sm-page" id="education" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-bach">
         <h3>Adults with a bachelor's degree or higher</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Census ACS 5-year estimate, percent of adults.</p>
         <div class="sm-chart" data-draw="ed_bach" data-source="edu_county"></div>
       </div>
       <div class="sm-card" id="card-training">
         <h3>Training providers in the region</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Main campuses. Check each site for current programs.</p>
         <ul class="sm-list" data-draw="ed_training" data-source="resources"></ul>
       </div>
@@ -563,17 +662,20 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-acs-hs">
         <h3>High school diploma or higher</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Adults 25 and older, Census ACS. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="acs_hs" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-assoc">
         <h3>Associate's degree</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Adults 25 and older whose highest degree is an associate's. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="acs_assoc" data-source="acs_county"></div>
       </div>
     </div>
     <div class="sm-card" id="card-wf-programs">
       <h3>Workforce programs</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <ul class="sm-list" data-draw="ed_programs" data-source="programs"></ul>
     </div>
     <h2 class="sm-h2" id="college-pipeline">Colleges and TCATs in the region</h2>
@@ -603,11 +705,13 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-col-enr">
         <h3>Fall enrollment by school</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">All students, full- and part-time. Hover for the change from the year before.</p>
         <div class="sm-chart" data-draw="col_enr_bars" data-source="college_summary"></div>
       </div>
       <div class="sm-card" id="card-col-comp">
         <h3>Credentials awarded by school</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Certificates, diplomas and degrees in one school year. Hover for the mix.</p>
         <div class="sm-chart" data-draw="col_comp_bars" data-source="college_summary"></div>
       </div>
@@ -615,11 +719,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-pipeline">
         <h3>Regional talent pipeline by program area</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Certificates, diplomas and associate degrees from all 7 schools combined. Hover for the split.</p>
         <div class="sm-chart" data-draw="col_pipeline" data-source="program_pipeline"></div>
       </div>
       <div class="sm-card" id="card-col-top">
         <h3>Top programs at each school</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Program areas with the most credentials awarded. Open “Read more” for the full list.</p>
         <ul class="sm-list" data-draw="col_top" data-source="edu_colleges"></ul>
         <div class="sm-more"><a href="https://nces.ed.gov/collegenavigator/" target="_blank" rel="noopener">Learn more: College Navigator ↗</a></div>
@@ -652,11 +758,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-hs-rate">
         <h3>Graduation rate by school district</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Hover a district for graduates, class size and student groups.</p>
         <div class="sm-chart" data-draw="hs_dumbbell" data-source="grad_summary"></div>
       </div>
       <div class="sm-card" id="card-hs-grads">
         <h3>Graduates by district</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">The size of each district's yearly pipeline into college, training and work.</p>
         <div class="sm-chart" data-draw="hs_grads_bars" data-source="grad_summary"></div>
         <div class="sm-more"><a href="https://www.tn.gov/education/districts/federal-programs-and-oversight/data/data-downloads.html" target="_blank" rel="noopener">Learn more: TDOE Data Downloads &amp; Requests ↗</a></div>
@@ -667,6 +775,12 @@
 
   <!-- ================= MANUFACTURING ================= -->
   <section class="sm-page" id="manufacturing" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Tennessee manufacturing jobs</span>
@@ -721,27 +835,32 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-mfg-cty-jobs">
         <h3>Manufacturing jobs by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Label shows the change from a year earlier.</p>
         <div class="sm-chart" data-draw="m_cty_jobs" data-source="mfg_county"></div>
       </div>
       <div class="sm-card" id="card-mfg-cty-chg">
         <h3>Change over the year</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change in manufacturing jobs. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="m_cty_chg" data-source="mfg_county"></div>
       </div>
       <div class="sm-card" id="card-mfg-cty-lq">
         <h3>How concentrated is manufacturing?</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Location quotient: 1.0 = U.S. average share of jobs; 3.0 = three times the national share.</p>
         <div class="sm-chart" data-draw="m_cty_lq" data-source="mfg_county"></div>
       </div>
       <div class="sm-card" id="card-mfg-cty-wage">
         <h3>Average weekly manufacturing pay</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="m_cty_wage" data-source="mfg_county"></div>
       </div>
     </div>
     <div class="sm-card" id="card-mfg-subsectors">
       <h3>Largest manufacturing industries in each county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Top industries BLS publishes for each county (some are withheld for confidentiality). Open “Read more” for the full list.</p>
       <ul class="sm-list" data-draw="m_subsectors" data-source="qcew_subsectors"></ul>
       <div class="sm-more"><a href="https://www.bls.gov/cew/" target="_blank" rel="noopener">Learn more: BLS QCEW ↗</a></div>
@@ -750,11 +869,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-tn-mfg">
         <h3>Tennessee manufacturing employment</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Thousands of jobs, seasonally adjusted, BLS.</p>
         <div class="sm-chart" data-draw="m_trend" data-source="tn_mfg"></div>
       </div>
       <div class="sm-card" id="card-mfg-inv">
         <h3>Announced manufacturing projects</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Investment in millions of dollars.</p>
         <div class="sm-chart" data-draw="m_inv_bars" data-source="projects"></div>
       </div>
@@ -762,17 +883,20 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-mfg-growth">
         <h3>Manufacturing job growth, past 12 months</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change in manufacturing jobs, same month a year earlier. BLS.</p>
         <div class="sm-chart" data-draw="m_growth_bars" data-source="mfg_growth"></div>
       </div>
       <div class="sm-card" id="card-nash-mfg">
         <h3>Nashville metro manufacturing employment</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Thousands of jobs, seasonally adjusted. The metro area includes Maury County.</p>
         <div class="sm-chart" data-draw="m_nash_trend" data-source="nash_mfg"></div>
       </div>
     </div>
     <div class="sm-card" id="card-anchors">
       <h3>Anchor employers by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">From your county profiles.</p>
       <ul class="sm-list" data-draw="m_anchors" data-source="counties"></ul>
     </div>
@@ -780,6 +904,12 @@
 
   <!-- ================= TOURISM ================= -->
   <section class="sm-page" id="tourism" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Tennessee visitor spending, <span data-draw="tr_year" data-source="tourism_summary" data-field="year" data-where="county=Tennessee">—</span></span>
@@ -795,11 +925,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-leih">
         <h3>Tennessee leisure &amp; hospitality employment</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Thousands of jobs, seasonally adjusted, BLS.</p>
         <div class="sm-chart" data-draw="tr_trend" data-source="tn_leih"></div>
       </div>
       <div class="sm-card" id="card-attractions">
         <h3>Signature attractions</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="tr_attr" data-source="resources"></ul>
       </div>
     </div>
@@ -830,11 +962,13 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-tu-map">
         <h3>Visitor spending by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Darker = more spending. Hover for the change and state rank; click a county for its profile.</p>
         <div class="sm-map" data-draw="tu_map" data-source="tourism_summary"></div>
       </div>
       <div class="sm-card" id="card-tu-spend">
         <h3>Spending and rank among 95 counties</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Direct visitor spending. # = state rank.</p>
         <div class="sm-chart" data-draw="tu_spend_bars" data-source="tourism_summary"></div>
       </div>
@@ -842,11 +976,13 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-tu-chg">
         <h3>Change from the year before</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change in visitor spending. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="tu_chg_bars" data-source="tourism_summary"></div>
       </div>
       <div class="sm-card" id="card-tu-jobs">
         <h3>Tourism jobs</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Full- and part-time jobs, including owners, supported directly by visitor spending.</p>
         <div class="sm-chart" data-draw="tu_jobs_bars" data-source="tourism_summary"></div>
       </div>
@@ -854,11 +990,13 @@
     <div class="sm-grid">
       <div class="sm-card" id="card-tu-tax">
         <h3>State &amp; local taxes from visitors</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Sales, bed, income and other taxes generated by visitor spending. Hover for the state/local split.</p>
         <div class="sm-chart" data-draw="tu_tax_bars" data-source="tourism_summary"></div>
       </div>
       <div class="sm-card" id="card-tu-mix">
         <h3>Where visitors spend, region</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Spending by category, all 13 counties.</p>
         <div class="sm-chart" data-draw="tu_mix" data-source="tourism_summary"></div>
         <div class="sm-more"><a href="https://industry.tnvacation.com/research" target="_blank" rel="noopener">Learn more: TN Tourism research &amp; full report ↗</a></div>
@@ -868,6 +1006,12 @@
 
   <!-- ================= AGRICULTURE ================= -->
   <section class="sm-page" id="agriculture" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Region farms, <span data-draw="ag_year" data-source="ag_county" data-field="year" data-where="county=Region">—</span></span>
@@ -885,31 +1029,41 @@
         <span class="sm-kpi-sub"><b data-draw="ag_sales_chg" data-source="ag_county" data-field="sales_chg_pct" data-where="county=Region">—</b>% vs 2017 (not inflation-adjusted)</span>
       </div>
       <div class="sm-kpi">
-        <span class="sm-kpi-label">Cattle and calves</span>
-        <span class="sm-kpi-value"><b data-draw="ag_cattle" data-source="ag_county" data-field="cattle_head" data-where="county=Region">—</b></span>
-        <span class="sm-kpi-sub">head on hand</span>
+        <span class="sm-kpi-label">Cattle and calves (USDA estimate)</span>
+        <span class="sm-kpi-value"><b data-draw="ag_cattle" data-source="ag_latest" data-field="cattle_head" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub">head on <span data-draw="ag_cattle_asof" data-source="ag_latest" data-field="cattle_as_of" data-where="county=Region">—</span> · <b data-draw="ag_cattle_chg" data-source="ag_latest" data-field="cattle_chg_pct" data-where="county=Region">—</b>% vs a year earlier</span>
       </div>
     </div>
-    <p class="sm-note">USDA 2022 Census of Agriculture, the most recent. The next one (2027) is expected to be published in 2029.</p>
+    <p class="sm-note">Farms, land in farms and farm sales come from the USDA 2022 Census of Agriculture, still the most recent census (the 2027 census is expected to be published in 2029). Cattle, crop production and cash rent come from USDA NASS annual county estimates, the newest available; each figure shows its own date.</p>
     <div class="sm-grid">
       <div class="sm-card" id="card-ag-sales">
         <h3>Farm product sales by county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Millions of dollars. Hover to split crops and livestock.</p>
         <div class="sm-chart" data-draw="ag_sales_bars" data-source="ag_county"></div>
       </div>
       <div class="sm-card" id="card-ag-farms">
         <h3>Change in number of farms, 2017 to 2022</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Percent change. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="ag_farms_bars" data-source="ag_county"></div>
       </div>
       <div class="sm-card" id="card-ag-cattle">
         <h3>Cattle and calves on hand</h3>
-        <p class="sm-note">Head, December 31, 2022.</p>
-        <div class="sm-chart" data-draw="ag_cattle_bars" data-source="ag_county"></div>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+        <p class="sm-note">Head on <span data-draw="ag_cattle_asof2" data-source="ag_latest" data-field="cattle_as_of" data-where="county=Region">—</span>, USDA NASS county estimates. Labels show the change from a year earlier.</p>
+        <div class="sm-chart" data-draw="ag_cattle_bars" data-source="ag_latest"></div>
       </div>
+    </div>
+    <div class="sm-card" id="card-ag-latest">
+      <h3>Latest USDA county estimates</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+      <p class="sm-note">USDA NASS annual surveys: cattle on January 1 of this year and last, 2025 crop production, and 2026 average cash rent per acre. “Not published” means USDA combined the county with others to protect confidentiality.</p>
+      <div class="sm-tablebox" data-draw="ag_latest_tbl" data-source="ag_latest"></div>
     </div>
     <div class="sm-card" id="card-ag-top">
       <h3>Top farm products in each county</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Ranked by 2022 sales. USDA withholds some products for confidentiality; those are listed under “Read more”.</p>
       <ul class="sm-list" data-draw="ag_top" data-source="ag_county"></ul>
       <div class="sm-more"><a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">Learn more: USDA Quick Stats ↗</a><a href="https://www.nass.usda.gov/AgCensus/" target="_blank" rel="noopener">Census of Agriculture ↗</a></div>
@@ -917,10 +1071,12 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-ag-projects">
         <h3>Agriculture projects</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="ag_projects" data-source="projects"></ul>
       </div>
       <div class="sm-card" id="card-ag-links">
         <h3>Agriculture resources</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="ag_links" data-source="resources"></ul>
       </div>
     </div>
@@ -928,6 +1084,12 @@
 
   <!-- ================= HOUSING ================= -->
   <section class="sm-page" id="housing" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Region housing units permitted, <span data-draw="h_year" data-source="permits_region" data-field="year" data-row="0">—</span></span>
@@ -943,26 +1105,31 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-permits">
         <h3>New housing units permitted</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Census Building Permits Survey. Counts only places that issue permits, so rural counties can read low.</p>
         <div class="sm-chart" data-draw="h_permits" data-source="permits"></div>
       </div>
       <div class="sm-card" id="card-acs-home">
         <h3>Median home value</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Owner-occupied homes, Census ACS. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="acs_home" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-rent">
         <h3>Median gross rent</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Monthly, including utilities, Census ACS. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="acs_rent" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-acs-vacant">
         <h3>Vacant housing</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Share of all housing units, including seasonal homes. Dashed line = Tennessee.</p>
         <div class="sm-chart" data-draw="acs_vacant" data-source="acs_county"></div>
       </div>
       <div class="sm-card" id="card-housing-news">
         <h3>Housing programs and news</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="h_news" data-source="programs intel"></ul>
       </div>
     </div>
@@ -989,12 +1156,14 @@
       <span>Download this county's profile:</span>
       <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
       <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
     </div>
     <div class="sm-card" id="card-profile">
       <div class="sm-prof-head">
         <h2 class="sm-prof-name"><span data-draw="pf_name" data-source="counties" data-field="county">—</span> County</h2>
         <span class="sm-item-meta">Seat: <span data-draw="pf_seat" data-source="counties" data-field="seat">—</span> · <span data-draw="pf_tier" data-source="counties" data-field="tier_label">—</span> · <span data-draw="pf_badge" data-source="counties">—</span></span>
       </div>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <div class="sm-kv">
         <div><span>Unemployment, <span data-draw="pf_month" data-source="labor_latest" data-field="month">—</span></span><b><span data-draw="pf_rate" data-source="labor_latest" data-field="rate">—</span>%</b></div>
         <div><span>Labor force</span><b data-draw="pf_lf" data-source="labor_latest" data-field="lf">—</b></div>
@@ -1036,6 +1205,7 @@
         <h3>All counties side by side</h3>
         <input class="sm-search" id="cmp-search" type="search" placeholder="Filter counties" aria-label="Filter counties">
       </div>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Latest available year for each measure. Click a column to sort, a row to open that profile.</p>
       <div class="sm-tablebox">
         <table class="sm-table" data-source="county_all" data-row-key="county" data-sort-table="compare">
@@ -1075,13 +1245,23 @@
         <a class="sm-btn sm-btn-sm" href="https://tvasites.giswebtechguru.com/?sorting=featured&amp;showcommunityonmap=true&amp;layer=Region&amp;activebasemap2d=World%20Navigation%20Map%20(Places)&amp;mapextent=-9388814.803837564,4490805.938632733,-9973405.196162436,4065816.0613672663&amp;mapzoom=7&amp;FIPSCode=OID436" target="_blank" rel="noopener">Open the TVA Sites map ↗</a>
         <a class="sm-btn sm-btn-sm" href="https://mtida.giswebtechguru.com/?sorting=featured&amp;showpropertyonmap=true&amp;activebasemap2d=World%20Street%20Map%20(Places)&amp;mapextent=-9321791.803837564,4490815.438632733,-9906382.196162436,4065825.5613672663&amp;mapzoom=7" target="_blank" rel="noopener">Open the MTIDA properties map ↗</a>
       </div>
-      <div class="sm-mapbox" id="sm-mapframe">
-        <p class="sm-note" id="sm-mapnote">The maps open in a new browser tab. (On the public copy of this dashboard they also appear right here.)</p>
+      <p class="sm-note" id="sm-mapnote">The maps open in a new browser tab. (On the public copy of this dashboard they also appear right here.)</p>
+      <div class="sm-dlbar" id="sm-mappick" role="group" aria-label="Choose which map to show" hidden>
+        <span>Show in this page:</span>
+        <button class="sm-btn sm-btn-sm" type="button" data-map="tva" aria-pressed="true">TVA Sites</button>
+        <button class="sm-btn sm-btn-sm" type="button" data-map="mtida" aria-pressed="false">MTIDA properties</button>
       </div>
+      <div class="sm-mapbox" id="sm-mapframe" data-draw="site_map"></div>
     </div>
   </section>
 
   <section class="sm-page" id="projects" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-kpis">
       <div class="sm-kpi">
         <span class="sm-kpi-label">Announced investment tracked</span>
@@ -1102,31 +1282,37 @@
     <div class="sm-grid wide">
       <div class="sm-card" id="card-inv-bars">
         <h3>Investment by project</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Millions of dollars, as announced.</p>
         <div class="sm-chart" data-draw="g_inv_bars" data-source="projects"></div>
       </div>
       <div class="sm-card" id="card-actions">
         <h3>Action items</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <p class="sm-note">Soonest deadline first. Open “Steps” for who does what.</p>
         <ul class="sm-list" data-draw="g_actions_list" data-source="actions"></ul>
       </div>
     </div>
     <div class="sm-card" id="card-projects">
       <h3>Project pipeline</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <div class="sm-cards" data-draw="g_projects" data-source="projects"></div>
     </div>
     <div class="sm-card" id="card-awards">
       <h3>State awards to the region, 2026</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
       <p class="sm-note">Grants TNECD announced in 2026 for places in the 13 counties: site development, infrastructure planning, historic courthouses, downtown improvement and broadband (BEAD). Broadband amounts for providers that serve several counties cover their whole service area, so they are not added up here. Statewide broadband awards to providers serving dozens of counties (such as AT&amp;T, ZiTEL and SpaceX) also reach parts of the region and are not listed.</p>
       <div data-draw="g_awards" data-source="awards"></div>
     </div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-programs">
         <h3>Grants and state programs</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="g_programs" data-source="programs"></ul>
       </div>
       <div class="sm-card" id="card-events">
         <h3>Events</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
         <ul class="sm-list" data-draw="g_events" data-source="events"></ul>
       </div>
     </div>
@@ -1134,6 +1320,12 @@
 
   <!-- ================= RESOURCES ================= -->
   <section class="sm-page" id="resources" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-card" id="card-ai-howto">
       <h3>Use this dashboard with Claude</h3>
       <p class="sm-note">Claude (or another AI assistant) can read this dashboard's data and turn it into briefs, spreadsheets, slides and documents. These steps keep its answers tied to the real numbers.</p>
@@ -1159,7 +1351,7 @@ Rules:
 4. When you calculate something (a total, a share, a change), say it's your calculation and show how.
 5. Contacts change often: remind me to confirm names and titles on the official website before outreach.
 6. Keep it plain and structured: headings, short bullets, tables, and a sources list at the end.</textarea>
-      <div class="sm-dlbar"><button class="sm-btn sm-btn-sm" type="button" id="sm-howto-copy">Copy the instruction</button><span id="sm-howto-msg" role="status"></span></div>
+      <div class="sm-dlbar"><button class="sm-btn sm-btn-sm" type="button" id="sm-howto-copy">Copy the instruction</button><span id="sm-howto-ok" role="status" hidden>Copied. Paste it into Claude.</span><span id="sm-howto-fail" role="status" hidden>Your browser blocked copying. The text is selected: press Ctrl+C (Cmd+C on a Mac).</span></div>
       <h4 class="sm-howto-h">Things to ask</h4>
       <ul class="sm-howto">
         <li>“Write a one-page brief on Lincoln County for a prospect visit. Cite every number.”</li>

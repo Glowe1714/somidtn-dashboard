@@ -13,10 +13,14 @@
   const inClaude = () => !!(window.claude && typeof window.claude.use === 'function');
   let dlP = null;
   const downloads = () => { if (!dlP && inClaude()) dlP = window.claude.use('downloads').catch(() => null); return dlP || Promise.resolve(null); };
+  let toastMsg = '', toastTimer = null;
+  dash.draw('sm_toast', (el) => { el.textContent = toastMsg; });
   function toast(msg) {
-    let t = document.getElementById('sm-toast');
-    if (!t) { t = document.createElement('div'); t.id = 'sm-toast'; t.className = 'sm-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
-    t.textContent = msg; t.hidden = false; clearTimeout(t._h); t._h = setTimeout(() => { t.hidden = true; }, 6000);
+    toastMsg = String(msg || '');
+    dash.draw('sm_toast');
+    document.querySelectorAll('.sm-toast').forEach((t) => t.classList.remove('is-off'));
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => document.querySelectorAll('.sm-toast').forEach((t) => t.classList.add('is-off')), 6000);
   }
   async function save(filename, blob) {
     const dl = await downloads();
@@ -26,9 +30,9 @@
     }
     if (inClaude()) { toast('Downloads are not available in this view.'); return; }
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = filename;
-    document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+    a.href = URL.createObjectURL(blob); a.download = filename; a.rel = 'noopener';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   }
 
   /* ---------- zip (stored, no compression) for Office files ---------- */
@@ -112,8 +116,17 @@
     const para = (inner, o = {}) => '<w:p><w:pPr>' + (o.keep ? '<w:keepNext/>' : '') + '<w:spacing w:before="' + (o.before || 0) + '" w:after="' + (o.after == null ? 120 : o.after) + '"/>' + (o.ind ? '<w:ind w:left="' + o.ind + '" w:hanging="' + o.ind + '"/>' : '') + '</w:pPr>' + inner + '</w:p>';
     const TOTAL = 10080;
     const border = (k) => '<w:' + k + ' w:val="single" w:sz="4" w:space="0" w:color="A6A6A6"/>';
-    const parts = [];
+    const parts = [], imgs = [];
     blocks.forEach((b) => {
+      if (b.t === 'image') {
+        const k = imgs.length + 1; imgs.push(b.bytes);
+        const wIn = Math.min(7, b.w / 2 / 96), hIn = wIn * b.h / b.w, cx = Math.round(wIn * 914400), cy = Math.round(hIn * 914400);
+        parts.push('<w:p><w:pPr><w:spacing w:before="60" w:after="160"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="' + cx + '" cy="' + cy + '"/><wp:docPr id="' + k + '" name="Chart ' + k + '"/>'
+          + '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+          + '<pic:nvPicPr><pic:cNvPr id="' + k + '" name="chart' + k + '.jpeg"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rIdImg' + k + '"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill>'
+          + '<pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="' + cx + '" cy="' + cy + '"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>');
+        return;
+      }
       if (b.t === 'title') parts.push(para(run(b.text, { b: true, sz: 40, color: '1F3864' }), { after: 80 }));
       else if (b.t === 'subtitle') parts.push(para(run(b.text, { sz: 19, color: '595959' }), { after: 240 }));
       else if (b.t === 'h1') parts.push(para(run(b.text, { b: true, sz: 30, color: '1F3864' }), { before: 280, after: 120, keep: true }));
@@ -136,11 +149,13 @@
         parts.push(para('', { after: 60 }));
       }
     });
-    const doc = XML + '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>' + parts.join('') + '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>';
+    const doc = XML + '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="' + REL + '" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"><w:body>' + parts.join('') + '<w:sectPr><w:pgSz w:w="12240" w:h="15840"/><w:pgMar w:top="1080" w:right="1080" w:bottom="1080" w:left="1080" w:header="720" w:footer="720" w:gutter="0"/></w:sectPr></w:body></w:document>';
     return zip([
-      { name: '[Content_Types].xml', data: XML + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>' },
+      { name: '[Content_Types].xml', data: XML + '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="jpeg" ContentType="image/jpeg"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>' },
       { name: '_rels/.rels', data: XML + '<Relationships xmlns="' + PKG + '"><Relationship Id="rId1" Type="' + REL + '/officeDocument" Target="word/document.xml"/></Relationships>' },
+      { name: 'word/_rels/document.xml.rels', data: XML + '<Relationships xmlns="' + PKG + '">' + imgs.map((_, i) => '<Relationship Id="rIdImg' + (i + 1) + '" Type="' + REL + '/image" Target="media/chart' + (i + 1) + '.jpeg"/>').join('') + '</Relationships>' },
       { name: 'word/document.xml', data: doc },
+      ...imgs.map((bytes, i) => ({ name: 'word/media/chart' + (i + 1) + '.jpeg', data: bytes })),
     ], 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
   }
 
@@ -188,8 +203,20 @@
     const txt = (s, x, yy, size, bold, rgb) => ops.push((rgb || [0.1, 0.1, 0.1]).join(' ') + ' rg BT /' + (bold ? 'F2' : 'F1') + ' ' + size + ' Tf ' + x.toFixed(2) + ' ' + yy.toFixed(2) + ' Td (' + esc(s) + ') Tj ET');
     const para = (str, size, bold, rgb, indent = 0) => wrap(winText(str), size, bold, CW - indent).forEach((ln) => { room(size * 1.35); y -= size * 1.35; txt(ln, M + indent, y, size, bold, rgb); });
     const BLUE = [0.12, 0.22, 0.39], GREY = [0.35, 0.35, 0.35];
+    const images = [];
     newPage();
     blocks.forEach((b) => {
+      if (b.t === 'image') {
+        let dw = Math.min(CW, (b.w / 2) * 0.75), dh = dw * b.h / b.w;
+        const maxH = H - 2 * M - 70;
+        if (dh > maxH) { dh = maxH; dw = dh * b.w / b.h; }
+        room(dh + 12);
+        const name = 'Im' + (images.length + 1);
+        images.push({ b, page: pages.length - 1, name });
+        ops.push('q ' + dw.toFixed(2) + ' 0 0 ' + dh.toFixed(2) + ' ' + M + ' ' + (y - dh).toFixed(2) + ' cm /' + name + ' Do Q');
+        y -= dh + 12;
+        return;
+      }
       if (b.t === 'title') { para(b.text, 20, true, BLUE); y -= 4; }
       else if (b.t === 'subtitle') { para(b.text, 9.5, false, GREY); y -= 10; }
       else if (b.t === 'h1') { room(70); y -= 10; para(b.text, 14, true, BLUE); y -= 4; }
@@ -229,12 +256,18 @@
       }
     });
     const objs = ['<< /Type /Catalog /Pages 2 0 R >>', '', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>', '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+    const latin1 = (u) => { let o = ''; for (let i = 0; i < u.length; i += 8192) o += String.fromCharCode.apply(null, u.subarray(i, i + 8192)); return o; };
+    images.forEach((im) => {
+      objs.push('<< /Type /XObject /Subtype /Image /Width ' + im.b.w + ' /Height ' + im.b.h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + im.b.bytes.length + ' >>\nstream\n' + latin1(im.b.bytes) + '\nendstream');
+      im.obj = objs.length;
+    });
     const kids = [];
     pages.forEach((p, i) => {
       const foot = '0.4 0.4 0.4 rg BT /F1 7.5 Tf ' + M + ' 30 Td (' + esc(winText(footer)) + ') Tj ET 0.4 0.4 0.4 rg BT /F1 7.5 Tf ' + (W - M - 52) + ' 30 Td (' + esc('Page ' + (i + 1) + ' of ' + pages.length) + ') Tj ET';
       const stream = p.join('\n') + '\n' + foot;
       objs.push('<< /Length ' + stream.length + ' >>\nstream\n' + stream + '\nendstream');
-      objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + W + ' ' + H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ' + objs.length + ' 0 R >>');
+      const pim = images.filter((im) => im.page === i);
+      objs.push('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + W + ' ' + H + '] /Resources << /Font << /F1 3 0 R /F2 4 0 R >>' + (pim.length ? ' /XObject << ' + pim.map((im) => '/' + im.name + ' ' + im.obj + ' 0 R').join(' ') + ' >>' : '') + ' >> /Contents ' + objs.length + ' 0 R >>');
       kids.push(objs.length);
     });
     objs[1] = '<< /Type /Pages /Kids [' + kids.map((k) => k + ' 0 R').join(' ') + '] /Count ' + kids.length + ' >>';
@@ -482,48 +515,180 @@
     } catch (e) { toast(String(e && e.message ? e.message : e)); console.error(e); }
     busy(btn, false);
   }
+  /* ---------- section (card) and tab downloads ---------- */
+  const clean = (t) => String(t == null ? '' : t).replace(/[↗​]/g, '').replace(/\bRead more( \(\d+ more\))?|\bShow less\b/g, '').replace(/\s+/g, ' ').trim();
+  const isShown = (el) => !!(el && el.getClientRects().length);
+  const tabName = (sec) => { const t = document.querySelector('.sm-tab[data-tab="' + sec.id + '"]'); return t ? clean(t.textContent) : sec.id; };
+  const idsIn = (root) => {
+    const set = new Set();
+    const add = (e) => String(e.dataset.source || '').split(/\s+/).forEach((x) => { if (x) set.add(x); });
+    if (root.dataset && root.dataset.source) add(root);
+    root.querySelectorAll('[data-source]').forEach(add);
+    return [...set];
+  };
+  const rowsFor = (id) => { const d = dash.data(id); if (!d || d.status !== 'ok' || d.data == null) return null; return Array.isArray(d.data) ? d.data : [d.data]; };
+  const cellVal = (v) => (v == null ? '' : typeof v === 'object' ? JSON.stringify(v) : v);
+  const toGrid = (rows, lead) => {
+    const keys = [];
+    rows.forEach((r) => { if (r && typeof r === 'object') Object.keys(r).forEach((k) => { if (!keys.includes(k)) keys.push(k); }); });
+    return [(lead ? [lead[0]] : []).concat(keys), ...rows.map((r) => (lead ? [lead[1]] : []).concat(keys.map((k) => cellVal(r && r[k]))))];
+  };
+  const tableGrid = (table) => {
+    const rows = [];
+    table.querySelectorAll('tr').forEach((tr) => {
+      const cells = [...tr.children].filter((c) => c.tagName === 'TH' || c.tagName === 'TD');
+      if (cells.length) rows.push(cells.map((c) => { const a = c.querySelector('a[href]'); const t = clean(c.textContent); return a && /^Source/.test(t) ? a.href : t; }));
+    });
+    return rows;
+  };
+  async function runCard(fmt, btn) {
+    busy(btn, true);
+    try {
+      const card = btn.closest('.sm-card');
+      if (!card) return;
+      const title = clean((card.querySelector('h3, h2') || {}).textContent) || 'section';
+      const ids = idsIn(card);
+      if (ids.length) await S().ready(ids);
+      const tables = [...card.querySelectorAll('table')].filter(isShown);
+      const data = ids.map((id) => ({ id, rows: rowsFor(id) })).filter((d) => d.rows && d.rows.length);
+      const name = 'SoMidTN-' + slug(title) + '-' + today();
+      if (fmt === 'csv') {
+        let grid = null;
+        if (tables.length) grid = tableGrid(tables[0]);
+        else if (data.length === 1) grid = toGrid(data[0].rows);
+        else if (data.length) {
+          const keys = ['dataset'];
+          data.forEach((d) => d.rows.forEach((r) => { if (r && typeof r === 'object') Object.keys(r).forEach((k) => { if (!keys.includes(k)) keys.push(k); }); }));
+          grid = [keys, ...data.flatMap((d) => d.rows.map((r) => keys.map((k) => (k === 'dataset' ? d.id : cellVal(r && r[k])))))];
+        }
+        if (!grid) { toast('This section has no data to download yet.'); return; }
+        await save(name + '.csv', new Blob([csv(grid)], { type: 'text/csv' }));
+      } else {
+        const sheets = tables.map((t, i) => ({ name: tables.length > 1 ? title.slice(0, 26) + ' ' + (i + 1) : title, rows: tableGrid(t) }))
+          .concat(data.map((d) => ({ name: 'data ' + d.id, rows: toGrid(d.rows) })));
+        if (!sheets.length) { toast('This section has no data to download yet.'); return; }
+        await save(name + '.xlsx', xlsx(sheets));
+      }
+    } catch (e) { toast(String(e && e.message ? e.message : e)); console.error(e); }
+    finally { busy(btn, false); }
+  }
+  async function runTabExcel(btn) {
+    busy(btn, true);
+    try {
+      const sec = btn.closest('.sm-page');
+      if (!sec) return;
+      const name = tabName(sec), ids = idsIn(sec);
+      if (ids.length) await S().ready(ids);
+      const data = ids.map((id) => ({ id, rows: rowsFor(id) })).filter((d) => d.rows && d.rows.length);
+      if (!data.length) { toast('This tab has no data to download yet.'); return; }
+      const about = [['SoMidTN Dashboard', name], ['Generated', longDate()], ['What this is', 'Each sheet is one data source used on this tab, exactly as the dashboard loaded it. Each row carries its own dates; sources are named on the dashboard.'], ['Compiled by', 'Greg Lowe from public sources; not an official TNECD publication.'], ['', ''], ['Sheet', 'Rows']].concat(data.map((d) => [d.id, d.rows.length]));
+      await save('SoMidTN-' + slug(name) + '-data-' + today() + '.xlsx', xlsx([{ name: 'About', rows: about }].concat(data.map((d) => ({ name: d.id, rows: toGrid(d.rows) })))));
+    } catch (e) { toast(String(e && e.message ? e.message : e)); console.error(e); }
+    finally { busy(btn, false); }
+  }
+  // A chart (SVG) as a JPEG picture for Word and PDF, drawn with the colors it has on screen.
+  async function svgImage(svg) {
+    const r = svg.getBoundingClientRect(), w = Math.round(r.width), hh = Math.round(r.height);
+    if (w < 120 || hh < 60) return null;
+    const clone = svg.cloneNode(true);
+    const PROPS = ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'opacity', 'font-family', 'font-size', 'font-weight', 'text-anchor', 'dominant-baseline', 'visibility', 'display', 'color'];
+    const copy = (from, to) => { const cs = getComputedStyle(from); PROPS.forEach((k) => { const v = cs.getPropertyValue(k); if (v) to.style.setProperty(k, v); }); };
+    copy(svg, clone);
+    const src = svg.querySelectorAll('*'), dst = clone.querySelectorAll('*');
+    src.forEach((el, i) => { if (dst[i]) copy(el, dst[i]); });
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', w); clone.setAttribute('height', hh);
+    if (!clone.getAttribute('viewBox')) clone.setAttribute('viewBox', '0 0 ' + w + ' ' + hh);
+    const xml = new XMLSerializer().serializeToString(clone);
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error('chart picture failed')); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml); });
+    const k = 2, c = document.createElement('canvas');
+    c.width = w * k; c.height = hh * k;
+    const g = c.getContext('2d');
+    let bg = 'rgb(255, 255, 255)';
+    for (let e = svg; e; e = e.parentElement) { const v = getComputedStyle(e).backgroundColor; if (v && v !== 'transparent' && !/rgba\(.*,\s*0\)$/.test(v)) { bg = v; break; } }
+    g.fillStyle = bg; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    const bin = atob(c.toDataURL('image/jpeg', 0.9).split(',')[1]), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return { t: 'image', bytes, w: c.width, h: c.height };
+  }
+  async function tabBlocks(sec) {
+    const name = tabName(sec), ids = idsIn(sec);
+    if (ids.length) await S().ready(ids);
+    await new Promise((r) => setTimeout(r, 400));
+    const B = [{ t: 'title', text: 'SoMidTN Dashboard: ' + name }, { t: 'subtitle', text: 'Southern Middle Tennessee, 13 counties. Snapshot of the ' + name + ' tab as shown on ' + longDate() + '. Compiled by Greg Lowe from public sources; not an official TNECD publication.' }];
+    sec.querySelectorAll(':scope > .sm-note').forEach((n) => { const t = isShown(n) && clean(n.innerText); if (t) B.push({ t: 'note', text: t }); });
+    const kpiRow = (k) => { const part = (sel) => clean((k.querySelector(sel) || {}).innerText); const lab = part('.sm-kpi-label'); return lab ? [lab, part('.sm-kpi-value'), part('.sm-kpi-sub')] : [clean(k.innerText), '', '']; };
+    const kpis = [...sec.querySelectorAll('.sm-kpi')].filter((k) => isShown(k) && !k.closest('.sm-card')).map(kpiRow);
+    if (kpis.length) { B.push({ t: 'h1', text: 'Key numbers' }); B.push({ t: 'table', head: ['Measure', 'Value', 'Detail'], widths: [3, 1.6, 4], rows: kpis }); }
+    for (const card of sec.querySelectorAll('.sm-card')) {
+      if (!isShown(card)) continue;
+      const hd = card.querySelector('h3, h2');
+      B.push({ t: 'h1', text: hd ? clean(hd.innerText) : 'Section' });
+      card.querySelectorAll(':scope > .sm-note').forEach((n) => { const t = isShown(n) && clean(n.innerText); if (t) B.push({ t: 'note', text: t }); });
+      const ck = [...card.querySelectorAll('.sm-kpi')].filter(isShown).map(kpiRow);
+      if (ck.length) B.push({ t: 'table', head: ['Measure', 'Value', 'Detail'], widths: [3, 1.6, 4], rows: ck });
+      for (const t of card.querySelectorAll('table')) {
+        if (!isShown(t)) continue;
+        const g = tableGrid(t);
+        if (g.length < 2) continue;
+        const body = g.slice(1);
+        B.push({ t: 'table', head: g[0], rows: body.slice(0, 150) });
+        if (body.length > 150) B.push({ t: 'note', text: 'First 150 of ' + body.length + ' rows. The full table is in the Excel download.' });
+      }
+      const lis = [...card.querySelectorAll('li')].filter((li) => isShown(li) && !li.closest('table') && !(li.parentElement && li.parentElement.closest('li')));
+      if (lis.length) {
+        B.push({ t: 'bullets', items: lis.slice(0, 60).map((li) => clean(li.innerText).slice(0, 700)) });
+        if (lis.length > 60) B.push({ t: 'note', text: 'First 60 of ' + lis.length + ' items.' });
+      }
+      const tiles = [...card.querySelectorAll('.sm-cards > *')].filter(isShown);
+      if (tiles.length) B.push({ t: 'bullets', items: tiles.slice(0, 60).map((x) => clean(x.innerText).slice(0, 700)) });
+      for (const dl of card.querySelectorAll('dl')) {
+        if (!isShown(dl)) continue;
+        const rows = [];
+        dl.querySelectorAll('dt').forEach((dt) => { const dd = dt.nextElementSibling; rows.push([clean(dt.innerText), clean(dd && dd.innerText)]); });
+        if (rows.length) B.push({ t: 'table', head: ['Item', 'Details'], widths: [1.6, 6], rows });
+      }
+      const svgs = [...card.querySelectorAll('svg')].filter((v) => isShown(v) && !v.closest('table') && !v.closest('button') && !(v.parentElement && v.parentElement.closest('svg'))).slice(0, 4);
+      for (const v of svgs) { const pic = await svgImage(v).catch(() => null); if (pic) B.push(pic); }
+    }
+    B.push({ t: 'note', text: 'Figures are as shown on the SoMidTN Dashboard on the date above; each section names its sources and period. The Excel download for this tab has the underlying data.' });
+    return { B, name };
+  }
+  async function runTabReport(fmt, btn) {
+    busy(btn, true);
+    try {
+      const sec = btn.closest('.sm-page');
+      if (!sec) return;
+      const { B, name } = await tabBlocks(sec);
+      await save('SoMidTN-' + slug(name) + '-' + today() + '.' + fmt, fmt === 'pdf' ? pdf(B, 'SoMidTN Dashboard: ' + name + ', ' + longDate()) : docx(B));
+    } catch (e) { toast(String(e && e.message ? e.message : e)); console.error(e); }
+    finally { busy(btn, false); }
+  }
   document.addEventListener('click', (ev) => {
     const b = ev.target.closest('button[data-fmt]');
     if (!b) return;
-    const bar = b.closest('[data-report]'), tb = b.closest('.sm-tbtns');
-    if (bar) { ev.preventDefault(); runReport(bar.dataset.report, b.dataset.fmt, b); return; }
-    if (tb) {
+    const bar = b.closest('[data-report]'), cardBar = b.closest('[data-dl="card"]');
+    if (bar) {
       ev.preventDefault();
-      const card = tb.closest('.sm-card'), table = card && card.querySelector('table');
-      if (!table) { toast('This table has not loaded yet.'); return; }
-      const title = (card.querySelector('h3') || {}).textContent || 'table';
-      const rows = [];
-      table.querySelectorAll('tr').forEach((tr) => {
-        const cells = [...tr.children].filter((c) => c.tagName === 'TH' || c.tagName === 'TD');
-        if (cells.length) rows.push(cells.map((c) => { const a = c.querySelector('a[href]'); const t = c.textContent.replace(/\s+/g, ' ').trim(); return a && /^Source/.test(t) ? a.href : t; }));
-      });
-      const name = 'SoMidTN-' + slug(title) + '-' + today();
-      if (b.dataset.fmt === 'csv') save(name + '.csv', new Blob([csv(rows)], { type: 'text/csv' }));
-      else save(name + '.xlsx', xlsx([{ name: title, rows }]));
+      if (b.dataset.fmt === 'xlsx') runTabExcel(b);
+      else if (bar.dataset.report === 'tab') runTabReport(b.dataset.fmt, b);
+      else runReport(bar.dataset.report, b.dataset.fmt, b);
+      return;
     }
+    if (cardBar) { ev.preventDefault(); runCard(b.dataset.fmt, b); }
   });
-  const addTableButtons = () => document.querySelectorAll('.sm-card').forEach((card) => {
-    if (card.querySelector(':scope > .sm-tbtns') || !card.querySelector('table')) return;
-    const box = document.createElement('div');
-    box.className = 'sm-tbtns';
-    box.appendChild(Object.assign(document.createElement('span'), { textContent: 'Download table:' }));
-    [['csv', 'CSV'], ['xlsx', 'Excel']].forEach(([f, label]) => { const b = document.createElement('button'); b.type = 'button'; b.className = 'sm-btn sm-btn-sm'; b.dataset.fmt = f; b.textContent = label; box.appendChild(b); });
-    const h3 = card.querySelector(':scope > h3');
-    if (h3) h3.insertAdjacentElement('afterend', box); else card.insertBefore(box, card.firstChild);
-  });
-  let pend = false;
-  new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; addTableButtons(); }); }).observe(document.body, { childList: true, subtree: true });
-  addTableButtons();
   /* ---------- "Use this dashboard with Claude": copy the saved instruction ---------- */
   document.addEventListener('click', async (ev) => {
     if (!ev.target.closest('#sm-howto-copy')) return;
-    const ta = document.getElementById('sm-howto-text'), msg = document.getElementById('sm-howto-msg');
+    const ta = document.getElementById('sm-howto-text');
     if (!ta) return;
     let ok = false;
     try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) { ok = false; }
     if (!ok) { ta.focus(); ta.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
-    if (msg) msg.textContent = ok ? 'Copied. Paste it into Claude.' : 'Your browser blocked copying. The text is selected: press Ctrl+C (Cmd+C on a Mac).';
+    document.querySelectorAll('#sm-howto-ok').forEach((e) => { e.hidden = !ok; });
+    document.querySelectorAll('#sm-howto-fail').forEach((e) => { e.hidden = ok; });
     if (!ok) { ta.focus(); ta.select(); }
   });
-  window.SMExport = { csv, xlsx, docx, pdf, pptx, strategyBlocks, countyBlocks, strategySlides };
+  window.SMExport = { csv, xlsx, docx, pdf, pptx, strategyBlocks, countyBlocks, strategySlides, tabBlocks };
 })();

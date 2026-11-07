@@ -305,6 +305,22 @@
     },
   });
 
+  dash.calc('ag_latest', {
+    title: 'Latest USDA county estimates',
+    description: 'USDA NASS annual survey estimates for each county: cattle and calves on January 1 (this year and last), beef cows, crop production and average cash rent; Region adds the 13 counties for cattle.',
+    inputs: ['ag_survey'],
+    fn: (ag_survey) => {
+      const rows = ag_survey.map((r) => ({ ...r }));
+      const c = ag_survey.filter((r) => r.county !== 'Tennessee');
+      const all = (f) => c.every((r) => r[f] != null);
+      const sum = (f) => c.reduce((s, r) => s + (r[f] || 0), 0);
+      const cur = all('cattle_head') ? sum('cattle_head') : null, prev = all('cattle_head_prev') ? sum('cattle_head_prev') : null;
+      rows.push({ county: 'Region', cattle_as_of: c.length ? c[0].cattle_as_of : null, cattle_head: cur, cattle_head_prev: prev,
+        cattle_chg_pct: cur != null && prev ? Math.round((cur / prev - 1) * 1000) / 10 : null, crops_year: c.length ? c[0].crops_year : null, rent_year: c.length ? c[0].rent_year : null });
+      return rows;
+    },
+  });
+
   dash.calc('industry_mix', {
     title: 'Economy mix by county',
     description: 'BEA GDP by industry for the latest year, grouped into eight sectors with each sector\'s share of the county total; "Not disclosed" is the total minus the published industries.',
@@ -1863,9 +1879,18 @@
     { ref: tn && tn.farms_chg_pct != null ? { value: tn.farms_chg_pct, label: 'TN ' + sgn(tn.farms_chg_pct) + '%' } : null, onClick: (r) => openCounty(r.county), aria: 'Change in number of farms by county' });
   });
   dash.draw('ag_cattle_bars', (el) => {
-    if (pending(el, ['ag_county'])) return;
-    hbars(el, agRows().filter((r) => r.cattle_head != null).sort((a, b) => b.cattle_head - a.cattle_head)
-      .map((r) => ({ label: r.county, value: r.cattle_head, county: r.county })), { onClick: (r) => openCounty(r.county), aria: 'Cattle and calves by county' });
+    if (pending(el, ['ag_latest'])) return;
+    hbars(el, rowsOf('ag_latest').filter((r) => COUNTIES.includes(r.county) && r.cattle_head != null).sort((a, b) => b.cattle_head - a.cattle_head)
+      .map((r) => ({ label: r.county, value: r.cattle_head, county: r.county, text: int(r.cattle_head) + (r.cattle_chg_pct != null ? ' (' + sgn(r.cattle_chg_pct) + '%)' : '') })), { onClick: (r) => openCounty(r.county), aria: 'Cattle and calves by county' });
+  });
+  valueDraw('ag_cattle_asof', (v) => dayFmt(v)); valueDraw('ag_cattle_asof2', (v) => dayFmt(v)); valueDraw('ag_cattle_chg', (v) => sgn(v));
+  dash.draw('ag_latest_tbl', (el) => {
+    if (pending(el, ['ag_latest'])) return;
+    const rows = rowsOf('ag_latest').filter((r) => r.county !== 'Region');
+    const np = (r, f) => (r[f] != null ? int(r[f]) : (r.withheld || []).includes(f) ? 'Withheld' : 'Not published');
+    const cy = (rows[0] || {}).crops_year, ry = (rows[0] || {}).rent_year, ca = (rows[0] || {}).cattle_as_of;
+    miniTable(el, ['County', 'Cattle, ' + (ca ? dayFmt(ca) : ''), 'Change vs a year earlier', 'Beef cows', 'Corn ' + (cy || '') + ' (bu)', 'Soybeans ' + (cy || '') + ' (bu)', 'Winter wheat ' + (cy || '') + ' (bu)', 'Cash rent ' + (ry || '') + ', cropland ($/acre)', 'Cash rent ' + (ry || '') + ', pasture ($/acre)'],
+      rows.map((r) => [r.county, np(r, 'cattle_head'), r.cattle_chg_pct != null ? sgn(r.cattle_chg_pct) + '%' : '—', np(r, 'beef_cows'), np(r, 'corn_bu'), np(r, 'soy_bu'), np(r, 'wheat_bu'), r.rent_crop != null ? '$' + f2(r.rent_crop) : 'Not published', r.rent_pasture != null ? '$' + f2(r.rent_pasture) : 'Not published']));
   });
   dash.draw('ag_top', (el) => {
     el.replaceChildren();
@@ -2436,29 +2461,23 @@
   };
   const MAP_IN_PAGE = typeof window.__dashStart === 'function';
   let mapPick = 'tva';
-  function showSiteMap() {
-    const box = document.getElementById('sm-mapframe');
-    if (!box || !MAP_IN_PAGE) return;
-    let bar = document.getElementById('sm-mappick');
-    if (!bar) {
-      bar = h('div', 'sm-dlbar'); bar.id = 'sm-mappick'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Choose which map to show');
-      bar.appendChild(h('span', null, 'Show in this page:'));
-      Object.entries(SITE_MAPS).forEach(([k, m]) => { const b = h('button', 'sm-btn sm-btn-sm', m.label); b.type = 'button'; b.dataset.map = k; bar.appendChild(b); });
-      box.parentNode.insertBefore(bar, box);
-    }
-    bar.querySelectorAll('button[data-map]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.map === mapPick)));
-    let f = box.querySelector('iframe');
-    if (!f) { f = document.createElement('iframe'); f.className = 'sm-mapframe'; f.setAttribute('allow', 'fullscreen; geolocation'); f.setAttribute('allowfullscreen', ''); box.replaceChildren(f); }
+  dash.draw('site_map', (el) => {
+    if (!MAP_IN_PAGE) { el.replaceChildren(); return; }
+    let f = el.querySelector('iframe');
+    if (!f) { f = document.createElement('iframe'); f.className = 'sm-mapframe'; f.setAttribute('allow', 'fullscreen; geolocation'); f.setAttribute('allowfullscreen', ''); el.replaceChildren(f); }
     if (f.getAttribute('src') !== SITE_MAPS[mapPick].url) { f.title = SITE_MAPS[mapPick].title; f.src = SITE_MAPS[mapPick].url; }
-  }
+  });
   if (MAP_IN_PAGE) {
+    // the public copy shows the map in the page: reveal the picker and hide the "opens in a new tab" note
+    document.querySelectorAll('#sm-mappick').forEach((e) => { e.hidden = false; });
+    document.querySelectorAll('#sm-mapnote').forEach((e) => { e.hidden = true; });
     document.addEventListener('click', (ev) => {
       const pick = ev.target.closest('#sm-mappick button[data-map]');
-      if (pick) { mapPick = pick.dataset.map; showSiteMap(); return; }
-      if (ev.target.closest('.sm-tab[data-tab="sites"]')) setTimeout(showSiteMap, 0);
+      if (!pick || !SITE_MAPS[pick.dataset.map]) return;
+      mapPick = pick.dataset.map;
+      document.querySelectorAll('#sm-mappick button[data-map]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.map === mapPick)));
+      dash.draw('site_map');
     });
-    const firstLook = () => { const s = document.getElementById('sites'); if (s && !s.hidden) showSiteMap(); };
-    setTimeout(firstLook, 0); window.addEventListener('hashchange', () => setTimeout(firstLook, 0));
   }
 
   /* ---------- site search ---------- */
@@ -2531,17 +2550,16 @@
     const target = it.go.el || document.getElementById(it.go.tab);
     if (target) setTimeout(() => target.scrollIntoView({ block: 'start', behavior: 'smooth' }), 60);
   }
-  const qBox = document.getElementById('sm-q'), resBox = document.getElementById('sm-results');
-  const renderResults = () => {
-    if (!qBox || !resBox) return;
-    const q = qBox.value.trim();
-    resBox.replaceChildren();
-    if (!q) { resBox.hidden = true; return; }
+  // The results box is a drawing: listeners only store the query, toggle a class and ask for a redraw.
+  let searchQ = '';
+  dash.draw('sm_search', (el) => {
+    el.replaceChildren();
+    const q = searchQ.trim();
+    if (!q) return;
     const loading = SEARCH_SETS.filter((id) => dash.data(id).status === 'loading');
     const words = q.toLowerCase().split(/\s+/).filter(Boolean);
     const res = runSearch(q);
-    resBox.hidden = false;
-    resBox.appendChild(h('div', 'sm-results-head', res.length ? res.length + (res.length === 40 ? '+' : '') + ' match' + (res.length === 1 ? '' : 'es') : 'No matches' + (loading.length ? ' yet (still loading some data)' : '')));
+    el.appendChild(h('div', 'sm-results-head', res.length ? res.length + (res.length === 40 ? '+' : '') + ' match' + (res.length === 1 ? '' : 'es') : 'No matches' + (loading.length ? ' yet (still loading some data)' : '')));
     res.forEach((it) => {
       const row = h('div', 'sm-result');
       const b = h('button', 'sm-result-main'); b.type = 'button';
@@ -2549,20 +2567,29 @@
       const tt = h('span', 'sm-result-title'); markText(tt, it.title, words); top.appendChild(tt);
       b.appendChild(top);
       if (it.text) { const sn = h('span', 'sm-result-snip'); markText(sn, snippet(it.text, words), words); b.appendChild(sn); }
-      b.addEventListener('click', () => { resBox.hidden = true; goTo(it); });
+      b.addEventListener('click', () => { document.querySelectorAll('.sm-results').forEach((r) => r.classList.add('is-off')); goTo(it); });
       row.appendChild(b);
       if (it.url) row.appendChild(link(it.url, 'Source ↗'));
-      resBox.appendChild(row);
+      el.appendChild(row);
     });
+  });
+  const setSearch = (q) => {
+    searchQ = q;
+    document.querySelectorAll('.sm-results').forEach((r) => r.classList.toggle('is-off', !q.trim()));
+    dash.draw('sm_search');
   };
-  if (qBox && resBox) {
-    let tmr;
-    qBox.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(renderResults, 120); });
-    qBox.addEventListener('focus', () => { SEARCH_SETS.forEach((id) => dash.data(id)); if (qBox.value.trim()) renderResults(); });
-    qBox.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { qBox.value = ''; resBox.hidden = true; } });
-    document.addEventListener('click', (ev) => { if (!ev.target.closest('.sm-searchbar')) resBox.hidden = true; });
-    dash.onData(() => { if (!resBox.hidden && qBox.value.trim()) renderResults(); });
-  }
+  let searchTimer;
+  document.addEventListener('input', (ev) => {
+    if (!ev.target.matches || !ev.target.matches('#sm-q')) return;
+    clearTimeout(searchTimer); const v = ev.target.value;
+    searchTimer = setTimeout(() => setSearch(v), 120);
+  });
+  document.addEventListener('keydown', (ev) => {
+    if (ev.key !== 'Escape' || !ev.target.matches || !ev.target.matches('#sm-q')) return;
+    ev.target.value = ''; setSearch('');
+  });
+  document.addEventListener('focusin', (ev) => { if (ev.target.matches && ev.target.matches('#sm-q') && ev.target.value.trim()) setSearch(ev.target.value); });
+  document.addEventListener('click', (ev) => { if (!ev.target.closest('.sm-searchbar')) document.querySelectorAll('.sm-results').forEach((r) => r.classList.add('is-off')); });
 
   /* ---------- shared with export.js ---------- */
   window.SM = {

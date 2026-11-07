@@ -15,10 +15,12 @@
 .sm-btn.is-syncing { opacity: .6; cursor: progress; }
 .sm-btn.is-syncing::after { content: " …"; }
 
-.sm-tabs { display: flex; gap: 2px; overflow-x: auto; border-bottom: 1px solid var(--color-border-line); scrollbar-width: thin; }
-.sm-tab { font: inherit; font-size: var(--cds-font-size-body); background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 12px; color: var(--color-fg-muted); cursor: pointer; white-space: nowrap; }
-.sm-tab[aria-selected="true"] { color: var(--color-fg); border-bottom-color: var(--color-fg); font-weight: 600; }
-.sm-tab:hover { color: var(--color-fg); }
+.sm-tabs { display: grid; grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr)); gap: 6px; padding-bottom: var(--cds-gap-sm); border-bottom: 1px solid var(--color-border-line); }
+.sm-tab { font: inherit; font-size: var(--cds-font-size-body); background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: 8px 10px; color: var(--color-fg-muted); cursor: pointer; text-align: center; white-space: normal; line-height: 1.25; min-height: 2.6em; }
+.sm-tab[aria-selected="true"] { color: var(--color-bg); background: var(--color-fg); border-color: var(--color-fg); font-weight: 600; }
+.sm-tab:hover { color: var(--color-fg); border-color: var(--color-fg-muted); }
+.sm-tab[aria-selected="true"]:hover { color: var(--color-bg); }
+@media (max-width: 640px) { .sm-tabs { grid-template-columns: repeat(3, 1fr); gap: 4px; } .sm-tab { font-size: 13px; padding: 6px 4px; } }
 
 .sm-page { display: flex; flex-direction: column; gap: var(--cds-gap-lg); }
 .sm-page[hidden] { display: none; }
@@ -190,3 +192,7 @@ a.sm-btn { display: inline-block; text-decoration: none; }
 .sm-btn[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
 .sm-mapbox { min-height: 3rem; }
 .sm-mapframe { display: block; width: 100%; height: min(78vh, 760px); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); }
+/* hidden by class (drawings stay runnable) and the tab download bar */
+.is-off { display: none !important; }
+.sm-tabdl { margin: 0 0 var(--cds-gap-sm); padding: 8px 12px; border: 1px dashed var(--color-border-line); border-radius: var(--cds-radius); }
+.sm-tbtns[data-dl="card"] { margin: 0 0 var(--cds-gap-xs, 4px); }
