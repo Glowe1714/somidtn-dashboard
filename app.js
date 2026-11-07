@@ -1362,9 +1362,9 @@
     tile('Workers in WARN notices', int(f.warn_workers), f.warn_notices + ' notice' + (f.warn_notices === 1 ? '' : 's') + ' in the last 24 months');
     tile('Jobs in announced projects', int(f.proj_jobs), f.proj_count + ' projects, $' + f1(f.proj_invest_m) + 'M, in ' + f.proj_counties + ' of 13 counties (24 months)');
   });
-  dash.draw('sp_swot', (el) => {
-    if (pending(el, ['sp_facts', 'sp_counties', 'sp_clusters'])) return;
+  function spSwotData() {
     const f = spF(), sp = rowsOf('sp_counties'), cl = rowsOf('sp_clusters');
+    if (!f || !sp || !cl) return null;
     const Q = { Strengths: [], Weaknesses: [], Opportunities: [], Threats: [] };
     const add = (q, text, src) => Q[q].push({ text, src });
     // strengths
@@ -1404,6 +1404,11 @@
     const mt = rowsOf('markets_tape');
     const t10 = mt && mt.find((r) => r.kind === 'tape' && r.label === '10-year'), mo = mt && mt.find((r) => r.kind === 'tape' && r.label === '30-year mortgage');
     if (t10) add('Threats', 'Higher borrowing costs: the 10-year Treasury is ' + f2(t10.value) + '% (' + (t10.chg_ytd != null ? sgnInt(t10.chg_ytd * 100) + ' bp this year' : '') + ')' + (mo ? ' and the 30-year mortgage ' + f2(mo.value) + '%' : '') + ', raising the cost of expansions, spec buildings and housing.', 'EconVitals ' + dayFmt(t10.as_of));
+    return Q;
+  }
+  dash.draw('sp_swot', (el) => {
+    if (pending(el, ['sp_facts', 'sp_counties', 'sp_clusters'])) return;
+    const Q = spSwotData();
     el.replaceChildren();
     const box = h('div', 'sm-swot');
     Object.entries(Q).forEach(([q, items]) => {
@@ -1491,11 +1496,9 @@
       el.appendChild(li);
     });
   });
-  dash.draw('sp_plan', (el) => {
-    el.replaceChildren();
+  function spPlanSteps() {
     const f = spF(), sp = rowsOf('sp_counties'), cl = rowsOf('sp_clusters');
-    if (!f || !sp || !cl) { el.classList.toggle('dash-skeleton', ['sp_facts', 'sp_counties', 'sp_clusters'].some((id) => dash.data(id).status === 'loading')); return; }
-    el.classList.remove('dash-skeleton');
+    if (!f || !sp || !cl) return null;
     const ret = sp.filter((r) => r.f_retention).map((r) => r.county);
     const warn12 = (rowsOf('warn') || []).filter((r) => String(r.notice_date || '') >= todayStr().replace(/^(\d{4})/, (y) => String(Number(y) - 1)));
     const mom = sp.filter((r) => r.f_momentum).map((r) => r.county);
@@ -1513,6 +1516,13 @@
     if (mom.length) S(180, 'Months 4–6', 'Build on recent wins', 'In ' + spList(mom) + ', use the announced projects to recruit their suppliers and service firms, and line up the hiring pipeline for the announced jobs.');
     if (prep.length) S(180, 'Months 4–6', 'Get product ready to market', 'For ' + spList(prep) + ', confirm the top industrial site\'s due diligence, utilities and broadband (County profiles tab) and pursue site-development programs where gaps remain.');
     S(365, 'Months 7–12', 'Measure and report results', 'Review the measures below every quarter (the data refreshes automatically) and share progress with county partners and TNECD.');
+    return steps.map((s) => ({ ...s, due: spDue(s.days), due_label: spDate(s.days) }));
+  }
+  dash.draw('sp_plan', (el) => {
+    el.replaceChildren();
+    const steps = spPlanSteps();
+    if (!steps) { el.classList.toggle('dash-skeleton', ['sp_facts', 'sp_counties', 'sp_clusters'].some((id) => dash.data(id).status === 'loading')); return; }
+    el.classList.remove('dash-skeleton');
     steps.forEach((s, i) => {
       const li = h('li', 'sm-item'), top = h('div', 'sm-item-top');
       top.appendChild(h('span', 'sm-item-title', (i + 1) + '. ' + s.title));
@@ -1522,11 +1532,11 @@
       li.appendChild(top); li.appendChild(h('p', null, s.text)); el.appendChild(li);
     });
   });
-  dash.draw('sp_measures', (el) => {
-    if (pending(el, ['sp_facts', 'sp_counties'])) return;
+  function spMeasureRows() {
     const f = spF(), sp = rowsOf('sp_counties');
+    if (!f || !sp) return null;
     const bb = sp.filter((r) => r.broadband_pct != null).sort((a, b) => a.broadband_pct - b.broadband_pct)[0];
-    miniTable(el, ['Measure', 'Now', 'As of', 'Goal'], [
+    return [
       ['Region manufacturing jobs', f.mfg_jobs != null ? int(f.mfg_jobs) : '—', f.quarter, 'Return to growth'],
       ['Counties losing factory jobs', f.mfg_down + ' of ' + f.mfg_reporting, f.quarter, 'Fewer each year'],
       ['Region unemployment', f.rate != null ? f1(f.rate) + '%' : '—', f.month, 'At or below Tennessee'],
@@ -1535,7 +1545,11 @@
       ['Jobs in announced projects (24 months)', int(f.proj_jobs), 'Rolling', 'More, in more counties'],
       ['Counties with an announced project (24 months)', f.proj_counties + ' of 13', 'Rolling', 'More counties'],
       ['Lowest county home broadband', bb ? bb.county + ' ' + f1(bb.broadband_pct) + '%' : '—', 'ACS 5-year', 'Close the gap with Tennessee'],
-    ]);
+    ];
+  }
+  dash.draw('sp_measures', (el) => {
+    if (pending(el, ['sp_facts', 'sp_counties'])) return;
+    miniTable(el, ['Measure', 'Now', 'As of', 'Goal'], spMeasureRows());
   });
   dash.draw('sp_funding', (el) => {
     el.replaceChildren();
@@ -2391,4 +2405,124 @@
       el.appendChild(box);
     });
   });
+
+  /* ---------- site search ---------- */
+  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers'];
+  function searchIndex() {
+    const items = [];
+    const add = (type, title, fields, go, url) => { const text = fields.filter((x) => x != null && x !== '').map(String).join(' · '); items.push({ type, title: String(title || ''), text, go, url, hay: (title + ' ' + text).toLowerCase() }); };
+    document.querySelectorAll('.sm-page').forEach((sec) => {
+      const tab = document.querySelector('.sm-tab[data-tab="' + sec.id + '"]');
+      const tabName = tab ? tab.textContent.trim() : sec.id;
+      add('Tab', tabName, [], { tab: sec.id });
+      sec.querySelectorAll('.sm-card').forEach((card) => {
+        const hd = card.querySelector('h3');
+        if (hd) add('Section', hd.textContent.trim(), [tabName, [...card.querySelectorAll(':scope > .sm-note')].map((n) => n.textContent.trim()).join(' ')], { tab: sec.id, el: card });
+      });
+    });
+    (rowsOf('counties') || []).forEach((r) => {
+      add('County profile', r.county + ' County', ['Seat: ' + r.seat, r.tier_label, r.corridor, r.top_park, r.power, r.anchors, r.challenges, r.workforce_signal], { county: r.county });
+      [['County mayor', r.county_mayor], ['Economic development', r.ed_leader], ['City leaders', r.city_leaders], ['State legislators', r.state_legislators]]
+        .forEach(([lbl, v]) => { if (v) add('Contact', r.county + ': ' + lbl, [v], { county: r.county }); });
+    });
+    (rowsOf('projects') || []).forEach((r) => add('Project', r.project, [r.county, r.sector, r.summary, r.detail, r.announced], { tab: 'projects' }, r.source_url));
+    (rowsOf('programs') || []).forEach((r) => add('Grant or program', r.program, [r.agency, r.topic, r.amount_label, r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
+    (rowsOf('actions') || []).forEach((r) => add('Action item', r.action, [r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
+    (rowsOf('events') || []).forEach((r) => add('Event', r.event, [r.county, r.date, r.location], { tab: 'projects' }, r.source_url));
+    (rowsOf('intel') || []).forEach((r) => add('Intel', r.headline, [r.topic, r.date, r.body], { tab: 'overview' }, r.source_url));
+    (rowsOf('warn') || []).forEach((r) => add('WARN notice', r.company, [r.city, r.county, r.workers + ' workers', r.action, r.notice_date, r.note], { tab: 'workforce' }, r.source_url));
+    (rowsOf('stories') || []).forEach((r) => add('News', r.headline, [r.publisher, r.date, r.summary, r.why_it_matters], { tab: 'news' }, r.source_url));
+    (rowsOf('radar_feed') || []).forEach((r) => add('AI radar', r.title, [r.lab, r.date, r.impact], { tab: 'news' }, r.url));
+    (rowsOf('resources') || []).forEach((r) => add('Resource', r.name, [r.category, r.where, r.description], { tab: 'resources' }, r.url));
+    (rowsOf('notebooks') || []).forEach((r) => add('Notebook', r.name, [r.scope], { tab: 'strategy' }, r.url));
+    (rowsOf('sp_employers') || []).filter((r) => r.shown).forEach((r) => add('Employer', r.company, [r.county, r.industry, r.employees != null ? r.employees + ' employees' : null, r.status], { tab: 'strategy' }, r.source_url));
+    const seen = new Set();
+    (rowsOf('edu_colleges') || []).forEach((r) => {
+      if (seen.has(r.institution)) return; seen.add(r.institution);
+      add('College or TCAT', r.institution, [r.type, r.city, r.county ? r.county + ' County' : null], { tab: 'education' }, r.source_url);
+    });
+    return items;
+  }
+  function runSearch(q) {
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return [];
+    const res = searchIndex().filter((it) => words.every((w) => it.hay.includes(w)));
+    const score = (it) => (words.every((w) => it.title.toLowerCase().includes(w)) ? 0 : 1) + (it.type === 'Tab' ? -1 : 0);
+    return res.sort((a, b) => score(a) - score(b)).slice(0, 40);
+  }
+  const snippet = (text, words) => {
+    const low = text.toLowerCase();
+    const i = Math.max(0, Math.min(...words.map((w) => { const k = low.indexOf(w); return k < 0 ? Infinity : k; })));
+    if (!isFinite(i)) return text.slice(0, 160);
+    const s = Math.max(0, i - 60);
+    return (s > 0 ? '…' : '') + text.slice(s, s + 180) + (s + 180 < text.length ? '…' : '');
+  };
+  const markText = (el, text, words) => {
+    const low = text.toLowerCase();
+    let pos = 0;
+    while (pos < text.length) {
+      let best = -1, len = 0;
+      words.forEach((w) => { const k = low.indexOf(w, pos); if (k >= 0 && (best < 0 || k < best)) { best = k; len = w.length; } });
+      if (best < 0) { el.appendChild(document.createTextNode(text.slice(pos))); break; }
+      if (best > pos) el.appendChild(document.createTextNode(text.slice(pos, best)));
+      el.appendChild(h('mark', null, text.slice(best, best + len)));
+      pos = best + len;
+    }
+  };
+  function goTo(it) {
+    if (it.go.county) { openCounty(it.go.county); return; }
+    if (it.go.tab) showTab(it.go.tab);
+    const target = it.go.el || document.getElementById(it.go.tab);
+    if (target) setTimeout(() => target.scrollIntoView({ block: 'start', behavior: 'smooth' }), 60);
+  }
+  const qBox = document.getElementById('sm-q'), resBox = document.getElementById('sm-results');
+  const renderResults = () => {
+    if (!qBox || !resBox) return;
+    const q = qBox.value.trim();
+    resBox.replaceChildren();
+    if (!q) { resBox.hidden = true; return; }
+    const loading = SEARCH_SETS.filter((id) => dash.data(id).status === 'loading');
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const res = runSearch(q);
+    resBox.hidden = false;
+    resBox.appendChild(h('div', 'sm-results-head', res.length ? res.length + (res.length === 40 ? '+' : '') + ' match' + (res.length === 1 ? '' : 'es') : 'No matches' + (loading.length ? ' yet (still loading some data)' : '')));
+    res.forEach((it) => {
+      const row = h('div', 'sm-result');
+      const b = h('button', 'sm-result-main'); b.type = 'button';
+      const top = h('span', 'sm-result-top'); top.appendChild(h('span', 'sm-pill', it.type));
+      const tt = h('span', 'sm-result-title'); markText(tt, it.title, words); top.appendChild(tt);
+      b.appendChild(top);
+      if (it.text) { const sn = h('span', 'sm-result-snip'); markText(sn, snippet(it.text, words), words); b.appendChild(sn); }
+      b.addEventListener('click', () => { resBox.hidden = true; goTo(it); });
+      row.appendChild(b);
+      if (it.url) row.appendChild(link(it.url, 'Source ↗'));
+      resBox.appendChild(row);
+    });
+  };
+  if (qBox && resBox) {
+    let tmr;
+    qBox.addEventListener('input', () => { clearTimeout(tmr); tmr = setTimeout(renderResults, 120); });
+    qBox.addEventListener('focus', () => { SEARCH_SETS.forEach((id) => dash.data(id)); if (qBox.value.trim()) renderResults(); });
+    qBox.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') { qBox.value = ''; resBox.hidden = true; } });
+    document.addEventListener('click', (ev) => { if (!ev.target.closest('.sm-searchbar')) resBox.hidden = true; });
+    dash.onData(() => { if (!resBox.hidden && qBox.value.trim()) renderResults(); });
+  }
+
+  /* ---------- shared with export.js ---------- */
+  window.SM = {
+    rowsOf, selCounty, showTab, openCounty, spSwotData, spPlanSteps, spMeasureRows, spF, dayFmt, f1, f2, int, sgn, sgnInt, usd, todayStr,
+    planStart: SP_PLAN_START,
+    ready(ids, ms = 15000) {
+      return new Promise((resolve) => {
+        const t0 = Date.now();
+        const tick = () => {
+          const st = ids.map((id) => dash.data(id).status);
+          const settled = st.every((s) => s !== 'loading') && (Date.now() - t0 > 800 || st.every((s) => s !== 'idle' && s != null));
+          if (settled || Date.now() - t0 > ms) resolve(ids.filter((id) => dash.data(id).status !== 'ok'));
+          else setTimeout(tick, 250);
+        };
+        tick();
+      });
+    },
+  };
 })();

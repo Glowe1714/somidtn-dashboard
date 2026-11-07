@@ -23,6 +23,12 @@
     </div>
   </header>
 
+  <div class="sm-searchbar" role="search">
+    <label class="sm-vh" for="sm-q">Search the dashboard</label>
+    <input id="sm-q" class="sm-sitesearch" type="search" placeholder="Search the dashboard: counties, people, projects, grants, employers, news…" autocomplete="off" spellcheck="false">
+    <div id="sm-results" class="sm-results" hidden></div>
+  </div>
+
   <nav class="sm-tabs" role="tablist" aria-label="Dashboard sections">
     <button class="sm-tab" role="tab" type="button" data-tab="overview" aria-selected="true">Overview</button>
     <button class="sm-tab" role="tab" type="button" data-tab="strategy" aria-selected="false">Strategic plan</button>
@@ -125,6 +131,12 @@
   <section class="sm-page" id="strategy" role="tabpanel" hidden>
     <p class="sm-note">A strategy for keeping and growing the region's existing employers (business retention and expansion) and recruiting new ones across the 13 counties. Every finding below is calculated from the data on this dashboard and updates on its own when that data refreshes. The focus areas and action steps are suggestions for review, not adopted policy.</p>
     <p class="sm-note" data-draw="sp_asof" data-source="sp_facts"></p>
+    <div class="sm-dlbar" data-report="strategy">
+      <span>Download this plan:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pptx">PowerPoint</button>
+    </div>
     <div class="sm-kpis" data-draw="sp_kpis" data-source="sp_facts"></div>
     <div class="sm-grid">
       <div class="sm-card" id="card-sp-swot">
@@ -972,6 +984,11 @@
       <button class="sm-chip" type="button" data-county="Perry" aria-pressed="false">Perry</button>
       <button class="sm-chip" type="button" data-county="Wayne" aria-pressed="false">Wayne</button>
     </div>
+    <div class="sm-dlbar" data-report="county">
+      <span>Download this county's profile:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
     <div class="sm-card" id="card-profile">
       <div class="sm-prof-head">
         <h2 class="sm-prof-name"><span data-draw="pf_name" data-source="counties" data-field="county">—</span> County</h2>
@@ -1102,6 +1119,7 @@
 <script src="vendor/d3.min.js"></script>
 <script src="runtime.js"></script>
 <script src="app.js"></script>
+<script src="export.js"></script>
 <script>window.__dashStart();</script>
 </body>
 </html>
