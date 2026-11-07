@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SoMidTN Dashboard</title>
+<meta name="description" content="Southern Middle Tennessee economic and community development dashboard for 13 counties: labor, people, economy, education, manufacturing, tourism, agriculture, housing, county profiles, projects and grants. Updated daily from public sources.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="sm" id="top">
+  <header class="sm-head">
+    <div>
+      <p class="sm-eyebrow">Southern Middle Tennessee · 13 counties · Economic &amp; community development</p>
+      <h1 class="sm-title">SoMidTN Dashboard</h1>
+      <p class="sm-take">Across the region, unemployment was <b data-draw="t_rate" data-source="labor_region" data-field="rate" data-row="0">—</b>% in <span data-draw="t_month" data-source="labor_region" data-field="month" data-row="0">—</span>, <span data-draw="t_dir" data-source="labor_region">—</span> from <b data-draw="t_rateya" data-source="labor_region" data-field="rate_ya" data-row="0">—</b>% a year earlier. Highest: <span data-draw="t_hic" data-source="labor_region" data-field="high_county" data-row="0">—</span> at <b data-draw="t_hi" data-source="labor_region" data-field="high_rate" data-row="0">—</b>%. Lowest: <span data-draw="t_loc" data-source="labor_region" data-field="low_county" data-row="0">—</span> at <b data-draw="t_lo" data-source="labor_region" data-field="low_rate" data-row="0">—</b>%.</p>
+    </div>
+    <div class="sm-sync">
+      <button class="sm-btn sm-syncbtn" type="button" title="Pull the newest state and national numbers from FRED (county numbers refresh every morning)">Sync now</button>
+      <span class="sm-fresh">County data through <span data-draw="fresh_month" data-source="labor_region" data-field="month" data-row="0">—</span> · refreshed every morning</span>
+    </div>
+  </header>
+
+  <nav class="sm-tabs" role="tablist" aria-label="Dashboard sections">
+    <button class="sm-tab" role="tab" type="button" data-tab="overview" aria-selected="true">Overview</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="strategy" aria-selected="false">Strategic plan</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="news" aria-selected="false">News</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="workforce" aria-selected="false">Labor &amp; workforce</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="people" aria-selected="false">People &amp; income</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="economy" aria-selected="false">Economy &amp; business</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="useconomy" aria-selected="false">U.S. economy</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="markets" aria-selected="false">Markets &amp; macro</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="education" aria-selected="false">Education &amp; training</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="manufacturing" aria-selected="false">Manufacturing</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="tourism" aria-selected="false">Tourism</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="agriculture" aria-selected="false">Agriculture</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="housing" aria-selected="false">Housing</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="counties" aria-selected="false">County profiles</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="projects" aria-selected="false">Projects &amp; grants</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="resources" aria-selected="false">Resources</button>
+  </nav>
+
+  <!-- ================= OVERVIEW ================= -->
+  <section class="sm-page" id="overview" role="tabpanel">
+    <div class="sm-kpis">
+      <div class="sm-kpi" id="kpi-region-unemp">
+        <span class="sm-kpi-label">Region unemployment</span>
+        <span class="sm-kpi-value"><b data-draw="k_rate" data-source="labor_region" data-field="rate" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub"><b data-draw="k_rate_chg" data-source="labor_region" data-field="rate_chg" data-row="0">—</b> pts vs <span data-draw="k_rate_ya" data-source="labor_region" data-field="month_ya" data-row="0">—</span></span>
+      </div>
+      <div class="sm-kpi" id="kpi-region-lf">
+        <span class="sm-kpi-label">Region labor force</span>
+        <span class="sm-kpi-value"><b data-draw="k_lf" data-source="labor_region" data-field="lf" data-row="0">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="k_lf_chg" data-source="labor_region" data-field="lf_chg_pct" data-row="0">—</b>% vs a year earlier</span>
+      </div>
+      <div class="sm-kpi" id="kpi-region-mfg">
+        <span class="sm-kpi-label">Region manufacturing jobs, <span data-draw="k_mfg_q" data-source="mfg_county" data-field="quarter" data-where="county=Region">—</span></span>
+        <span class="sm-kpi-value"><b data-draw="k_mfg" data-source="mfg_county" data-field="mfg_jobs" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="k_mfg_chg" data-source="mfg_county" data-field="mfg_jobs_chg" data-where="county=Region">—</b> vs a year earlier</span>
+      </div>
+      <div class="sm-kpi" id="kpi-tn-unemp">
+        <span class="sm-kpi-label">Tennessee unemployment (adj.)</span>
+        <span class="sm-kpi-value"><b data-draw="k_tn" data-source="macro" data-field="tn_rate" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub">U.S. <b data-draw="k_us" data-source="macro" data-field="us_rate" data-row="0">—</b>%</span>
+      </div>
+      <div class="sm-kpi" id="kpi-pipeline">
+        <span class="sm-kpi-label">Announced investment tracked</span>
+        <span class="sm-kpi-value">$<b data-draw="k_inv" data-source="pipeline" data-field="invest_b" data-where="category=All">—</b>B</span>
+        <span class="sm-kpi-sub"><b data-draw="k_jobs" data-source="pipeline" data-field="jobs" data-where="category=All">—</b> jobs · <b data-draw="k_projects" data-source="pipeline" data-field="projects" data-where="category=All">—</b> projects</span>
+      </div>
+      <div class="sm-kpi" id="kpi-next">
+        <span class="sm-kpi-label">Next deadline</span>
+        <div data-draw="k_next" data-source="deadlines">—</div>
+      </div>
+    </div>
+
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-map">
+        <h3>County map</h3>
+        <p class="sm-note">Schematic, not to scale. Darker = higher. Click a county to open its profile.</p>
+        <div class="sm-seg" role="group" aria-label="Map metric">
+          <button type="button" data-map="rate" aria-pressed="true">Unemployment</button>
+          <button type="button" data-map="pop" aria-pressed="false">Population growth</button>
+          <button type="button" data-map="mhi" aria-pressed="false">Household income</button>
+          <button type="button" data-map="pov" aria-pressed="false">Poverty</button>
+          <button type="button" data-map="bach" aria-pressed="false">Bachelor's+</button>
+          <button type="button" data-map="mfg" aria-pressed="false">Manufacturing concentration</button>
+          <button type="button" data-map="farm" aria-pressed="false">Farm sales</button>
+          <button type="button" data-map="tier" aria-pressed="false">Jobs tax credit tier</button>
+        </div>
+        <div class="sm-map" data-mapview="rate" data-draw="map_rate" data-source="labor_latest"></div>
+        <div class="sm-map" data-mapview="pop" data-draw="map_pop" data-source="pop_county" hidden></div>
+        <div class="sm-map" data-mapview="mhi" data-draw="map_mhi" data-source="income_county" hidden></div>
+        <div class="sm-map" data-mapview="pov" data-draw="map_pov" data-source="income_county" hidden></div>
+        <div class="sm-map" data-mapview="bach" data-draw="map_bach" data-source="edu_county" hidden></div>
+        <div class="sm-map" data-mapview="mfg" data-draw="map_mfg" data-source="mfg_county" hidden></div>
+        <div class="sm-map" data-mapview="farm" data-draw="map_farm" data-source="ag_county" hidden></div>
+        <div class="sm-map" data-mapview="tier" data-draw="map_tier" data-source="counties" hidden></div>
+      </div>
+      <div class="sm-card" id="card-county-unemp">
+        <h3>Unemployment by county</h3>
+        <p class="sm-note">Latest month, not seasonally adjusted. Dashed line = Tennessee (same basis).</p>
+        <div class="sm-chart" data-draw="ov_urn_bars" data-source="labor_latest"></div>
+        <div class="sm-more"><a href="https://www.bls.gov/lau/" target="_blank" rel="noopener">Learn more: BLS LAUS ↗</a></div>
+      </div>
+    </div>
+
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-coming-up">
+        <h3>Coming up</h3>
+        <p class="sm-note">Deadlines and events in the next 60 days.</p>
+        <ul class="sm-list" data-draw="ov_deadlines" data-source="deadlines"></ul>
+      </div>
+      <div class="sm-card" id="card-intel">
+        <h3>Latest intelligence</h3>
+        <p class="sm-note">Verified items from your daily brief. Open “Read more” for detail.</p>
+        <ul class="sm-list" data-draw="ov_intel" data-source="intel"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STRATEGIC PLAN ================= -->
+  <section class="sm-page" id="strategy" role="tabpanel" hidden>
+    <p class="sm-note">A strategy for keeping and growing the region's existing employers (business retention and expansion) and recruiting new ones across the 13 counties. Every finding below is calculated from the data on this dashboard and updates on its own when that data refreshes. The focus areas and action steps are suggestions for review, not adopted policy.</p>
+    <p class="sm-note" data-draw="sp_asof" data-source="sp_facts"></p>
+    <div class="sm-kpis" data-draw="sp_kpis" data-source="sp_facts"></div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-swot">
+        <h3>Where the region stands</h3>
+        <p class="sm-note">Strengths, weaknesses, opportunities and threats, each tied to a number and its source.</p>
+        <div data-draw="sp_swot" data-source="sp_facts sp_counties sp_clusters programs markets_tape"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-plan">
+        <h3>Action plan</h3>
+        <p class="sm-note">Plan start: Monday, Nov 9, 2026. Target dates are fixed from that day. Steps are suggestions and appear only when the data calls for them; the counties and programs named in each step update with the data.</p>
+        <ul class="sm-list" data-draw="sp_plan" data-source="sp_facts sp_counties sp_clusters programs warn"></ul>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-matrix">
+        <h3>County focus</h3>
+        <p class="sm-note">How the focus is chosen. <b>Retain &amp; expand</b>: a WARN notice in the last 24 months, factory jobs down 5% or more from a year earlier, or manufacturing at 3 or more times the national share with jobs falling. <b>Build on wins</b>: announced projects in the last 24 months with 100 or more stated jobs. <b>Market the workforce</b>: unemployment at or above Tennessee's. <b>Prepare sites &amp; product</b>: none of these. Click a row to open that county's profile.</p>
+        <div class="sm-tablebox" data-draw="sp_matrix" data-source="sp_counties"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-bre">
+        <h3>Retention and expansion watch list</h3>
+        <p class="sm-note">Counties flagged <b>Retain &amp; expand</b>, with their largest manufacturing subsectors, the place to start employer visits. BLS withholds some county figures for privacy.</p>
+        <div class="sm-tablebox" data-draw="sp_bre" data-source="sp_counties"></div>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-sp-clusters">
+        <h3>Recruitment targets: clusters the region already has</h3>
+        <p class="sm-note">Manufacturing subsectors ranked by jobs across the 13 counties (BLS QCEW, disclosed figures only, so totals are lower bounds). Suppliers to these clusters are natural recruitment targets.</p>
+        <div class="sm-tablebox" data-draw="sp_clusters_tbl" data-source="sp_clusters"></div>
+        <h3>Recent wins to build on</h3>
+        <ul class="sm-list" data-draw="sp_wins" data-source="projects sp_facts"></ul>
+      </div>
+      <div class="sm-card" id="card-sp-measures">
+        <h3>Measures to track</h3>
+        <p class="sm-note">Current values update with each data refresh.</p>
+        <div class="sm-tablebox" data-draw="sp_measures" data-source="sp_facts sp_counties"></div>
+        <h3>Funding and programs to use</h3>
+        <ul class="sm-list" data-draw="sp_funding" data-source="programs"></ul>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-notebooks">
+        <h3>Your Gemini Notebooks</h3>
+        <p class="sm-note">Research notebooks behind this plan. They open only for you or people you have shared each notebook with. Notebook answers are AI summaries, so facts used on this dashboard cite the original sources.</p>
+        <ul class="sm-list" data-draw="sp_notebooks" data-source="notebooks counties"></ul>
+        <div class="sm-more" data-draw="sp_nb_counties" data-source="counties"></div>
+      </div>
+    </div>
+    <div class="sm-more"><a href="https://tnecd.com/wp-content/uploads/2025/06/EHV_Tax_Tier_Map_FY2025-2026_V5.pdf" target="_blank" rel="noopener">TNECD tax credit tier map ↗</a><a href="https://www.bls.gov/cew/" target="_blank" rel="noopener">BLS QCEW ↗</a><a href="https://www.tn.gov/workforce/employers/staffing-redirect/layoffs---unemployment/warn-notices/q-and-a.html" target="_blank" rel="noopener">TDLWD WARN &amp; Rapid Response Q&amp;A ↗</a></div>
+  </section>
+
+  <!-- ================= NEWS ================= -->
+  <section class="sm-page" id="news" role="tabpanel" hidden>
+    <h2 class="sm-h2">Stories of interest</h2>
+    <p class="sm-note">Verified stories, each with its source, picked for Southern Middle Tennessee economic development and your interests. A Claude scheduled task adds new ones every day. Newest first.</p>
+    <div class="sm-seg" id="nw-filter" role="group" aria-label="Filter stories by category">
+      <button type="button" data-cat="All" aria-pressed="true">All</button>
+      <button type="button" data-cat="ECD &amp; Workforce" aria-pressed="false">ECD &amp; Workforce</button>
+      <button type="button" data-cat="Industry &amp; Infrastructure" aria-pressed="false">Industry &amp; Infrastructure</button>
+      <button type="button" data-cat="Economy &amp; Markets" aria-pressed="false">Economy &amp; Markets</button>
+      <button type="button" data-cat="AI &amp; Agent Tech" aria-pressed="false">AI &amp; Agent Tech</button>
+      <button type="button" data-cat="Health &amp; Longevity" aria-pressed="false">Health &amp; Longevity</button>
+      <button type="button" data-cat="Non-Obvious Trends" aria-pressed="false">Non-Obvious Trends</button>
+    </div>
+    <ul class="sm-news" data-draw="nw_stories" data-source="stories"></ul>
+    <h2 class="sm-h2">From your AI Frontier Radar sheet</h2>
+    <p class="sm-note">Copied every day from the &ldquo;AI Frontier Radar&rdquo; tab of your Daily Brief Google Sheet and shown as written. These entries are not re-verified by Claude; check the link before citing one. <a href="https://docs.google.com/spreadsheets/d/1HSRRdZKimUHMlo3SUYB4FmWnyyxDk7aiKHU2eWq0wLo/edit" target="_blank" rel="noopener">Open the sheet &#8599;</a></p>
+    <ul class="sm-news" data-draw="nw_radar" data-source="radar_feed"></ul>
+  </section>
+
+  <!-- ================= LABOR & WORKFORCE ================= -->
+  <section class="sm-page" id="workforce" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee nonfarm jobs</span>
+        <span class="sm-kpi-value"><b data-draw="w_nf" data-source="macro" data-field="nonfarm_k" data-row="0">—</b>K</span>
+        <span class="sm-kpi-sub"><b data-draw="w_nf_chg" data-source="macro" data-field="nonfarm_chg_k" data-row="0">—</b>K over the year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">TN initial jobless claims, week of <span data-draw="w_cl_wk" data-source="macro" data-field="claims_week" data-row="0">—</span></span>
+        <span class="sm-kpi-value"><b data-draw="w_cl" data-source="macro" data-field="claims" data-row="0">—</b></span>
+        <span class="sm-kpi-sub">Prior week <b data-draw="w_cl_prev" data-source="macro" data-field="claims_prev" data-row="0">—</b></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee unemployment (adj.)</span>
+        <span class="sm-kpi-value"><b data-draw="w_tn" data-source="macro" data-field="tn_rate" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub">U.S. <b data-draw="w_us" data-source="macro" data-field="us_rate" data-row="0">—</b>%</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region labor force</span>
+        <span class="sm-kpi-value"><b data-draw="w_lf" data-source="labor_region" data-field="lf" data-row="0">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="w_lf_chg" data-source="labor_region" data-field="lf_chg" data-row="0">—</b> people vs a year earlier</span>
+      </div>
+    </div>
+    <div class="sm-card" id="card-multiples">
+      <h3>Unemployment by county, last two years</h3>
+      <p class="sm-note">Same scale on every chart. Dashed line = Tennessee. Not seasonally adjusted. October 2025 is blank because BLS did not collect it during the federal shutdown.</p>
+      <div class="sm-mult" data-draw="w_mult" data-source="urn_trend"></div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-region-trend">
+        <h3>Region vs. Tennessee</h3>
+        <p class="sm-note">Region rate weights each county by its labor force.</p>
+        <div class="sm-chart" data-draw="w_region_line" data-source="urn_trend"></div>
+      </div>
+      <div class="sm-card" id="card-labor-table">
+        <h3>Labor force detail</h3>
+        <p class="sm-note">Click a column to sort.</p>
+        <div class="sm-tablebox">
+          <table class="sm-table" data-source="labor_latest" data-row-key="county" data-sort-table="labor">
+            <thead><tr>
+              <th data-field="county"><button class="sm-sort" type="button" data-sort="county">County</button></th>
+              <th data-field="rate"><button class="sm-sort" type="button" data-sort="rate">Rate %</button></th>
+              <th data-field="rate_ya"><button class="sm-sort" type="button" data-sort="rate_ya">Year ago %</button></th>
+              <th data-field="rate_chg"><button class="sm-sort" type="button" data-sort="rate_chg">Change pts</button></th>
+              <th data-field="lf"><button class="sm-sort" type="button" data-sort="lf">Labor force</button></th>
+              <th data-field="lf_chg_pct"><button class="sm-sort" type="button" data-sort="lf_chg_pct">LF change %</button></th>
+            </tr></thead>
+            <tbody data-draw="w_table"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-warn">
+      <h3>Layoff watch: WARN notices in the region</h3>
+      <p class="sm-note">Verified WARN layoff and closure notices in the 13 counties, last 24 months: <b data-draw="w_warn_total" data-source="warn_total" data-field="workers" data-row="0">—</b> workers in <b data-draw="w_warn_n" data-source="warn_total" data-field="notices" data-row="0">—</b> notices. Newest first.</p>
+      <ul class="sm-list" data-draw="w_warn" data-source="warn"></ul>
+      <div class="sm-more"><a href="https://www.tn.gov/workforce/general-resources/major-publications0/major-publications-redirect/reports.html" target="_blank" rel="noopener">Learn more: TN WARN reports ↗</a></div>
+    </div>
+    <div class="sm-card" id="card-wf-signals">
+      <h3>Workforce signals by county</h3>
+      <p class="sm-note">From your county profiles. Items marked “Unverified” have not been re-checked against a source.</p>
+      <ul class="sm-list" data-draw="w_signals" data-source="counties"></ul>
+      <div class="sm-more"><a href="https://www.jobs4tn.gov/" target="_blank" rel="noopener">Jobs4TN ↗</a><a href="https://www.tn.gov/workforce.html" target="_blank" rel="noopener">TN Labor &amp; Workforce ↗</a></div>
+    </div>
+  </section>
+
+  <!-- ================= PEOPLE & INCOME ================= -->
+  <section class="sm-page" id="people" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region population, <span data-draw="p_year" data-source="pop_region" data-field="year" data-row="0">—</span></span>
+        <span class="sm-kpi-value"><b data-draw="p_pop" data-source="pop_region" data-field="pop" data-row="0">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="p_pop_add" data-source="pop_region" data-field="chg_since_base" data-row="0">—</b> people since <span data-draw="p_base" data-source="pop_region" data-field="base_year" data-row="0">—</span></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee median household income</span>
+        <span class="sm-kpi-value">$<b data-draw="p_tn_mhi" data-source="income_county" data-field="mhi" data-where="county=Tennessee">—</b></span>
+        <span class="sm-kpi-sub">Census SAIPE, <span data-draw="p_tn_mhi_y" data-source="income_county" data-field="year" data-where="county=Tennessee">—</span></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee poverty rate</span>
+        <span class="sm-kpi-value"><b data-draw="p_tn_pov" data-source="income_county" data-field="poverty" data-where="county=Tennessee">—</b>%</span>
+        <span class="sm-kpi-sub">All ages</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee per-capita income</span>
+        <span class="sm-kpi-value">$<b data-draw="p_tn_pcpi" data-source="income_county" data-field="pcpi" data-where="county=Tennessee">—</b></span>
+        <span class="sm-kpi-sub">BEA, <span data-draw="p_tn_pcpi_y" data-source="income_county" data-field="year" data-where="county=Tennessee">—</span></span>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-pop">
+        <h3>Population by county</h3>
+        <p class="sm-note">Census estimates, July 1 (live from FRED).</p>
+        <div class="sm-chart" data-draw="p_pop_bars" data-source="pop_county"></div>
+      </div>
+      <div class="sm-card" id="card-pop-growth">
+        <h3>Population growth</h3>
+        <p class="sm-note">Percent change since <span data-draw="p_growth_base" data-source="pop_county" data-field="base_year" data-row="0">—</span>, Census estimates.</p>
+        <div class="sm-chart" data-draw="p_growth_bars" data-source="pop_county"></div>
+      </div>
+      <div class="sm-card" id="card-pop-region">
+        <h3>Region population by year</h3>
+        <p class="sm-note">All 13 counties combined.</p>
+        <div class="sm-chart" data-draw="p_region_cols" data-source="pop_region"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-mhi">
+        <h3>Median household income</h3>
+        <p class="sm-note">Census SAIPE. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="p_mhi_bars" data-source="income_county"></div>
+      </div>
+      <div class="sm-card" id="card-poverty">
+        <h3>Poverty rate</h3>
+        <p class="sm-note">All ages, Census SAIPE. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="p_pov_bars" data-source="income_county"></div>
+      </div>
+      <div class="sm-card" id="card-pcpi">
+        <h3>Per-capita personal income</h3>
+        <p class="sm-note">BEA. Dashed line = Tennessee, same year.</p>
+        <div class="sm-chart" data-draw="p_pcpi_bars" data-source="income_county"></div>
+      </div>
+    </div>
+    <h2 class="sm-h2" id="workforce-readiness">Workforce readiness</h2>
+    <p class="sm-note">Census American Community Survey, <span data-draw="acs_period" data-source="acs_county" data-field="period" data-where="county=Tennessee">—</span> (five years of survey responses averaged). Dashed line = Tennessee.</p>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-acs-lfpr">
+        <h3>Labor force participation</h3>
+        <p class="sm-note">Share of people 16 and older working or looking for work. Rates include people living in prisons and nursing homes, which can pull rural counties down.</p>
+        <div class="sm-chart" data-draw="acs_lfpr" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-age">
+        <h3>Median age</h3>
+        <p class="sm-note">Hover for the share of residents 65 and older.</p>
+        <div class="sm-chart" data-draw="acs_age" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-commute">
+        <h3>Average commute</h3>
+        <p class="sm-note">Minutes to work, one way. Hover for the share who work from home.</p>
+        <div class="sm-chart" data-draw="acs_commute" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-mfgw">
+        <h3>Residents who work in manufacturing</h3>
+        <p class="sm-note">Share of employed residents, wherever their job is.</p>
+        <div class="sm-chart" data-draw="acs_mfgw" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-bb">
+        <h3>Households with broadband</h3>
+        <p class="sm-note">Share of households with a broadband internet subscription.</p>
+        <div class="sm-chart" data-draw="acs_bb" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-vets">
+        <h3>Veterans</h3>
+        <p class="sm-note">Share of civilian adults who are veterans.</p>
+        <div class="sm-chart" data-draw="acs_vets" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-unins">
+        <h3>No health insurance</h3>
+        <p class="sm-note">Share of residents without health coverage.</p>
+        <div class="sm-chart" data-draw="acs_unins" data-source="acs_county"></div>
+      </div>
+    </div>
+    <div class="sm-more"><a href="https://www.census.gov/quickfacts/" target="_blank" rel="noopener">Learn more: Census QuickFacts ↗</a><a href="https://data.census.gov/" target="_blank" rel="noopener">data.census.gov ↗</a></div>
+  </section>
+
+  <!-- ================= ECONOMY & BUSINESS ================= -->
+  <section class="sm-page" id="economy" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region real GDP, <span data-draw="e_year" data-source="gdp_region" data-field="year" data-row="0">—</span></span>
+        <span class="sm-kpi-value">$<b data-draw="e_gdp" data-source="gdp_region" data-field="gdp_b" data-row="0">—</b>B</span>
+        <span class="sm-kpi-sub"><b data-draw="e_gdp_chg" data-source="gdp_region" data-field="chg_1yr_pct" data-row="0">—</b>% vs prior year (2017 dollars)</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">10-year Treasury</span>
+        <span class="sm-kpi-value"><b data-draw="e_10y" data-source="macro" data-field="ust10" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub"><span data-draw="e_10y_d" data-source="macro" data-field="ust10_date" data-row="0">—</span></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">30-year mortgage</span>
+        <span class="sm-kpi-value"><b data-draw="e_mtg" data-source="macro" data-field="mortgage" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub"><b data-draw="e_mtg_chg" data-source="macro" data-field="mortgage_chg" data-row="0">—</b> pts vs prior week</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Fed funds target (upper)</span>
+        <span class="sm-kpi-value"><b data-draw="e_fed" data-source="macro" data-field="fed_upper" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub">As of <span data-draw="e_fed_d" data-source="macro" data-field="fed_date" data-row="0">—</span></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Inflation (CPI, 12 months)</span>
+        <span class="sm-kpi-value"><b data-draw="e_cpi" data-source="macro" data-field="cpi" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub"><span data-draw="e_cpi_m" data-source="macro" data-field="cpi_month" data-row="0">—</span></span>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-gdp">
+        <h3>Real GDP by county</h3>
+        <p class="sm-note">Billions of 2017 dollars, BEA.</p>
+        <div class="sm-chart" data-draw="e_gdp_bars" data-source="gdp_county"></div>
+      </div>
+      <div class="sm-card" id="card-gdp-growth">
+        <h3>Real GDP growth</h3>
+        <p class="sm-note">Percent change since <span data-draw="e_growth_base" data-source="gdp_county" data-field="base_year" data-row="0">—</span>, inflation-adjusted.</p>
+        <div class="sm-chart" data-draw="e_gdp_growth" data-source="gdp_county"></div>
+      </div>
+      <div class="sm-card" id="card-gdp-region">
+        <h3>Region real GDP by year</h3>
+        <p class="sm-note">Billions of 2017 dollars.</p>
+        <div class="sm-chart" data-draw="e_gdp_cols" data-source="gdp_region"></div>
+      </div>
+      <div class="sm-card" id="card-biz">
+        <h3>Private business establishments</h3>
+        <p class="sm-note">BLS QCEW, latest quarter. Label shows change vs a year earlier.</p>
+        <div class="sm-chart" data-draw="e_biz_bars" data-source="biz_county"></div>
+      </div>
+    </div>
+    <h2 class="sm-h2" id="economy-mix">What each county's economy runs on</h2>
+    <p class="sm-note">BEA GDP by industry, <span data-draw="e_mix_year" data-source="industry_mix" data-field="year" data-row="0">—</span>, current dollars. "Not disclosed" is the part BEA withholds to protect individual employers. Finance &amp; real estate includes the rental value of owner-occupied homes.</p>
+    <div class="sm-card" id="card-econ-mix">
+      <h3>Economy mix by county</h3>
+      <p class="sm-note">Each bar is 100% of the county's GDP. Hover a segment for its dollar value.</p>
+      <div class="sm-chart" data-draw="e_mix" data-source="industry_mix"></div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-mfg-gdp">
+        <h3>Manufacturing's share of the local economy</h3>
+        <p class="sm-note">Manufacturing GDP as a share of all GDP. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="e_mfg_gdp" data-source="mfg_gdp"></div>
+      </div>
+      <div class="sm-card" id="card-top-ind">
+        <h3>Largest industries in each county</h3>
+        <p class="sm-note">Top three by share of GDP, among industries BEA publishes.</p>
+        <ul class="sm-list" data-draw="e_top_ind" data-source="industry_mix"></ul>
+      </div>
+    </div>
+    <div class="sm-more"><a href="https://www.bea.gov/data/by-place-county-metro-local" target="_blank" rel="noopener">Learn more: BEA county data ↗</a><a href="https://www.bls.gov/cew/" target="_blank" rel="noopener">BLS QCEW ↗</a></div>
+  </section>
+
+  <!-- ================= U.S. ECONOMY (EconVitals) ================= -->
+  <section class="sm-page" id="useconomy" role="tabpanel" hidden>
+    <p class="sm-note">National numbers from EconVitals (public domain), built from BLS, BEA, Census, Treasury and FRED data. Refreshed every morning.</p>
+    <div class="sm-kpis" data-draw="ev_glance" data-source="econvitals"></div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-ev-nowcast">
+        <h3>GDP nowcasts for this quarter</h3>
+        <p class="sm-note">Annualized growth rate each tracker expects. Hover for the date.</p>
+        <div class="sm-chart" data-draw="ev_nowcast" data-source="econvitals"></div>
+      </div>
+      <div class="sm-card" id="card-ev-jobs">
+        <h3>U.S. job gains by sector</h3>
+        <p class="sm-note">Average jobs added per month over the last 3 months, thousands. Hover for 1-month and 12-month figures.</p>
+        <div class="sm-chart" data-draw="ev_jobs" data-source="econvitals"></div>
+      </div>
+      <div class="sm-card" id="card-ev-yields">
+        <h3>Treasury yields</h3>
+        <p class="sm-note">Borrowing costs that set the tone for industrial and spec-building finance. Hover for the weekly change.</p>
+        <div class="sm-chart" data-draw="ev_yields" data-source="econvitals"></div>
+      </div>
+    </div>
+    <div class="sm-more"><a href="https://econvitals.org/" target="_blank" rel="noopener">Learn more: EconVitals ↗</a><a href="https://econvitals.org/briefings/" target="_blank" rel="noopener">Weekly briefings ↗</a><a href="https://econvitals.org/calendar/" target="_blank" rel="noopener">Release calendar ↗</a></div>
+  </section>
+
+  <!-- ================= MARKETS & MACRO ================= -->
+  <section class="sm-page" id="markets" role="tabpanel" hidden>
+    <p class="sm-note">Interest rates, credit, currencies, commodities, the federal budget and other central banks. The daily market tape comes from EconVitals (public domain, built from Treasury, Federal Reserve, CME and exchange data) and refreshes every morning. Bond spreads, yield history and the federal budget are live FRED series. Each figure carries its own date. Data only, not investment advice.</p>
+    <p class="sm-note" data-draw="mk_asof" data-source="markets_tape"></p>
+    <div class="sm-kpis" data-draw="mk_kpis" data-source="markets_tape"></div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-mk-rates">
+        <h3>Rates, inflation pricing and credit</h3>
+        <p class="sm-note">Yield and spread changes are in basis points (bp; 100 bp = 1 percentage point). VIX and NFCI changes are index points.</p>
+        <div class="sm-tablebox" data-draw="mk_rates_tbl" data-source="markets_tape mk_spreads"></div>
+      </div>
+      <div class="sm-card" id="card-mk-global">
+        <h3>Central banks and economies abroad</h3>
+        <p class="sm-note">Policy rate, 10-year government bond yield, inflation (12 months), unemployment and GDP growth over 4 quarters, percent (EconVitals; each country's latest month). The U.S. policy rate is the top of the Fed's range.</p>
+        <div class="sm-tablebox" data-draw="mk_intl_tbl" data-source="markets_tape"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-mk-curve">
+        <h3>Treasury yields, past year</h3>
+        <p class="sm-note">Daily 2-, 10- and 30-year Treasury yields, percent (FRED). Hover for any day.</p>
+        <div class="sm-chart" data-draw="mk_yields_chart" data-source="mk_dgs2 mk_dgs10 mk_dgs30"></div>
+      </div>
+      <div class="sm-card" id="card-mk-oas">
+        <h3>Corporate bond spreads, past year</h3>
+        <p class="sm-note">Extra yield companies pay over Treasuries (option-adjusted spread, percentage points; ICE BofA via FRED). Wider spreads mean costlier credit for expansions.</p>
+        <div class="sm-chart" data-draw="mk_oas_chart" data-source="mk_ig mk_hy"></div>
+      </div>
+      <div class="sm-card" id="card-mk-infl">
+        <h3>U.S. inflation</h3>
+        <p class="sm-note">Change over 12 months, and the last 3 months at an annual rate (EconVitals, from BLS and BEA).</p>
+        <div class="sm-tablebox" data-draw="mk_infl_tbl" data-source="markets_tape"></div>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-mk-fx">
+        <h3>Currencies and commodities</h3>
+        <p class="sm-note">Changes in percent. Commodity prices are front-month futures.</p>
+        <div class="sm-tablebox" data-draw="mk_fx_tbl" data-source="markets_tape"></div>
+      </div>
+      <div class="sm-card" id="card-mk-fiscal">
+        <h3>Federal budget, share of GDP</h3>
+        <p class="sm-note">Latest fiscal year compared with the average of the last 60 fiscal years (OMB and BEA via FRED). The line shows the surplus or deficit each year; the dashed line is the 60-year average.</p>
+        <div class="sm-tablebox" data-draw="mk_fiscal_tbl" data-source="mk_fiscal"></div>
+        <div class="sm-chart" data-draw="mk_deficit_chart" data-source="mk_fiscal mk_deficit"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-mk-why">
+        <h3>Why it matters for Southern Middle Tennessee</h3>
+        <ul class="sm-list">
+          <li class="sm-item"><p>Long-term Treasury yields and the 30-year mortgage rate set the cost of financing industrial buildings, spec buildings and housing.</p></li>
+          <li class="sm-item"><p>Corporate bond spreads show how easily companies can borrow. Wider spreads usually mean tighter credit for expansion projects.</p></li>
+          <li class="sm-item"><p>The dollar's value affects what local manufacturers earn on exports and what foreign companies pay to invest in Tennessee.</p></li>
+          <li class="sm-item"><p>Oil, natural gas and copper prices feed into manufacturers' input and freight costs.</p></li>
+          <li class="sm-item"><p>Interest rates and growth abroad shape expansion decisions by foreign-owned companies with Tennessee plants.</p></li>
+        </ul>
+      </div>
+    </div>
+    <div class="sm-more"><a href="https://econvitals.org/financial/" target="_blank" rel="noopener">EconVitals financial ↗</a><a href="https://econvitals.org/inflation/" target="_blank" rel="noopener">EconVitals inflation ↗</a><a href="https://econvitals.org/international/" target="_blank" rel="noopener">EconVitals international ↗</a><a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" rel="noopener">Fed meeting calendar ↗</a><a href="https://fred.stlouisfed.org/" target="_blank" rel="noopener">FRED ↗</a></div>
+  </section>
+
+  <!-- ================= EDUCATION & TRAINING ================= -->
+  <section class="sm-page" id="education" role="tabpanel" hidden>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-bach">
+        <h3>Adults with a bachelor's degree or higher</h3>
+        <p class="sm-note">Census ACS 5-year estimate, percent of adults.</p>
+        <div class="sm-chart" data-draw="ed_bach" data-source="edu_county"></div>
+      </div>
+      <div class="sm-card" id="card-training">
+        <h3>Training providers in the region</h3>
+        <p class="sm-note">Main campuses. Check each site for current programs.</p>
+        <ul class="sm-list" data-draw="ed_training" data-source="resources"></ul>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-acs-hs">
+        <h3>High school diploma or higher</h3>
+        <p class="sm-note">Adults 25 and older, Census ACS. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="acs_hs" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-assoc">
+        <h3>Associate's degree</h3>
+        <p class="sm-note">Adults 25 and older whose highest degree is an associate's. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="acs_assoc" data-source="acs_county"></div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-wf-programs">
+      <h3>Workforce programs</h3>
+      <ul class="sm-list" data-draw="ed_programs" data-source="programs"></ul>
+    </div>
+    <h2 class="sm-h2" id="college-pipeline">Colleges and TCATs in the region</h2>
+    <p class="sm-note">U.S. Department of Education IPEDS: fall <span data-draw="col_eyear" data-source="college_summary" data-field="enroll_year" data-row="0">—</span> enrollment and credentials awarded in the <span data-draw="col_cyear" data-source="college_summary" data-field="comp_label" data-row="0">—</span> school year, for the 7 public and nonprofit colleges and TCATs with a main campus in the 13 counties. Three small for-profit schools (The Hair Academy, Lawrenceburg Technical College, Love Beauty School) are not included. Branch campuses count under their main campus.</p>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Students enrolled (fall)</span>
+        <span class="sm-kpi-value"><b data-draw="col_enr" data-source="college_summary" data-field="enroll" data-where="institution=All">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="col_enr_chg" data-source="college_summary" data-field="enroll_chg" data-where="institution=All">—</b> vs the year before</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Certificates &amp; diplomas</span>
+        <span class="sm-kpi-value"><b data-draw="col_cert" data-source="college_summary" data-field="certificates" data-where="institution=All">—</b></span>
+        <span class="sm-kpi-sub">Awarded in one school year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Associate degrees</span>
+        <span class="sm-kpi-value"><b data-draw="col_assoc" data-source="college_summary" data-field="associate" data-where="institution=All">—</b></span>
+        <span class="sm-kpi-sub">Awarded in one school year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Bachelor's &amp; graduate degrees</span>
+        <span class="sm-kpi-value"><b data-draw="col_bach" data-source="college_summary" data-field="bachelor_plus" data-where="institution=All">—</b></span>
+        <span class="sm-kpi-sub">Awarded in one school year</span>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-col-enr">
+        <h3>Fall enrollment by school</h3>
+        <p class="sm-note">All students, full- and part-time. Hover for the change from the year before.</p>
+        <div class="sm-chart" data-draw="col_enr_bars" data-source="college_summary"></div>
+      </div>
+      <div class="sm-card" id="card-col-comp">
+        <h3>Credentials awarded by school</h3>
+        <p class="sm-note">Certificates, diplomas and degrees in one school year. Hover for the mix.</p>
+        <div class="sm-chart" data-draw="col_comp_bars" data-source="college_summary"></div>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-pipeline">
+        <h3>Regional talent pipeline by program area</h3>
+        <p class="sm-note">Certificates, diplomas and associate degrees from all 7 schools combined. Hover for the split.</p>
+        <div class="sm-chart" data-draw="col_pipeline" data-source="program_pipeline"></div>
+      </div>
+      <div class="sm-card" id="card-col-top">
+        <h3>Top programs at each school</h3>
+        <p class="sm-note">Program areas with the most credentials awarded. Open “Read more” for the full list.</p>
+        <ul class="sm-list" data-draw="col_top" data-source="edu_colleges"></ul>
+        <div class="sm-more"><a href="https://nces.ed.gov/collegenavigator/" target="_blank" rel="noopener">Learn more: College Navigator ↗</a></div>
+      </div>
+    </div>
+    <h2 class="sm-h2" id="hs-grad">High school graduation, class of <span data-draw="hs_year" data-source="grad_summary" data-field="year" data-row="0">—</span></h2>
+    <p class="sm-note">TN Department of Education district graduation rates (2025-26 file, suppressed version). 16 school districts in the 13 counties, including the Tullahoma, Manchester and Fayetteville city systems. TDOE publishes two versions of the rate; the federal version is the same or lower in every district here. Region and Tennessee figures are calculated by adding district counts.</p>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Graduation rate, region</span>
+        <span class="sm-kpi-value"><b data-draw="hs_rate" data-source="grad_summary" data-field="rate_state" data-where="district=Region">—</b></span>
+        <span class="sm-kpi-sub">State version · Tennessee <b data-draw="hs_tn" data-source="grad_summary" data-field="rate_state" data-where="district=Tennessee">—</b></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Federal version, region</span>
+        <span class="sm-kpi-value"><b data-draw="hs_fed" data-source="grad_summary" data-field="rate_federal" data-where="district=Region">—</b></span>
+        <span class="sm-kpi-sub">Tennessee <b data-draw="hs_tn_fed" data-source="grad_summary" data-field="rate_federal" data-where="district=Tennessee">—</b></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Graduates, region</span>
+        <span class="sm-kpi-value"><b data-draw="hs_grads" data-source="grad_summary" data-field="grads_state" data-where="district=Region">—</b></span>
+        <span class="sm-kpi-sub">of <b data-draw="hs_cohort" data-source="grad_summary" data-field="cohort" data-where="district=Region">—</b> students in the class</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Economically disadvantaged</span>
+        <span class="sm-kpi-value"><b data-draw="hs_econ" data-source="grad_summary" data-field="econ_rate_state" data-where="district=Region">—</b></span>
+        <span class="sm-kpi-sub">Graduation rate, state version, region</span>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-hs-rate">
+        <h3>Graduation rate by school district</h3>
+        <p class="sm-note">Hover a district for graduates, class size and student groups.</p>
+        <div class="sm-chart" data-draw="hs_dumbbell" data-source="grad_summary"></div>
+      </div>
+      <div class="sm-card" id="card-hs-grads">
+        <h3>Graduates by district</h3>
+        <p class="sm-note">The size of each district's yearly pipeline into college, training and work.</p>
+        <div class="sm-chart" data-draw="hs_grads_bars" data-source="grad_summary"></div>
+        <div class="sm-more"><a href="https://www.tn.gov/education/districts/federal-programs-and-oversight/data/data-downloads.html" target="_blank" rel="noopener">Learn more: TDOE Data Downloads &amp; Requests ↗</a></div>
+      </div>
+    </div>
+    <p class="sm-note">Updated once a year by hand: the TDOE website blocks automated downloads, so attach each new district graduation-rate file in the Claude chat and the dashboard is rebuilt from it.</p>
+  </section>
+
+  <!-- ================= MANUFACTURING ================= -->
+  <section class="sm-page" id="manufacturing" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee manufacturing jobs</span>
+        <span class="sm-kpi-value"><b data-draw="m_jobs" data-source="macro" data-field="mfg_k" data-row="0">—</b>K</span>
+        <span class="sm-kpi-sub"><b data-draw="m_jobs_chg" data-source="macro" data-field="mfg_chg_k" data-row="0">—</b>K over the year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Announced manufacturing investment</span>
+        <span class="sm-kpi-value">$<b data-draw="m_inv" data-source="pipeline" data-field="invest_b" data-where="category=Manufacturing">—</b>B</span>
+        <span class="sm-kpi-sub"><b data-draw="m_jobs_ann" data-source="pipeline" data-field="jobs" data-where="category=Manufacturing">—</b> jobs announced</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">TN factory pay, <span data-draw="m_wage_m" data-source="mfg_context" data-field="wage_month" data-row="0">—</span></span>
+        <span class="sm-kpi-value">$<b data-draw="m_wage" data-source="mfg_context" data-field="tn_wage" data-row="0">—</b>/hr</span>
+        <span class="sm-kpi-sub"><b data-draw="m_wage_chg" data-source="mfg_context" data-field="tn_wage_chg_pct" data-row="0">—</b>% vs a year earlier</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Nashville metro manufacturing jobs</span>
+        <span class="sm-kpi-value"><b data-draw="m_nash" data-source="mfg_context" data-field="nash_k" data-row="0">—</b>K</span>
+        <span class="sm-kpi-sub"><b data-draw="m_nash_chg" data-source="mfg_context" data-field="nash_chg_k" data-row="0">—</b>K over the year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">U.S. manufacturing jobs</span>
+        <span class="sm-kpi-value"><b data-draw="m_us" data-source="mfg_context" data-field="us_m" data-row="0">—</b>M</span>
+        <span class="sm-kpi-sub"><b data-draw="m_us_chg" data-source="mfg_context" data-field="us_chg_k" data-row="0">—</b>K over the year</span>
+      </div>
+    </div>
+    <h2 class="sm-h2" id="mfg-counties">Manufacturing in the 13 counties, <span data-draw="m_q" data-source="mfg_county" data-field="quarter" data-where="county=Region">—</span></h2>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region manufacturing jobs</span>
+        <span class="sm-kpi-value"><b data-draw="m_reg_jobs" data-source="mfg_county" data-field="mfg_jobs" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="m_reg_chg" data-source="mfg_county" data-field="mfg_jobs_chg" data-where="county=Region">—</b> vs a year earlier (<b data-draw="m_reg_chg_pct" data-source="mfg_county" data-field="mfg_jobs_chg_pct" data-where="county=Region">—</b>%)</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Share of private-sector jobs</span>
+        <span class="sm-kpi-value"><b data-draw="m_reg_share" data-source="mfg_county" data-field="mfg_share_pct" data-where="county=Region">—</b>%</span>
+        <span class="sm-kpi-sub">Tennessee <b data-draw="m_tn_share" data-source="mfg_county" data-field="mfg_share_pct" data-where="county=Tennessee">—</b>%</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Manufacturing plants</span>
+        <span class="sm-kpi-value"><b data-draw="m_reg_estabs" data-source="mfg_county" data-field="mfg_estabs" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub">Private establishments</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee manufacturing pay</span>
+        <span class="sm-kpi-value">$<b data-draw="m_tn_wage" data-source="mfg_county" data-field="mfg_wage_wk" data-where="county=Tennessee">—</b>/wk</span>
+        <span class="sm-kpi-sub">Average weekly wage, same quarter</span>
+      </div>
+    </div>
+    <p class="sm-note">BLS Quarterly Census of Employment and Wages (QCEW), private employers, jobs in the last month of the quarter. Moore County's manufacturing figures are withheld by BLS to protect employer confidentiality, so region totals cover the other 12 counties.</p>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-mfg-cty-jobs">
+        <h3>Manufacturing jobs by county</h3>
+        <p class="sm-note">Label shows the change from a year earlier.</p>
+        <div class="sm-chart" data-draw="m_cty_jobs" data-source="mfg_county"></div>
+      </div>
+      <div class="sm-card" id="card-mfg-cty-chg">
+        <h3>Change over the year</h3>
+        <p class="sm-note">Percent change in manufacturing jobs. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="m_cty_chg" data-source="mfg_county"></div>
+      </div>
+      <div class="sm-card" id="card-mfg-cty-lq">
+        <h3>How concentrated is manufacturing?</h3>
+        <p class="sm-note">Location quotient: 1.0 = U.S. average share of jobs; 3.0 = three times the national share.</p>
+        <div class="sm-chart" data-draw="m_cty_lq" data-source="mfg_county"></div>
+      </div>
+      <div class="sm-card" id="card-mfg-cty-wage">
+        <h3>Average weekly manufacturing pay</h3>
+        <p class="sm-note">Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="m_cty_wage" data-source="mfg_county"></div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-mfg-subsectors">
+      <h3>Largest manufacturing industries in each county</h3>
+      <p class="sm-note">Top industries BLS publishes for each county (some are withheld for confidentiality). Open “Read more” for the full list.</p>
+      <ul class="sm-list" data-draw="m_subsectors" data-source="qcew_subsectors"></ul>
+      <div class="sm-more"><a href="https://www.bls.gov/cew/" target="_blank" rel="noopener">Learn more: BLS QCEW ↗</a></div>
+    </div>
+    <h2 class="sm-h2">Tennessee and national context</h2>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-tn-mfg">
+        <h3>Tennessee manufacturing employment</h3>
+        <p class="sm-note">Thousands of jobs, seasonally adjusted, BLS.</p>
+        <div class="sm-chart" data-draw="m_trend" data-source="tn_mfg"></div>
+      </div>
+      <div class="sm-card" id="card-mfg-inv">
+        <h3>Announced manufacturing projects</h3>
+        <p class="sm-note">Investment in millions of dollars.</p>
+        <div class="sm-chart" data-draw="m_inv_bars" data-source="projects"></div>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-mfg-growth">
+        <h3>Manufacturing job growth, past 12 months</h3>
+        <p class="sm-note">Percent change in manufacturing jobs, same month a year earlier. BLS.</p>
+        <div class="sm-chart" data-draw="m_growth_bars" data-source="mfg_growth"></div>
+      </div>
+      <div class="sm-card" id="card-nash-mfg">
+        <h3>Nashville metro manufacturing employment</h3>
+        <p class="sm-note">Thousands of jobs, seasonally adjusted. The metro area includes Maury County.</p>
+        <div class="sm-chart" data-draw="m_nash_trend" data-source="nash_mfg"></div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-anchors">
+      <h3>Anchor employers by county</h3>
+      <p class="sm-note">From your county profiles.</p>
+      <ul class="sm-list" data-draw="m_anchors" data-source="counties"></ul>
+    </div>
+  </section>
+
+  <!-- ================= TOURISM ================= -->
+  <section class="sm-page" id="tourism" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tennessee visitor spending, <span data-draw="tr_year" data-source="tourism_summary" data-field="year" data-where="county=Tennessee">—</span></span>
+        <span class="sm-kpi-value">$<b data-draw="tr_spend" data-source="tourism_summary" data-field="spending" data-where="county=Tennessee">—</b>B</span>
+        <span class="sm-kpi-sub"><b data-draw="tr_chg" data-source="tourism_summary" data-field="spend_chg_pct" data-where="county=Tennessee">—</b>% vs prior year</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">TN leisure &amp; hospitality jobs</span>
+        <span class="sm-kpi-value"><b data-draw="tr_jobs" data-source="macro" data-field="leih_k" data-row="0">—</b>K</span>
+        <span class="sm-kpi-sub"><b data-draw="tr_jobs_chg" data-source="macro" data-field="leih_chg_k" data-row="0">—</b>K over the year</span>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-leih">
+        <h3>Tennessee leisure &amp; hospitality employment</h3>
+        <p class="sm-note">Thousands of jobs, seasonally adjusted, BLS.</p>
+        <div class="sm-chart" data-draw="tr_trend" data-source="tn_leih"></div>
+      </div>
+      <div class="sm-card" id="card-attractions">
+        <h3>Signature attractions</h3>
+        <ul class="sm-list" data-draw="tr_attr" data-source="resources"></ul>
+      </div>
+    </div>
+    <h2 class="sm-h2" id="tourism-counties">Tourism in the 13 counties, <span data-draw="tu_year" data-source="tourism_summary" data-field="year" data-where="county=Region">—</span></h2>
+    <p class="sm-note">TN Department of Tourist Development, <em>Economic Impact of Travel on Tennessee</em> report for that year (Tourism Economics), county pages. Direct impacts of visitor spending only. Region totals add the 13 counties; Tennessee adds all 95.</p>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Visitor spending, region</span>
+        <span class="sm-kpi-value"><b data-draw="tu_spend" data-source="tourism_summary" data-field="spending" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="tu_spend_chg" data-source="tourism_summary" data-field="spend_chg_pct" data-where="county=Region">—</b> vs <span data-draw="tu_pyear" data-source="tourism_summary" data-field="prior_year" data-where="county=Region">—</span> · Tennessee <b data-draw="tu_tn_chg" data-source="tourism_summary" data-field="spend_chg_pct" data-where="county=Tennessee">—</b></span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Tourism jobs, region</span>
+        <span class="sm-kpi-value"><b data-draw="tu_jobs" data-source="tourism_summary" data-field="jobs" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="tu_jobs_chg" data-source="tourism_summary" data-field="jobs_chg" data-where="county=Region">—</b> vs the year before, full- and part-time</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">State &amp; local taxes, region</span>
+        <span class="sm-kpi-value"><b data-draw="tu_tax" data-source="tourism_summary" data-field="taxes" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="tu_state_tax" data-source="tourism_summary" data-field="state_taxes" data-where="county=Region">—</b> state · <b data-draw="tu_local_tax" data-source="tourism_summary" data-field="local_taxes" data-where="county=Region">—</b> local</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region share of Tennessee spending</span>
+        <span class="sm-kpi-value"><b data-draw="tu_share" data-source="tourism_summary" data-field="share_tn_pct" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub">Top county: <b data-draw="tu_top" data-source="tourism_summary" data-field="top_county" data-where="county=Region">—</b>, #<b data-draw="tu_top_rank" data-source="tourism_summary" data-field="top_rank" data-where="county=Region">—</b> of 95</span>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-tu-map">
+        <h3>Visitor spending by county</h3>
+        <p class="sm-note">Darker = more spending. Hover for the change and state rank; click a county for its profile.</p>
+        <div class="sm-map" data-draw="tu_map" data-source="tourism_summary"></div>
+      </div>
+      <div class="sm-card" id="card-tu-spend">
+        <h3>Spending and rank among 95 counties</h3>
+        <p class="sm-note">Direct visitor spending. # = state rank.</p>
+        <div class="sm-chart" data-draw="tu_spend_bars" data-source="tourism_summary"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-tu-chg">
+        <h3>Change from the year before</h3>
+        <p class="sm-note">Percent change in visitor spending. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="tu_chg_bars" data-source="tourism_summary"></div>
+      </div>
+      <div class="sm-card" id="card-tu-jobs">
+        <h3>Tourism jobs</h3>
+        <p class="sm-note">Full- and part-time jobs, including owners, supported directly by visitor spending.</p>
+        <div class="sm-chart" data-draw="tu_jobs_bars" data-source="tourism_summary"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-tu-tax">
+        <h3>State &amp; local taxes from visitors</h3>
+        <p class="sm-note">Sales, bed, income and other taxes generated by visitor spending. Hover for the state/local split.</p>
+        <div class="sm-chart" data-draw="tu_tax_bars" data-source="tourism_summary"></div>
+      </div>
+      <div class="sm-card" id="card-tu-mix">
+        <h3>Where visitors spend, region</h3>
+        <p class="sm-note">Spending by category, all 13 counties.</p>
+        <div class="sm-chart" data-draw="tu_mix" data-source="tourism_summary"></div>
+        <div class="sm-more"><a href="https://industry.tnvacation.com/research" target="_blank" rel="noopener">Learn more: TN Tourism research &amp; full report ↗</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AGRICULTURE ================= -->
+  <section class="sm-page" id="agriculture" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region farms, <span data-draw="ag_year" data-source="ag_county" data-field="year" data-where="county=Region">—</span></span>
+        <span class="sm-kpi-value"><b data-draw="ag_farms" data-source="ag_county" data-field="farms" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="ag_farms_chg" data-source="ag_county" data-field="farms_chg_pct" data-where="county=Region">—</b>% vs 2017</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Land in farms</span>
+        <span class="sm-kpi-value"><b data-draw="ag_acres" data-source="ag_county" data-field="acres" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub">acres</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Farm product sales</span>
+        <span class="sm-kpi-value">$<b data-draw="ag_sales" data-source="ag_county" data-field="sales_m" data-where="county=Region">—</b>M</span>
+        <span class="sm-kpi-sub"><b data-draw="ag_sales_chg" data-source="ag_county" data-field="sales_chg_pct" data-where="county=Region">—</b>% vs 2017 (not inflation-adjusted)</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Cattle and calves</span>
+        <span class="sm-kpi-value"><b data-draw="ag_cattle" data-source="ag_county" data-field="cattle_head" data-where="county=Region">—</b></span>
+        <span class="sm-kpi-sub">head on hand</span>
+      </div>
+    </div>
+    <p class="sm-note">USDA 2022 Census of Agriculture, the most recent. The next one (2027) is expected to be published in 2029.</p>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-ag-sales">
+        <h3>Farm product sales by county</h3>
+        <p class="sm-note">Millions of dollars. Hover to split crops and livestock.</p>
+        <div class="sm-chart" data-draw="ag_sales_bars" data-source="ag_county"></div>
+      </div>
+      <div class="sm-card" id="card-ag-farms">
+        <h3>Change in number of farms, 2017 to 2022</h3>
+        <p class="sm-note">Percent change. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="ag_farms_bars" data-source="ag_county"></div>
+      </div>
+      <div class="sm-card" id="card-ag-cattle">
+        <h3>Cattle and calves on hand</h3>
+        <p class="sm-note">Head, December 31, 2022.</p>
+        <div class="sm-chart" data-draw="ag_cattle_bars" data-source="ag_county"></div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-ag-top">
+      <h3>Top farm products in each county</h3>
+      <p class="sm-note">Ranked by 2022 sales. USDA withholds some products for confidentiality; those are listed under “Read more”.</p>
+      <ul class="sm-list" data-draw="ag_top" data-source="ag_county"></ul>
+      <div class="sm-more"><a href="https://quickstats.nass.usda.gov/" target="_blank" rel="noopener">Learn more: USDA Quick Stats ↗</a><a href="https://www.nass.usda.gov/AgCensus/" target="_blank" rel="noopener">Census of Agriculture ↗</a></div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-ag-projects">
+        <h3>Agriculture projects</h3>
+        <ul class="sm-list" data-draw="ag_projects" data-source="projects"></ul>
+      </div>
+      <div class="sm-card" id="card-ag-links">
+        <h3>Agriculture resources</h3>
+        <ul class="sm-list" data-draw="ag_links" data-source="resources"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOUSING ================= -->
+  <section class="sm-page" id="housing" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Region housing units permitted, <span data-draw="h_year" data-source="permits_region" data-field="year" data-row="0">—</span></span>
+        <span class="sm-kpi-value"><b data-draw="h_units" data-source="permits_region" data-field="units" data-row="0">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="h_units_prev" data-source="permits_region" data-field="units" data-row="1">—</b> the year before</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">30-year mortgage rate</span>
+        <span class="sm-kpi-value"><b data-draw="h_mtg" data-source="mortgage" data-field="mortgage" data-row="0">—</b>%</span>
+        <span class="sm-kpi-sub">Week of <span data-draw="h_mtg_d" data-source="mortgage" data-field="mortgage_date" data-row="0">—</span></span>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-permits">
+        <h3>New housing units permitted</h3>
+        <p class="sm-note">Census Building Permits Survey. Counts only places that issue permits, so rural counties can read low.</p>
+        <div class="sm-chart" data-draw="h_permits" data-source="permits"></div>
+      </div>
+      <div class="sm-card" id="card-acs-home">
+        <h3>Median home value</h3>
+        <p class="sm-note">Owner-occupied homes, Census ACS. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="acs_home" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-rent">
+        <h3>Median gross rent</h3>
+        <p class="sm-note">Monthly, including utilities, Census ACS. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="acs_rent" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-acs-vacant">
+        <h3>Vacant housing</h3>
+        <p class="sm-note">Share of all housing units, including seasonal homes. Dashed line = Tennessee.</p>
+        <div class="sm-chart" data-draw="acs_vacant" data-source="acs_county"></div>
+      </div>
+      <div class="sm-card" id="card-housing-news">
+        <h3>Housing programs and news</h3>
+        <ul class="sm-list" data-draw="h_news" data-source="programs intel"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COUNTY PROFILES ================= -->
+  <section class="sm-page" id="counties" role="tabpanel" hidden>
+    <div class="sm-chips" role="group" aria-label="Choose a county">
+      <button class="sm-chip" type="button" data-county="Bedford" aria-pressed="false">Bedford</button>
+      <button class="sm-chip" type="button" data-county="Coffee" aria-pressed="false">Coffee</button>
+      <button class="sm-chip" type="button" data-county="Franklin" aria-pressed="false">Franklin</button>
+      <button class="sm-chip" type="button" data-county="Giles" aria-pressed="false">Giles</button>
+      <button class="sm-chip" type="button" data-county="Hickman" aria-pressed="false">Hickman</button>
+      <button class="sm-chip" type="button" data-county="Lawrence" aria-pressed="false">Lawrence</button>
+      <button class="sm-chip" type="button" data-county="Lewis" aria-pressed="false">Lewis</button>
+      <button class="sm-chip" type="button" data-county="Lincoln" aria-pressed="false">Lincoln</button>
+      <button class="sm-chip" type="button" data-county="Marshall" aria-pressed="false">Marshall</button>
+      <button class="sm-chip" type="button" data-county="Maury" aria-pressed="false">Maury</button>
+      <button class="sm-chip" type="button" data-county="Moore" aria-pressed="false">Moore</button>
+      <button class="sm-chip" type="button" data-county="Perry" aria-pressed="false">Perry</button>
+      <button class="sm-chip" type="button" data-county="Wayne" aria-pressed="false">Wayne</button>
+    </div>
+    <div class="sm-card" id="card-profile">
+      <div class="sm-prof-head">
+        <h2 class="sm-prof-name"><span data-draw="pf_name" data-source="counties" data-field="county">—</span> County</h2>
+        <span class="sm-item-meta">Seat: <span data-draw="pf_seat" data-source="counties" data-field="seat">—</span> · <span data-draw="pf_tier" data-source="counties" data-field="tier_label">—</span> · <span data-draw="pf_badge" data-source="counties">—</span></span>
+      </div>
+      <div class="sm-kv">
+        <div><span>Unemployment, <span data-draw="pf_month" data-source="labor_latest" data-field="month">—</span></span><b><span data-draw="pf_rate" data-source="labor_latest" data-field="rate">—</span>%</b></div>
+        <div><span>Labor force</span><b data-draw="pf_lf" data-source="labor_latest" data-field="lf">—</b></div>
+        <div><span>Population</span><b data-draw="pf_pop" data-source="pop_county" data-field="pop">—</b></div>
+        <div><span>Growth since <span data-draw="pf_popbase" data-source="pop_county" data-field="base_year">—</span></span><b><span data-draw="pf_popchg" data-source="pop_county" data-field="chg_since_base_pct">—</span>%</b></div>
+        <div><span>Median household income</span><b>$<span data-draw="pf_mhi" data-source="income_county" data-field="mhi">—</span></b></div>
+        <div><span>Poverty rate</span><b><span data-draw="pf_pov" data-source="income_county" data-field="poverty">—</span>%</b></div>
+        <div><span>Per-capita income</span><b>$<span data-draw="pf_pcpi" data-source="income_county" data-field="pcpi">—</span></b></div>
+        <div><span>Real GDP</span><b>$<span data-draw="pf_gdp" data-source="gdp_county" data-field="gdp_b">—</span>B</b></div>
+        <div><span>Business establishments</span><b data-draw="pf_est" data-source="biz_county" data-field="est">—</b></div>
+        <div><span>Bachelor's degree+</span><b><span data-draw="pf_bach" data-source="edu_county" data-field="bach_pct">—</span>%</b></div>
+        <div><span>Housing units permitted</span><b data-draw="pf_bp" data-source="permits_latest" data-field="units">—</b></div>
+        <div><span>Manufacturing jobs</span><b data-draw="pf_mfg" data-source="mfg_county" data-field="mfg_jobs">—</b></div>
+        <div><span>Manufacturing share of private jobs</span><b><span data-draw="pf_mfgshare" data-source="mfg_county" data-field="mfg_share_pct">—</span>%</b></div>
+        <div><span>Manufacturing share of GDP</span><b><span data-draw="pf_mfggdp" data-source="mfg_gdp" data-field="mfg_share_pct">—</span>%</b></div>
+        <div><span>Median age</span><b data-draw="pf_age" data-source="acs_county" data-field="median_age">—</b></div>
+        <div><span>Labor force participation</span><b><span data-draw="pf_lfpr" data-source="acs_county" data-field="lfpr_pct">—</span>%</b></div>
+        <div><span>Average commute</span><b><span data-draw="pf_commute" data-source="acs_county" data-field="commute_min">—</span> min</b></div>
+        <div><span>Households with broadband</span><b><span data-draw="pf_bb" data-source="acs_county" data-field="broadband_pct">—</span>%</b></div>
+        <div><span>Median home value</span><b>$<span data-draw="pf_home" data-source="acs_county" data-field="home_value">—</span></b></div>
+        <div><span>Farm sales (2022)</span><b>$<span data-draw="pf_farm" data-source="ag_county" data-field="sales_m">—</span>M</b></div>
+      </div>
+      <div class="sm-chart" data-draw="pf_trend" data-source="urn_trend"></div>
+      <dl class="sm-facts">
+        <dt>Corridor</dt><dd data-draw="pf_corridor" data-source="counties" data-field="corridor">—</dd>
+        <dt>Top industrial site</dt><dd data-draw="pf_park" data-source="counties" data-field="top_park">—</dd>
+        <dt>Power provider</dt><dd data-draw="pf_power" data-source="counties" data-field="power">—</dd>
+        <dt>Anchor employers</dt><dd data-draw="pf_anchors" data-source="counties" data-field="anchors">—</dd>
+        <dt>Challenges</dt><dd data-draw="pf_challenges" data-source="counties" data-field="challenges">—</dd>
+        <dt>County mayor</dt><dd data-draw="pf_mayor" data-source="counties" data-field="county_mayor">—</dd>
+        <dt>Economic development lead</dt><dd data-draw="pf_ed" data-source="counties" data-field="ed_leader">—</dd>
+        <dt>City leaders</dt><dd data-draw="pf_city" data-source="counties" data-field="city_leaders">—</dd>
+        <dt>State legislators</dt><dd data-draw="pf_leg" data-source="counties" data-field="state_legislators">—</dd>
+      </dl>
+      <div class="sm-more" data-draw="pf_links" data-source="counties"></div>
+    </div>
+    <div class="sm-card" id="card-compare">
+      <div class="sm-prof-head">
+        <h3>All counties side by side</h3>
+        <input class="sm-search" id="cmp-search" type="search" placeholder="Filter counties" aria-label="Filter counties">
+      </div>
+      <p class="sm-note">Latest available year for each measure. Click a column to sort, a row to open that profile.</p>
+      <div class="sm-tablebox">
+        <table class="sm-table" data-source="county_all" data-row-key="county" data-sort-table="compare">
+          <thead><tr>
+            <th data-field="county"><button class="sm-sort" type="button" data-sort="county">County</button></th>
+            <th data-field="tier"><button class="sm-sort" type="button" data-sort="tier">Tier</button></th>
+            <th data-field="rate"><button class="sm-sort" type="button" data-sort="rate">Unemp. %</button></th>
+            <th data-field="lf"><button class="sm-sort" type="button" data-sort="lf">Labor force</button></th>
+            <th data-field="pop"><button class="sm-sort" type="button" data-sort="pop">Population</button></th>
+            <th data-field="pop_chg_pct"><button class="sm-sort" type="button" data-sort="pop_chg_pct">Pop. growth %</button></th>
+            <th data-field="mhi"><button class="sm-sort" type="button" data-sort="mhi">Median HH income</button></th>
+            <th data-field="poverty"><button class="sm-sort" type="button" data-sort="poverty">Poverty %</button></th>
+            <th data-field="pcpi"><button class="sm-sort" type="button" data-sort="pcpi">Per-capita income</button></th>
+            <th data-field="gdp_b"><button class="sm-sort" type="button" data-sort="gdp_b">Real GDP $B</button></th>
+            <th data-field="est"><button class="sm-sort" type="button" data-sort="est">Establishments</button></th>
+            <th data-field="bach_pct"><button class="sm-sort" type="button" data-sort="bach_pct">Bachelor's+ %</button></th>
+            <th data-field="permits"><button class="sm-sort" type="button" data-sort="permits">Permits</button></th>
+            <th data-field="mfg_jobs"><button class="sm-sort" type="button" data-sort="mfg_jobs">Mfg jobs</button></th>
+            <th data-field="mfg_lq"><button class="sm-sort" type="button" data-sort="mfg_lq">Mfg LQ</button></th>
+            <th data-field="farm_sales_m"><button class="sm-sort" type="button" data-sort="farm_sales_m">Farm sales $M</button></th>
+            <th data-field="lfpr_pct"><button class="sm-sort" type="button" data-sort="lfpr_pct">Labor force part. %</button></th>
+            <th data-field="median_age"><button class="sm-sort" type="button" data-sort="median_age">Median age</button></th>
+          </tr></thead>
+          <tbody data-draw="cmp_body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROJECTS & GRANTS ================= -->
+  <section class="sm-page" id="projects" role="tabpanel" hidden>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Announced investment tracked</span>
+        <span class="sm-kpi-value">$<b data-draw="g_inv" data-source="pipeline" data-field="invest_b" data-where="category=All">—</b>B</span>
+        <span class="sm-kpi-sub"><b data-draw="g_proj" data-source="pipeline" data-field="projects" data-where="category=All">—</b> projects</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Jobs announced</span>
+        <span class="sm-kpi-value"><b data-draw="g_jobs" data-source="pipeline" data-field="jobs" data-where="category=All">—</b></span>
+        <span class="sm-kpi-sub">Where a count was stated</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Open action items</span>
+        <span class="sm-kpi-value"><b data-draw="g_actions" data-source="action_count" data-field="open" data-row="0">—</b></span>
+        <span class="sm-kpi-sub"><b data-draw="g_actions_dated" data-source="action_count" data-field="with_deadline" data-row="0">—</b> with a deadline</span>
+      </div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-inv-bars">
+        <h3>Investment by project</h3>
+        <p class="sm-note">Millions of dollars, as announced.</p>
+        <div class="sm-chart" data-draw="g_inv_bars" data-source="projects"></div>
+      </div>
+      <div class="sm-card" id="card-actions">
+        <h3>Action items</h3>
+        <p class="sm-note">Soonest deadline first. Open “Steps” for who does what.</p>
+        <ul class="sm-list" data-draw="g_actions_list" data-source="actions"></ul>
+      </div>
+    </div>
+    <div class="sm-card" id="card-projects">
+      <h3>Project pipeline</h3>
+      <div class="sm-cards" data-draw="g_projects" data-source="projects"></div>
+    </div>
+    <div class="sm-grid wide">
+      <div class="sm-card" id="card-programs">
+        <h3>Grants and state programs</h3>
+        <ul class="sm-list" data-draw="g_programs" data-source="programs"></ul>
+      </div>
+      <div class="sm-card" id="card-events">
+        <h3>Events</h3>
+        <ul class="sm-list" data-draw="g_events" data-source="events"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RESOURCES ================= -->
+  <section class="sm-page" id="resources" role="tabpanel" hidden>
+    <div class="sm-cards" data-draw="r_all" data-source="resources"></div>
+  </section>
+</div>
+<script src="vendor/d3.min.js"></script>
+<script src="runtime.js"></script>
+<script src="app.js"></script>
+<script>window.__dashStart();</script>
+</body>
+</html>
