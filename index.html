@@ -1113,6 +1113,43 @@
 
   <!-- ================= RESOURCES ================= -->
   <section class="sm-page" id="resources" role="tabpanel" hidden>
+    <div class="sm-card" id="card-ai-howto">
+      <h3>Use this dashboard with Claude</h3>
+      <p class="sm-note">Claude (or another AI assistant) can read this dashboard's data and turn it into briefs, spreadsheets, slides and documents. These steps keep its answers tied to the real numbers.</p>
+      <h4 class="sm-howto-h">Two ways to give Claude the data</h4>
+      <ol class="sm-howto">
+        <li><b>Attach a download (works everywhere).</b> Use the Word, PDF or PowerPoint buttons on the Strategic plan and County profiles tabs, or the CSV and Excel buttons above any table, then attach the file to your Claude chat and ask your question.</li>
+        <li><b>Give Claude the live data link.</b> Paste <code>https://glowe1714.github.io/somidtn-dashboard/data/manifest.json</code> into the chat. It lists every dataset with its source and last update; each one is at <code>…/data/&lt;id&gt;.json</code> (for example <code>data/counties.json</code>, <code>data/projects.json</code>, <code>data/warn.json</code>). Claude can open links only when web access is available in your Claude app; if it says it cannot, use option 1.</li>
+      </ol>
+      <h4 class="sm-howto-h">Optional: a saved instruction</h4>
+      <p class="sm-note">Paste this at the start of a chat, or into a Claude Project's instructions so every chat in that project follows it.</p>
+      <textarea class="sm-howto-text" id="sm-howto-text" readonly rows="14" aria-label="Saved instruction for Claude">You help me use the SoMidTN Dashboard: public economic and community development data for 13 Southern Middle Tennessee counties (Bedford, Coffee, Franklin, Giles, Hickman, Lawrence, Lewis, Lincoln, Marshall, Maury, Moore, Perry and Wayne), compiled by Greg Lowe (TNECD Business Development Consultant) from public sources. It is not an official TNECD publication.
+
+Where the data is:
+- Dashboard: https://glowe1714.github.io/somidtn-dashboard/
+- Every dataset, with its title, description, source and last update: https://glowe1714.github.io/somidtn-dashboard/data/manifest.json
+- Each dataset's rows: https://glowe1714.github.io/somidtn-dashboard/data/<id>.json (ids are in the manifest)
+- Files I attach that were downloaded from the dashboard
+
+Rules:
+1. Use only figures and facts you read in that data or in files I attach. Never estimate, fill gaps or invent numbers, names, titles, dates or links. If the data doesn't have it, say so plainly.
+2. After each figure, name its dataset and period (for example: unemployment, BLS, Sep 2026).
+3. If you can't open a link or file, tell me. Don't answer from memory.
+4. When you calculate something (a total, a share, a change), say it's your calculation and show how.
+5. Contacts change often: remind me to confirm names and titles on the official website before outreach.
+6. Keep it plain and structured: headings, short bullets, tables, and a sources list at the end.</textarea>
+      <div class="sm-dlbar"><button class="sm-btn sm-btn-sm" type="button" id="sm-howto-copy">Copy the instruction</button><span id="sm-howto-msg" role="status"></span></div>
+      <h4 class="sm-howto-h">Things to ask</h4>
+      <ul class="sm-howto">
+        <li>“Write a one-page brief on Lincoln County for a prospect visit. Cite every number.”</li>
+        <li>“Make an Excel workbook comparing unemployment, manufacturing jobs and median household income for all 13 counties.”</li>
+        <li>“Turn the attached Strategic plan into a 10-slide PowerPoint for county mayors.”</li>
+        <li>“Which counties had WARN notices in the last 24 months, and how many workers were affected?”</li>
+        <li>“Draft talking points for a TVA panel on the region's manufacturing clusters.”</li>
+        <li>Google Docs, Sheets or Slides: if Google Drive is connected in your Claude app, add “Save it to my Google Drive as a Google Doc” (or Sheet, or Slides).</li>
+      </ul>
+      <p class="sm-note">Creating Word, Excel, PowerPoint or PDF files inside Claude needs Claude's file creation turned on in your app's settings. If it's off, Claude can still write the content for you to paste.</p>
+    </div>
     <div class="sm-cards" data-draw="r_all" data-source="resources"></div>
   </section>
 </div>

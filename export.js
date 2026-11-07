@@ -512,5 +512,16 @@
   let pend = false;
   new MutationObserver(() => { if (pend) return; pend = true; requestAnimationFrame(() => { pend = false; addTableButtons(); }); }).observe(document.body, { childList: true, subtree: true });
   addTableButtons();
+  /* ---------- "Use this dashboard with Claude": copy the saved instruction ---------- */
+  document.addEventListener('click', async (ev) => {
+    if (!ev.target.closest('#sm-howto-copy')) return;
+    const ta = document.getElementById('sm-howto-text'), msg = document.getElementById('sm-howto-msg');
+    if (!ta) return;
+    let ok = false;
+    try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) { ok = false; }
+    if (!ok) { ta.focus(); ta.select(); try { ok = document.execCommand('copy'); } catch (e) { ok = false; } }
+    if (msg) msg.textContent = ok ? 'Copied. Paste it into Claude.' : 'Your browser blocked copying. The text is selected: press Ctrl+C (Cmd+C on a Mac).';
+    if (!ok) { ta.focus(); ta.select(); }
+  });
   window.SMExport = { csv, xlsx, docx, pdf, pptx, strategyBlocks, countyBlocks, strategySlides };
 })();
