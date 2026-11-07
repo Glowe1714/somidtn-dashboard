@@ -2406,8 +2406,63 @@
     });
   });
 
+  dash.draw('g_awards', (el) => {
+    if (pending(el, ['awards'])) return;
+    const rows = rowsOf('awards').slice().sort((a, b) => (a.announced < b.announced ? 1 : a.announced > b.announced ? -1 : String(a.county).localeCompare(String(b.county))));
+    const box = h('div', 'sm-tablebox'), t = h('table', 'sm-table'), hr = h('tr');
+    ['Announced', 'County', 'Recipient', 'Program', 'Amount', 'Purpose', 'Source'].forEach((x) => hr.appendChild(h('th', null, x)));
+    const th = h('thead'); th.appendChild(hr); t.appendChild(th);
+    const tb = h('tbody');
+    rows.forEach((r) => {
+      const tr = h('tr');
+      tr.appendChild(h('td', null, dayFmt(r.announced)));
+      tr.appendChild(h('td', 'sm-wrap', r.county));
+      tr.appendChild(h('td', 'sm-wrap', r.recipient));
+      tr.appendChild(h('td', null, r.program));
+      tr.appendChild(h('td', null, r.amount_label || (r.amount != null ? usd(r.amount) : '—')));
+      tr.appendChild(h('td', 'sm-wrap', r.purpose));
+      const s = h('td'); if (r.source_url) s.appendChild(link(r.source_url, 'Source ↗')); else s.textContent = '—'; tr.appendChild(s);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); box.appendChild(t); el.replaceChildren(box);
+  });
+
+  /* ---------- sites map (TVA Sites and MTIDA property maps) ----------
+     Claude dashboards do not allow another website inside the page, so there the buttons open the maps in a new tab.
+     The public copy (its runtime defines window.__dashStart) also shows the chosen map in the page, loaded on first view. */
+  const SITE_MAPS = {
+    tva: { label: 'TVA Sites', title: 'TVA Sites map: industrial sites and buildings, Southern Middle Tennessee region', url: 'https://tvasites.giswebtechguru.com/?sorting=featured&showcommunityonmap=true&layer=Region&activebasemap2d=World%20Navigation%20Map%20(Places)&mapextent=-9388814.803837564,4490805.938632733,-9973405.196162436,4065816.0613672663&mapzoom=7&FIPSCode=OID436' },
+    mtida: { label: 'MTIDA properties', title: 'MTIDA properties map: Middle Tennessee industrial sites and buildings', url: 'https://mtida.giswebtechguru.com/?sorting=featured&showpropertyonmap=true&activebasemap2d=World%20Street%20Map%20(Places)&mapextent=-9321791.803837564,4490815.438632733,-9906382.196162436,4065825.5613672663&mapzoom=7' },
+  };
+  const MAP_IN_PAGE = typeof window.__dashStart === 'function';
+  let mapPick = 'tva';
+  function showSiteMap() {
+    const box = document.getElementById('sm-mapframe');
+    if (!box || !MAP_IN_PAGE) return;
+    let bar = document.getElementById('sm-mappick');
+    if (!bar) {
+      bar = h('div', 'sm-dlbar'); bar.id = 'sm-mappick'; bar.setAttribute('role', 'group'); bar.setAttribute('aria-label', 'Choose which map to show');
+      bar.appendChild(h('span', null, 'Show in this page:'));
+      Object.entries(SITE_MAPS).forEach(([k, m]) => { const b = h('button', 'sm-btn sm-btn-sm', m.label); b.type = 'button'; b.dataset.map = k; bar.appendChild(b); });
+      box.parentNode.insertBefore(bar, box);
+    }
+    bar.querySelectorAll('button[data-map]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.map === mapPick)));
+    let f = box.querySelector('iframe');
+    if (!f) { f = document.createElement('iframe'); f.className = 'sm-mapframe'; f.setAttribute('allow', 'fullscreen; geolocation'); f.setAttribute('allowfullscreen', ''); box.replaceChildren(f); }
+    if (f.getAttribute('src') !== SITE_MAPS[mapPick].url) { f.title = SITE_MAPS[mapPick].title; f.src = SITE_MAPS[mapPick].url; }
+  }
+  if (MAP_IN_PAGE) {
+    document.addEventListener('click', (ev) => {
+      const pick = ev.target.closest('#sm-mappick button[data-map]');
+      if (pick) { mapPick = pick.dataset.map; showSiteMap(); return; }
+      if (ev.target.closest('.sm-tab[data-tab="sites"]')) setTimeout(showSiteMap, 0);
+    });
+    const firstLook = () => { const s = document.getElementById('sites'); if (s && !s.hidden) showSiteMap(); };
+    setTimeout(firstLook, 0); window.addEventListener('hashchange', () => setTimeout(firstLook, 0));
+  }
+
   /* ---------- site search ---------- */
-  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers'];
+  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers', 'awards'];
   function searchIndex() {
     const items = [];
     const add = (type, title, fields, go, url) => { const text = fields.filter((x) => x != null && x !== '').map(String).join(' · '); items.push({ type, title: String(title || ''), text, go, url, hay: (title + ' ' + text).toLowerCase() }); };
@@ -2426,6 +2481,7 @@
         .forEach(([lbl, v]) => { if (v) add('Contact', r.county + ': ' + lbl, [v], { county: r.county }); });
     });
     (rowsOf('projects') || []).forEach((r) => add('Project', r.project, [r.county, r.sector, r.summary, r.detail, r.announced], { tab: 'projects' }, r.source_url));
+    (rowsOf('awards') || []).forEach((r) => add('State award', r.recipient + ': ' + r.program, [r.county + ' County', r.amount_label, r.purpose, r.announced], { tab: 'projects' }, r.source_url));
     (rowsOf('programs') || []).forEach((r) => add('Grant or program', r.program, [r.agency, r.topic, r.amount_label, r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
     (rowsOf('actions') || []).forEach((r) => add('Action item', r.action, [r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
     (rowsOf('events') || []).forEach((r) => add('Event', r.event, [r.county, r.date, r.location], { tab: 'projects' }, r.source_url));

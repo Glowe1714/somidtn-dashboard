@@ -185,3 +185,8 @@ th[aria-sort="descending"] .sm-sort::after { content: " ▼"; }
 .sm-howto { margin: 0; padding-left: 1.3em; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; max-width: 90ch; }
 .sm-howto code, #card-ai-howto code { font-size: .92em; overflow-wrap: anywhere; background: var(--color-bg); border: 1px solid var(--color-border-line); border-radius: 4px; padding: 0 4px; }
 .sm-howto-text { box-sizing: border-box; width: 100%; max-width: 90ch; font: inherit; font-size: var(--cds-font-size-caption); line-height: 1.5; padding: 10px 12px; border-radius: var(--cds-radius); border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); resize: vertical; }
+/* sites map */
+a.sm-btn { display: inline-block; text-decoration: none; }
+.sm-btn[aria-pressed="true"] { background: var(--color-fg); color: var(--color-bg); border-color: var(--color-fg); }
+.sm-mapbox { min-height: 3rem; }
+.sm-mapframe { display: block; width: 100%; height: min(78vh, 760px); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); }

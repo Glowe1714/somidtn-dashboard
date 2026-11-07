@@ -44,6 +44,7 @@
     <button class="sm-tab" role="tab" type="button" data-tab="agriculture" aria-selected="false">Agriculture</button>
     <button class="sm-tab" role="tab" type="button" data-tab="housing" aria-selected="false">Housing</button>
     <button class="sm-tab" role="tab" type="button" data-tab="counties" aria-selected="false">County profiles</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="sites" aria-selected="false">Sites map</button>
     <button class="sm-tab" role="tab" type="button" data-tab="projects" aria-selected="false">Projects &amp; grants</button>
     <button class="sm-tab" role="tab" type="button" data-tab="resources" aria-selected="false">Resources</button>
   </nav>
@@ -1065,6 +1066,21 @@
   </section>
 
   <!-- ================= PROJECTS & GRANTS ================= -->
+  <!-- ================= SITES MAP ================= -->
+  <section class="sm-page" id="sites" role="tabpanel" hidden>
+    <div class="sm-card" id="card-sites-map">
+      <h3>Available sites and buildings</h3>
+      <p class="sm-note">Industrial sites and buildings marketed in the region, from two property databases: TVA Sites (Tennessee Valley Authority) and MTIDA (Middle Tennessee Industrial Development Association). Use the maps to search and filter properties by size, utilities, rail and more. Property details and contacts come from those databases, not from this dashboard.</p>
+      <div class="sm-dlbar" id="sm-maplinks">
+        <a class="sm-btn sm-btn-sm" href="https://tvasites.giswebtechguru.com/?sorting=featured&amp;showcommunityonmap=true&amp;layer=Region&amp;activebasemap2d=World%20Navigation%20Map%20(Places)&amp;mapextent=-9388814.803837564,4490805.938632733,-9973405.196162436,4065816.0613672663&amp;mapzoom=7&amp;FIPSCode=OID436" target="_blank" rel="noopener">Open the TVA Sites map ↗</a>
+        <a class="sm-btn sm-btn-sm" href="https://mtida.giswebtechguru.com/?sorting=featured&amp;showpropertyonmap=true&amp;activebasemap2d=World%20Street%20Map%20(Places)&amp;mapextent=-9321791.803837564,4490815.438632733,-9906382.196162436,4065825.5613672663&amp;mapzoom=7" target="_blank" rel="noopener">Open the MTIDA properties map ↗</a>
+      </div>
+      <div class="sm-mapbox" id="sm-mapframe">
+        <p class="sm-note" id="sm-mapnote">The maps open in a new browser tab. (On the public copy of this dashboard they also appear right here.)</p>
+      </div>
+    </div>
+  </section>
+
   <section class="sm-page" id="projects" role="tabpanel" hidden>
     <div class="sm-kpis">
       <div class="sm-kpi">
@@ -1098,6 +1114,11 @@
     <div class="sm-card" id="card-projects">
       <h3>Project pipeline</h3>
       <div class="sm-cards" data-draw="g_projects" data-source="projects"></div>
+    </div>
+    <div class="sm-card" id="card-awards">
+      <h3>State awards to the region, 2026</h3>
+      <p class="sm-note">Grants TNECD announced in 2026 for places in the 13 counties: site development, infrastructure planning, historic courthouses, downtown improvement and broadband (BEAD). Broadband amounts for providers that serve several counties cover their whole service area, so they are not added up here. Statewide broadband awards to providers serving dozens of counties (such as AT&amp;T, ZiTEL and SpaceX) also reach parts of the region and are not listed.</p>
+      <div data-draw="g_awards" data-source="awards"></div>
     </div>
     <div class="sm-grid wide">
       <div class="sm-card" id="card-programs">

@@ -351,7 +351,7 @@
   }
   async function countyBlocks() {
     const s = S(), c = s.selCounty();
-    await s.ready(['counties', 'labor_latest', 'pop_county', 'income_county', 'gdp_county', 'biz_county', 'edu_county', 'permits_latest', 'mfg_county', 'mfg_gdp', 'ag_county', 'acs_county', 'sp_counties', 'sp_facts', 'projects', 'warn', 'sp_employers']);
+    await s.ready(['counties', 'labor_latest', 'pop_county', 'income_county', 'gdp_county', 'biz_county', 'edu_county', 'permits_latest', 'mfg_county', 'mfg_gdp', 'ag_county', 'acs_county', 'sp_counties', 'sp_facts', 'projects', 'warn', 'sp_employers', 'awards']);
     const one = (id) => (s.rowsOf(id) || []).find((r) => r.county === c) || {};
     const p = one('counties');
     if (!p.county) throw new Error('The county profile has not finished loading. Please try again in a moment.');
@@ -399,6 +399,8 @@
     const cut = (s.spF() || {}).window_start || '0000';
     const pr = (s.rowsOf('projects') || []).filter((r) => r.county === c && String(r.announced || '') >= cut);
     if (pr.length) { B.push({ t: 'h1', text: 'Announced projects (last 24 months)' }); B.push({ t: 'table', head: ['Project', 'Sector', 'Jobs', 'Investment', 'Announced'], widths: [2.4, 2.4, 0.8, 1, 1.2], rows: pr.map((r) => [r.project, r.sector, r.jobs != null ? s.int(r.jobs) : 'Not stated', r.investment_m != null ? '$' + s.f1(r.investment_m) + 'M' : 'Not stated', s.dayFmt(r.announced)]) }); }
+    const aw = (s.rowsOf('awards') || []).filter((r) => String(r.county).split(/,\s*/).includes(c));
+    if (aw.length) { B.push({ t: 'h1', text: 'State awards (2026)' }); B.push({ t: 'table', head: ['Recipient', 'Program', 'Amount', 'Purpose', 'Announced'], widths: [2.2, 1.8, 1, 3.2, 1.2], rows: aw.map((r) => [r.recipient, r.program, r.amount_label, r.purpose, s.dayFmt(r.announced)]) }); }
     const w = (s.rowsOf('warn') || []).filter((r) => r.county === c && String(r.notice_date || '') >= cut);
     if (w.length) { B.push({ t: 'h1', text: 'WARN notices (last 24 months)' }); B.push({ t: 'table', head: ['Company', 'City', 'Workers', 'Action', 'Notice date', 'Effective'], widths: [2.2, 1.2, 0.8, 1.2, 1.2, 1.2], rows: w.map((r) => [r.company, r.city, String(r.workers), r.action, s.dayFmt(r.notice_date), r.effective_date ? s.dayFmt(r.effective_date) : '—']) }); }
     B.push({ t: 'note', text: 'Profile checked ' + (p.profile_checked || '—') + '; contacts checked ' + (p.contacts_checked || '—') + '. ' + SOURCES_NOTE });
