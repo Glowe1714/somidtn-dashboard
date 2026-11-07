@@ -2,7 +2,7 @@
 
 Inputs (downloaded from the Claude artifact by the publishing task):
   --docs   folder holding datasets/<id>.json  (ArtifactData list of collection "datasets")
-  --pages  folder holding files/<name>.json   (ArtifactData list of collection "files": index.html, app.js, style.css)
+  --pages  folder holding files/<name>.json   (ArtifactData list of collection "files": index.html, app.js, style.css, export.js)
   --assets folder holding <blob id>.json      (the data files the file datasets point to)
   --out    the repository folder to write (index.html, app.js, style.css, data/)
 Modes:
@@ -11,7 +11,7 @@ FRED datasets are fetched from FRED's public CSV download (no key needed). If FR
 the previous copy in data/ is kept and the manifest marks it. The build stops (exit 1) if any file dataset
 has neither a fresh download nor a previous copy, or if a page file is missing.
 """
-import argparse, csv, datetime, glob, io, json, os, subprocess, sys, time
+import argparse, csv, datetime, glob, io, json, os, re, subprocess, sys, time
 
 p = argparse.ArgumentParser()
 p.add_argument('--docs', required=True); p.add_argument('--out', required=True)
@@ -106,14 +106,24 @@ for i, d in sorted(docs.items()):
     manifest.append(m)
 
 if a.pages:
+    # Page files: index.html, app.js and style.css are required; other plain .js/.css files (such as export.js)
+    # are copied too. Files the public site owns itself (runtime.js, theme.css) are never overwritten.
+    names = sorted(os.path.basename(f)[:-5] for f in glob.glob(os.path.join(a.pages, 'files', '*.json')))
     for name in ('index.html', 'app.js', 'style.css'):
-        f = os.path.join(a.pages, 'files', name + '.json')
-        if not os.path.exists(f): problems.append('page file missing: ' + name); continue
-        text = json.load(open(f))['text']
+        if name not in names: problems.append('page file missing: ' + name)
+    for name in names:
+        if name in ('runtime.js', 'theme.css') or (name != 'index.html' and not re.match(r'^[A-Za-z0-9_-]+\.(js|css)$', name)):
+            problems.append('unexpected page file name: ' + name); continue
+        text = json.load(open(os.path.join(a.pages, 'files', name + '.json')))['text']
         if name == 'index.html':
-            body = text.replace('<meta name="dash-one-writer">', '').replace('<link rel="stylesheet" href="style.css">', '').replace('<script src="app.js"></script>', '').strip()
+            body = text.replace('<meta name="dash-one-writer">', '').replace('<link rel="stylesheet" href="style.css">', '')
+            scripts = re.findall(r'<script src="([^"]+)"></script>', body)
+            body = re.sub(r'<script src="[^"]+"></script>\s*', '', body).strip()
+            for src in scripts:
+                if src not in names: problems.append('index.html loads %s but there is no page file by that name' % src)
+            extra = ''.join('<script src="%s"></script>\n' % src for src in scripts if src != 'app.js')
             shell = open(os.path.join(a.out, 'tools', 'shell.html')).read()
-            text = shell.replace('<!--BODY-->', body)
+            text = shell.replace('<!--BODY-->', body).replace('<script src="app.js"></script>\n', '<script src="app.js"></script>\n' + extra)
         open(os.path.join(a.out, name), 'w').write(text)
 
 # Publish only the employer rows the dashboard would show: in the 13 counties, not repeated, and with a web
