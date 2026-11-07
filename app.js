@@ -712,6 +712,35 @@
       }));
     },
   });
+  dash.calc('sp_employers', {
+    title: 'Major employers',
+    description: "Employers from Greg Lowe's employer Sheet (notebook research), joined with the monthly web checks (one county a day on the 1st to 13th). A row is shown only when it has a web source: a link in the Sheet or a source found by a web check. Employee counts are as stated by that source.",
+    inputs: ['employers', 'employer_checks'],
+    fn: (employers, checks) => {
+      const k = (c, n) => String(c).toLowerCase() + '|' + String(n).toLowerCase().trim();
+      const latest = new Map();
+      checks.slice().sort((a, b) => (String(a.checked) < String(b.checked) ? -1 : 1)).forEach((c) => latest.set(k(c.county, c.company), c));
+      return employers.filter((e) => e.in_region && !e.duplicate).map((e) => {
+        const c = latest.get(k(e.county, e.company)) || null;
+        const webOk = c && ['confirmed', 'changed', 'closed'].includes(c.status) && c.source_url;
+        const shown = Boolean(e.has_url || webOk);
+        let status = 'Waiting for a web link in the Sheet';
+        if (c && c.status === 'confirmed') status = 'Web-checked ' + c.checked;
+        else if (c && c.status === 'changed') status = 'Updated by web check ' + c.checked + (c.note ? ': ' + c.note : '');
+        else if (c && c.status === 'closed') status = 'Closed or left the county, per web check ' + c.checked + (c.note ? ': ' + c.note : '');
+        else if (c && c.status === 'not_found' && e.has_url) status = "From Greg's Sheet; web check " + c.checked + ' could not confirm';
+        else if (e.has_url) status = "From Greg's Sheet; not yet web-checked";
+        else if (c && c.status === 'not_found') status = 'Web check ' + c.checked + ' could not confirm; needs a link';
+        return {
+          county: e.county, company: e.company, industry: e.industry, shown, status, check_status: c ? c.status : null,
+          employees: shown ? (c && c.employees != null ? c.employees : e.employees) : null,
+          employees_note: shown ? ((c && c.employees_note) || (e.employees == null ? e.employees_text : null)) : null,
+          source_url: (webOk && c.source_url) || e.source_url || null, checked: c ? c.checked : null, sheet_row: e.sheet_row,
+        };
+      });
+    },
+  });
+
   dash.calc('sp_facts', {
     title: 'Strategic plan: regional facts',
     description: 'Regional figures behind the Strategic plan tab: unemployment, manufacturing jobs and share, business establishments, WARN notices and announced projects in the last 24 months, and workforce comparisons with Tennessee.',
@@ -1415,9 +1444,35 @@
   dash.draw('sp_bre', (el) => {
     if (pending(el, ['sp_counties'])) return;
     const rows = rowsOf('sp_counties').filter((r) => r.f_retention).sort((a, b) => (b.warn_workers - a.warn_workers) || ((a.mfg_chg_pct ?? 0) - (b.mfg_chg_pct ?? 0)));
-    miniTable(el, ['County', 'Largest disclosed manufacturing subsectors (jobs)', 'Factory jobs vs yr ago', 'WARN notices (24 months)'],
-      rows.map((r) => [r.county, r.top_subsectors || 'Withheld by BLS', r.mfg_chg_pct != null ? sgn(r.mfg_chg_pct) + '% (' + sgnInt(r.mfg_chg) + ')' : '—', r.warn_list || 'None']));
-    el.querySelectorAll('td:nth-child(2), td:nth-child(4)').forEach((c) => c.classList.add('sm-wrap'));
+    const emp = (rowsOf('sp_employers') || []).filter((e) => e.shown);
+    const top = (c) => emp.filter((e) => e.county === c).sort((a, b) => (b.employees ?? -1) - (a.employees ?? -1)).slice(0, 3)
+      .map((e) => e.company + (e.employees != null ? ' (' + int(e.employees) + ')' : '')).join('; ');
+    miniTable(el, ['County', 'Largest disclosed manufacturing subsectors (jobs)', 'Largest listed employers', 'Factory jobs vs yr ago', 'WARN notices (24 months)'],
+      rows.map((r) => [r.county, r.top_subsectors || 'Withheld by BLS', top(r.county) || 'None listed yet', r.mfg_chg_pct != null ? sgn(r.mfg_chg_pct) + '% (' + sgnInt(r.mfg_chg) + ')' : '—', r.warn_list || 'None']));
+    el.querySelectorAll('td:nth-child(2), td:nth-child(3), td:nth-child(5)').forEach((c) => c.classList.add('sm-wrap'));
+  });
+  dash.draw('sp_employers_tbl', (el) => {
+    if (pending(el, ['sp_employers'])) return;
+    el.replaceChildren();
+    const all = rowsOf('sp_employers'), shown = all.filter((e) => e.shown);
+    const waiting = all.filter((e) => !e.shown);
+    const byC = {};
+    waiting.forEach((e) => { byC[e.county] = (byC[e.county] || 0) + 1; });
+    el.appendChild(h('p', 'sm-note', shown.length + ' employer' + (shown.length === 1 ? '' : 's') + ' listed. ' + (waiting.length ? waiting.length + ' more in the Sheet are waiting for a web source (' + Object.entries(byC).sort((a, b) => b[1] - a[1]).map(([c, n]) => c + ' ' + n).join(', ') + ').' : 'Every Sheet row has a source.')));
+    if (!shown.length) return;
+    const box = h('div', 'sm-tablebox'), t = h('table', 'sm-table'), hr = h('tr');
+    ['County', 'Company', 'Industry', 'Employees', 'Status', 'Source'].forEach((x) => hr.appendChild(h('th', null, x)));
+    const th = h('thead'); th.appendChild(hr); t.appendChild(th);
+    const tb = h('tbody');
+    shown.sort((a, b) => a.county.localeCompare(b.county) || ((b.employees ?? -1) - (a.employees ?? -1))).forEach((e) => {
+      const tr = h('tr');
+      tr.appendChild(h('td', null, e.county)); tr.appendChild(h('td', 'sm-wrap', e.company)); tr.appendChild(h('td', 'sm-wrap', e.industry || '—'));
+      tr.appendChild(h('td', null, e.employees != null ? int(e.employees) : (e.employees_note || '—')));
+      tr.appendChild(h('td', 'sm-wrap', e.status));
+      const s = h('td'); if (e.source_url) s.appendChild(link(e.source_url, 'Source ↗')); else s.textContent = '—'; tr.appendChild(s);
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); box.appendChild(t); el.appendChild(box);
   });
   dash.draw('sp_clusters_tbl', (el) => {
     if (pending(el, ['sp_clusters'])) return;

@@ -151,7 +151,14 @@
       <div class="sm-card" id="card-sp-bre">
         <h3>Retention and expansion watch list</h3>
         <p class="sm-note">Counties flagged <b>Retain &amp; expand</b>, with their largest manufacturing subsectors, the place to start employer visits. BLS withholds some county figures for privacy.</p>
-        <div class="sm-tablebox" data-draw="sp_bre" data-source="sp_counties"></div>
+        <div class="sm-tablebox" data-draw="sp_bre" data-source="sp_counties sp_employers"></div>
+      </div>
+    </div>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sp-employers">
+        <h3>Major employers</h3>
+        <p class="sm-note">From Greg's employer Sheet (notebook research), checked on the web one county a day on the 1st to 13th of each month. A company appears only when it has a web source; employee counts are as stated by that source. Statuses show whether and when each one was web-checked.</p>
+        <div data-draw="sp_employers_tbl" data-source="sp_employers"></div>
       </div>
     </div>
     <div class="sm-grid wide">
