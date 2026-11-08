@@ -2418,6 +2418,153 @@
     });
   });
 
+  /* calendar of events: community calendar + statewide economic development dates */
+  const CAL_CATS = ['Holidays & parades', 'Community', 'Chamber & business', 'Arts & entertainment', 'Public meetings', 'Economic development'];
+  const CAL_COUNTIES = ['Bedford', 'Coffee', 'Franklin', 'Giles', 'Hickman', 'Lawrence', 'Lewis', 'Lincoln', 'Marshall', 'Maury', 'Moore', 'Perry', 'Wayne'];
+  dash.calc('cal_rows', {
+    title: 'Calendar of events',
+    description: 'Events in the 13 counties (calendar dataset) plus the statewide economic development dates from the Events list on the Projects tab, one row per event, soonest first.',
+    inputs: ['calendar', 'events'],
+    fn: (calendar, events) => {
+      const ev = (events || []).map((r) => ({ title: r.event, start: r.date, end: r.end_date || null, time: null, venue: r.location || null, city: null,
+        county: r.county || 'Statewide', county_note: null, category: 'Economic development', organizer: null, source_name: 'Events list (Projects tab)',
+        source_type: 'Economic development', source_url: r.source_url || null, checked: null }));
+      const mins = (t) => { const m = /(\d{1,2}):(\d\d) ?([AP])M/.exec(t || ''); return m ? (Number(m[1]) % 12 + (m[3] === 'P' ? 12 : 0)) * 60 + Number(m[2]) : -1; };
+      return (calendar || []).map((r) => ({ ...r })).concat(ev)
+        .sort((a, b) => (a.start < b.start ? -1 : a.start > b.start ? 1 : mins(a.time) - mins(b.time) || String(a.title).localeCompare(String(b.title))));
+    },
+  });
+  let calMonth = '0', calCounty = '', calCat = 'All', calDay = null;
+  const ymdAdd = (s, months) => { const d = parseDay(s); d.setUTCDate(1); d.setUTCMonth(d.getUTCMonth() + months); return d.toISOString().slice(0, 10); };
+  const monthEnd = (first) => { const d = parseDay(first); d.setUTCMonth(d.getUTCMonth() + 1); d.setUTCDate(0); return d.toISOString().slice(0, 10); };
+  const monthName = (first) => parseDay(first).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const nextDay = (s) => new Date(parseDay(s).getTime() + 86400000).toISOString().slice(0, 10);
+  const calWindow = () => {
+    const t = todayStr();
+    if (calMonth === 'all') return { from: t, to: '9999-12-31', first: ymdAdd(t, 0), label: 'All upcoming events' };
+    const first = ymdAdd(t, Number(calMonth));
+    return { from: calMonth === '0' ? t : first, to: monthEnd(first), first, label: monthName(first) };
+  };
+  const calInWindow = (r, w) => (r.end || r.start) >= w.from && r.start <= w.to;
+  // An event is listed (and counted in the month grid) once: on its first day, or on the window's first day if it started earlier.
+  const calListDay = (r, w) => (r.start < w.from ? w.from : r.start);
+  const calMatch = (r, skipCounty) => (calCat === 'All' || r.category === calCat) && (skipCounty || !calCounty || r.county === calCounty || r.county === 'Statewide');
+  function calVisible() {
+    const rows = rowsOf('cal_rows') || [], w = calWindow();
+    return rows.filter((r) => calInWindow(r, w) && calMatch(r) && (!calDay || calListDay(r, w) === calDay));
+  }
+  const calDayLabel = (s) => parseDay(s).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+  const calRedraw = () => { dash.draw('cal_grid'); dash.draw('cal_list'); dash.draw('cal_kpi'); };
+  document.querySelectorAll('#cal-month button').forEach((b) => b.addEventListener('click', () => {
+    calMonth = b.dataset.month; calDay = null;
+    document.querySelectorAll('#cal-month button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    calRedraw();
+  }));
+  document.querySelectorAll('#cal-cat button').forEach((b) => b.addEventListener('click', () => {
+    calCat = b.dataset.cat;
+    document.querySelectorAll('#cal-cat button').forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    calRedraw();
+  }));
+  document.querySelectorAll('#cal-county').forEach((s) => s.addEventListener('change', () => { calCounty = s.value; calRedraw(); }));
+  dash.draw('cal_kpi', (el) => {
+    const rows = rowsOf('cal_rows');
+    if (!rows) { el.textContent = '—'; return; }
+    const w = calWindow(), k = el.dataset.k;
+    const inWin = rows.filter((r) => calInWindow(r, w));
+    if (k === 'n') el.textContent = int(inWin.filter((r) => calMatch(r)).length);
+    else if (k === 'period') el.textContent = w.label + (calCounty ? ' · ' + calCounty + ' County' : '') + (calCat !== 'All' ? ' · ' + calCat : '');
+    else if (k === 'counties' || k === 'missing') {
+      const have = new Set(inWin.filter((r) => calMatch(r, true)).map((r) => r.county).filter((c) => CAL_COUNTIES.includes(c)));
+      const miss = CAL_COUNTIES.filter((c) => !have.has(c));
+      el.textContent = k === 'counties' ? String(have.size) : (miss.length ? 'None listed yet: ' + miss.join(', ') : 'All 13 counties have listings');
+    } else if (k === 'next' || k === 'next_when') {
+      const t = todayStr();
+      const nx = rows.find((r) => r.start >= t && calMatch(r));
+      if (!nx) { el.textContent = k === 'next' ? 'Nothing listed' : ''; return; }
+      el.textContent = k === 'next' ? nx.title : [calDayLabel(nx.start), nx.time, nx.city || nx.county].filter(Boolean).join(' · ');
+    }
+  });
+  dash.draw('cal_grid', (el) => {
+    el.replaceChildren();
+    const rows = rowsOf('cal_rows');
+    if (!rows) return;
+    const w = calWindow(), first = w.first, last = monthEnd(first), t = todayStr();
+    const counts = {};
+    rows.filter((r) => calMatch(r) && calInWindow(r, w)).forEach((r) => { const d = calListDay(r, w); if (d >= first && d <= last) counts[d] = (counts[d] || 0) + 1; });
+    el.appendChild(h('div', 'sm-calmonth-title', monthName(first) + (calMonth === 'all' ? ' (the list below runs further)' : '')));
+    const grid = h('div', 'sm-calgrid');
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((d) => grid.appendChild(h('div', 'sm-calhd', d)));
+    const lead = parseDay(first).getUTCDay();
+    for (let i = 0; i < lead; i++) grid.appendChild(h('div', 'sm-calcell sm-calblank'));
+    for (let d = first; d <= last; d = nextDay(d)) {
+      const n = counts[d] || 0, day = d;
+      const b = h('button', 'sm-calcell' + (d < t ? ' is-past' : '') + (d === t ? ' is-today' : ''));
+      b.type = 'button';
+      b.setAttribute('aria-pressed', String(calDay === d));
+      b.setAttribute('aria-label', calDayLabel(d) + ': ' + n + ' event' + (n === 1 ? '' : 's'));
+      b.appendChild(h('span', 'sm-calnum', String(Number(d.slice(8)))));
+      if (n) b.appendChild(h('span', 'sm-calcount', String(n)));
+      b.disabled = !n;
+      b.addEventListener('click', () => { calDay = calDay === day ? null : day; calRedraw(); });
+      grid.appendChild(b);
+    }
+    el.appendChild(grid);
+    el.appendChild(h('p', 'sm-note', calDay ? 'Showing ' + calDayLabel(calDay) + ' only. Click the day again to show the whole month.' : 'Numbers are events per day; an event that runs several days is counted on its first day shown. Click a day to show only that day.'));
+  });
+  dash.draw('cal_list', (el) => {
+    el.replaceChildren();
+    if (pending(el, ['cal_rows'])) return;
+    const rows = calVisible(), w = calWindow();
+    if (!rows.length) { el.appendChild(h('p', 'sm-note', 'No events are listed for this choice yet. See “Sources checked” below for what could and could not be read.')); return; }
+    const byDay = new Map();
+    rows.forEach((r) => { const d = calListDay(r, w); if (!byDay.has(d)) byDay.set(d, []); byDay.get(d).push(r); });
+    [...byDay.keys()].sort().forEach((d) => {
+      const box = h('div', 'sm-calday');
+      box.appendChild(h('h4', 'sm-calday-h', calDayLabel(d)));
+      const ul = h('ul', 'sm-list');
+      byDay.get(d).forEach((r) => {
+        const li = h('li', 'sm-item');
+        const top = h('div', 'sm-item-top');
+        top.appendChild(h('span', 'sm-item-title', r.title));
+        const pills = h('span', 'sm-calpills');
+        pills.appendChild(catPill(r.category, CAL_CATS.indexOf(r.category)));
+        pills.appendChild(h('span', 'sm-pill', r.county === 'Statewide' ? 'Statewide' : r.county + ' Co.'));
+        top.appendChild(pills);
+        li.appendChild(top);
+        const when = r.end ? dayFmt(r.start) + ' – ' + dayFmt(r.end) : dayFmt(r.start);
+        const place = r.city && !(r.venue || '').includes(r.city) ? r.city : null;
+        const meta = h('span', 'sm-item-meta', [when, r.time, r.venue, place].filter(Boolean).join(' · ') + ' · ');
+        if (r.source_url) meta.appendChild(link(r.source_url, (r.source_name || 'Source') + ' ↗')); else meta.appendChild(document.createTextNode(r.source_name || ''));
+        li.appendChild(meta);
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+      el.appendChild(box);
+    });
+  });
+  dash.draw('cal_sources', (el) => {
+    el.replaceChildren();
+    if (pending(el, ['calendar_sources'])) return;
+    const rows = rowsOf('calendar_sources');
+    const order = (c) => (c === 'All counties' ? -1 : CAL_COUNTIES.indexOf(c));
+    const box = h('div', 'sm-tablebox'), t = h('table', 'sm-table'), hr = h('tr');
+    ['County', 'Source', 'Type', 'Status', 'Note'].forEach((x) => hr.appendChild(h('th', null, x)));
+    const th = h('thead'); th.appendChild(hr); t.appendChild(th);
+    const tb = h('tbody');
+    rows.slice().sort((a, b) => order(a.county) - order(b.county)).forEach((r) => {
+      const tr = h('tr');
+      tr.appendChild(h('td', null, r.county));
+      const s = h('td', 'sm-wrap'); if (r.url) s.appendChild(link(r.url, r.source + ' ↗')); else s.textContent = r.source; tr.appendChild(s);
+      tr.appendChild(h('td', null, r.type));
+      tr.appendChild(h('td', null, r.status));
+      tr.appendChild(h('td', 'sm-wrap', r.note || '—'));
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); box.appendChild(t); el.appendChild(box);
+    const checked = rows.map((r) => r.checked).filter(Boolean).sort().pop();
+    if (checked) el.appendChild(h('p', 'sm-note', 'Last checked ' + dayFmt(checked) + '.'));
+  });
+
   /* resources */
   dash.draw('r_all', (el) => {
     el.replaceChildren();
@@ -2483,7 +2630,7 @@
   }
 
   /* ---------- site search ---------- */
-  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers', 'awards'];
+  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers', 'awards', 'calendar'];
   function searchIndex() {
     const items = [];
     const add = (type, title, fields, go, url) => { const text = fields.filter((x) => x != null && x !== '').map(String).join(' · '); items.push({ type, title: String(title || ''), text, go, url, hay: (title + ' ' + text).toLowerCase() }); };
@@ -2506,6 +2653,7 @@
     (rowsOf('programs') || []).forEach((r) => add('Grant or program', r.program, [r.agency, r.topic, r.amount_label, r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
     (rowsOf('actions') || []).forEach((r) => add('Action item', r.action, [r.deadline ? 'Deadline ' + r.deadline : null, r.summary], { tab: 'projects' }, r.source_url));
     (rowsOf('events') || []).forEach((r) => add('Event', r.event, [r.county, r.date, r.location], { tab: 'projects' }, r.source_url));
+    (rowsOf('calendar') || []).forEach((r) => add('Calendar event', r.title, [r.county + ' County', r.city, dayFmt(r.start) + (r.end ? ' – ' + dayFmt(r.end) : ''), r.time, r.venue, r.category, r.source_name], { tab: 'calendar' }, r.source_url));
     (rowsOf('intel') || []).forEach((r) => add('Intel', r.headline, [r.topic, r.date, r.body], { tab: 'overview' }, r.source_url));
     (rowsOf('warn') || []).forEach((r) => add('WARN notice', r.company, [r.city, r.county, r.workers + ' workers', r.action, r.notice_date, r.note], { tab: 'workforce' }, r.source_url));
     (rowsOf('stories') || []).forEach((r) => add('News', r.headline, [r.publisher, r.date, r.summary, r.why_it_matters], { tab: 'news' }, r.source_url));
@@ -2595,6 +2743,7 @@
 
   /* ---------- shared with export.js ---------- */
   window.SM = {
+    calVisible,
     rowsOf, selCounty, showTab, openCounty, spSwotData, spPlanSteps, spMeasureRows, spF, dayFmt, f1, f2, int, sgn, sgnInt, usd, todayStr,
     planStart: SP_PLAN_START,
     ready(ids, ms = 15000) {

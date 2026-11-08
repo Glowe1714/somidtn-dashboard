@@ -541,6 +541,36 @@
     });
     return rows;
   };
+
+  /* ---------- calendar file (.ics) for Outlook, iPhone and Google Calendar ---------- */
+  function icsFile(rows) {
+    const esc = (v) => String(v == null ? '' : v).replace(/\\/g, '\\\\').replace(/\r?\n/g, '\\n').replace(/([,;])/g, '\\$1');
+    const fold = (line) => { const out = []; let s = line; while (s.length > 60) { out.push(s.slice(0, 60)); s = ' ' + s.slice(60); } out.push(s); return out.join('\r\n'); };
+    const ymd = (d) => String(d).slice(0, 10).replace(/-/g, '');
+    const t24 = (t) => { const m = /(\d{1,2}):(\d\d) ?([AP])M/.exec(t || ''); return m ? String(Number(m[1]) % 12 + (m[3] === 'P' ? 12 : 0)).padStart(2, '0') + m[2] + '00' : null; };
+    const nextDay = (d) => { const x = new Date(String(d).slice(0, 10) + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + 1); return x.toISOString().slice(0, 10); };
+    const stamp = new Date().toISOString().replace(/[-:]/g, '').slice(0, 15) + 'Z';
+    const L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//SoMidTN Dashboard//Calendar of events//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:SoMidTN events',
+      'BEGIN:VTIMEZONE', 'TZID:America/Chicago',
+      'BEGIN:DAYLIGHT', 'TZOFFSETFROM:-0600', 'TZOFFSETTO:-0500', 'TZNAME:CDT', 'DTSTART:19700308T020000', 'RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU', 'END:DAYLIGHT',
+      'BEGIN:STANDARD', 'TZOFFSETFROM:-0500', 'TZOFFSETTO:-0600', 'TZNAME:CST', 'DTSTART:19701101T020000', 'RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU', 'END:STANDARD',
+      'END:VTIMEZONE'];
+    rows.forEach((r, i) => {
+      const tm = String(r.time || '').match(/\d{1,2}:\d\d ?[AP]M/g) || [];
+      const t0 = t24(tm[0]), t1 = t24(tm[1]);
+      L.push('BEGIN:VEVENT', 'UID:' + ymd(r.start) + '-' + i + '-' + String(r.title || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 24) + '@somidtn-dashboard', 'DTSTAMP:' + stamp);
+      if (t0 && !r.end) { L.push('DTSTART;TZID=America/Chicago:' + ymd(r.start) + 'T' + t0); if (t1) L.push('DTEND;TZID=America/Chicago:' + ymd(r.start) + 'T' + t1); }
+      else L.push('DTSTART;VALUE=DATE:' + ymd(r.start), 'DTEND;VALUE=DATE:' + ymd(nextDay(r.end || r.start)));
+      L.push('SUMMARY:' + esc(r.title));
+      const where = [r.venue, r.city && !String(r.venue || '').includes(r.city) ? r.city + ', TN' : null].filter(Boolean).join(', ');
+      if (where) L.push('LOCATION:' + esc(where));
+      L.push('DESCRIPTION:' + esc([r.time ? 'Time: ' + r.time : null, r.county === 'Statewide' ? 'Statewide' : r.county + ' County', r.county_note, 'Listed by: ' + (r.source_name || 'source'), r.source_url, 'Check the source before you go; times and places can change.'].filter(Boolean).join('\n')));
+      if (r.source_url) L.push('URL:' + r.source_url);
+      L.push('END:VEVENT');
+    });
+    L.push('END:VCALENDAR');
+    return L.map(fold).join('\r\n') + '\r\n';
+  }
   async function runCard(fmt, btn) {
     busy(btn, true);
     try {
@@ -552,6 +582,13 @@
       const tables = [...card.querySelectorAll('table')].filter(isShown);
       const data = ids.map((id) => ({ id, rows: rowsFor(id) })).filter((d) => d.rows && d.rows.length);
       const name = 'SoMidTN-' + slug(title) + '-' + today();
+      if (fmt === 'ics') {
+        const rows = (S().calVisible && S().calVisible()) || [];
+        if (!rows.length) { toast('No events are shown, so there is nothing to add.'); return; }
+        await save('SoMidTN-events-' + today() + '.ics', new Blob([icsFile(rows)], { type: 'text/calendar' }));
+        toast('Saved ' + rows.length + ' event' + (rows.length === 1 ? '' : 's') + '. Open the file to add them to your calendar.');
+        return;
+      }
       if (fmt === 'csv') {
         let grid = null;
         if (tables.length) grid = tableGrid(tables[0]);
@@ -690,5 +727,5 @@
     document.querySelectorAll('#sm-howto-fail').forEach((e) => { e.hidden = ok; });
     if (!ok) { ta.focus(); ta.select(); }
   });
-  window.SMExport = { csv, xlsx, docx, pdf, pptx, strategyBlocks, countyBlocks, strategySlides, tabBlocks };
+  window.SMExport = { icsFile, csv, xlsx, docx, pdf, pptx, strategyBlocks, countyBlocks, strategySlides, tabBlocks };
 })();

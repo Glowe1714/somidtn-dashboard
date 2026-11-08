@@ -26,7 +26,7 @@
   <div class="sm-searchbar" role="search">
     <label class="sm-vh" for="sm-q">Search the dashboard</label>
     <input id="sm-q" class="sm-sitesearch" type="search" placeholder="Search the dashboard: counties, people, projects, grants, employers, news…" autocomplete="off" spellcheck="false">
-    <div id="sm-results" class="sm-results is-off" data-draw="sm_search" data-source="counties projects programs events intel warn stories radar_feed resources edu_colleges notebooks actions sp_employers awards"></div>
+    <div id="sm-results" class="sm-results is-off" data-draw="sm_search" data-source="counties projects programs events intel warn stories radar_feed resources edu_colleges notebooks actions sp_employers awards calendar"></div>
   </div>
   <div class="sm-toast is-off" id="sm-toast" role="status" aria-live="polite" data-draw="sm_toast"></div>
 
@@ -34,6 +34,7 @@
     <button class="sm-tab" role="tab" type="button" data-tab="overview" aria-selected="true">Overview</button>
     <button class="sm-tab" role="tab" type="button" data-tab="strategy" aria-selected="false">Strategic plan</button>
     <button class="sm-tab" role="tab" type="button" data-tab="news" aria-selected="false">News</button>
+    <button class="sm-tab" role="tab" type="button" data-tab="calendar" aria-selected="false">Calendar of events</button>
     <button class="sm-tab" role="tab" type="button" data-tab="workforce" aria-selected="false">Labor &amp; workforce</button>
     <button class="sm-tab" role="tab" type="button" data-tab="people" aria-selected="false">People &amp; income</button>
     <button class="sm-tab" role="tab" type="button" data-tab="economy" aria-selected="false">Economy &amp; business</button>
@@ -247,6 +248,65 @@
   </section>
 
   <!-- ================= LABOR & WORKFORCE ================= -->
+  <!-- ================= CALENDAR OF EVENTS ================= -->
+  <section class="sm-page" id="calendar" role="tabpanel" hidden>
+    <div class="sm-dlbar sm-tabdl" data-report="tab">
+      <span>Download this tab:</span>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel (all data)</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="docx">Word</button>
+      <button class="sm-btn sm-btn-sm" type="button" data-fmt="pdf">PDF</button>
+    </div>
+    <div class="sm-kpis">
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Events listed</span>
+        <span class="sm-kpi-value"><b data-draw="cal_kpi" data-source="cal_rows" data-k="n">—</b></span>
+        <span class="sm-kpi-sub" data-draw="cal_kpi" data-source="cal_rows" data-k="period">—</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Counties with listed events</span>
+        <span class="sm-kpi-value"><b data-draw="cal_kpi" data-source="cal_rows" data-k="counties">—</b> of 13</span>
+        <span class="sm-kpi-sub" data-draw="cal_kpi" data-source="cal_rows" data-k="missing">—</span>
+      </div>
+      <div class="sm-kpi">
+        <span class="sm-kpi-label">Next up</span>
+        <span class="sm-kpi-value sm-kpi-text" data-draw="cal_kpi" data-source="cal_rows" data-k="next">—</span>
+        <span class="sm-kpi-sub" data-draw="cal_kpi" data-source="cal_rows" data-k="next_when">—</span>
+      </div>
+    </div>
+    <div class="sm-card" id="card-calendar">
+      <h3>What&rsquo;s happening</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="ics">Add to my calendar (.ics)</button></div>
+      <p class="sm-note">Events in the 13 counties from chamber, visitors bureau, economic development, local news and government calendars, plus the statewide economic development dates from the Projects tab. Every event links to the page that lists it; check that page before you go, because times and places change. Weekly business promotions, virtual-only sessions and office closures are left out. Spring Hill is split between Maury and Williamson counties; its events are listed under Maury, so check the venue. &ldquo;Add to my calendar&rdquo; saves the events shown below as one file that Outlook, iPhone and Google Calendar can open.</p>
+      <div class="sm-calbar">
+        <div class="sm-seg" id="cal-month" role="group" aria-label="Choose the month">
+          <button type="button" data-month="0" aria-pressed="true">This month</button>
+          <button type="button" data-month="1" aria-pressed="false">Next month</button>
+          <button type="button" data-month="all" aria-pressed="false">All upcoming</button>
+        </div>
+        <label class="sm-calsel">County
+          <select id="cal-county"><option value="">All 13 counties</option><option value="Bedford">Bedford</option><option value="Coffee">Coffee</option><option value="Franklin">Franklin</option><option value="Giles">Giles</option><option value="Hickman">Hickman</option><option value="Lawrence">Lawrence</option><option value="Lewis">Lewis</option><option value="Lincoln">Lincoln</option><option value="Marshall">Marshall</option><option value="Maury">Maury</option><option value="Moore">Moore</option><option value="Perry">Perry</option><option value="Wayne">Wayne</option></select>
+        </label>
+      </div>
+      <div class="sm-seg" id="cal-cat" role="group" aria-label="Filter by kind of event">
+          <button type="button" data-cat="All" aria-pressed="true">All kinds</button>
+          <button type="button" data-cat="Holidays &amp; parades" aria-pressed="false">Holidays &amp; parades</button>
+          <button type="button" data-cat="Community" aria-pressed="false">Community</button>
+          <button type="button" data-cat="Chamber &amp; business" aria-pressed="false">Chamber &amp; business</button>
+          <button type="button" data-cat="Arts &amp; entertainment" aria-pressed="false">Arts &amp; entertainment</button>
+          <button type="button" data-cat="Public meetings" aria-pressed="false">Public meetings</button>
+          <button type="button" data-cat="Economic development" aria-pressed="false">Economic development</button>
+      </div>
+      <div class="sm-calmonth" data-draw="cal_grid" data-source="cal_rows"></div>
+      <div class="sm-agenda" data-draw="cal_list" data-source="cal_rows"></div>
+    </div>
+    <div class="sm-card" id="card-cal-sources">
+      <h3>Sources checked</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+      <p class="sm-note">Where the calendar comes from, county by county, and what could not be read. Facebook and Instagram need a login, and many small towns post events only there, so some counties have few or no listings. A Claude scheduled task re-checks these sources every Monday and Thursday morning and adds new events it can verify.</p>
+      <div data-draw="cal_sources" data-source="calendar_sources"></div>
+    </div>
+  </section>
+
   <section class="sm-page" id="workforce" role="tabpanel" hidden>
     <div class="sm-dlbar sm-tabdl" data-report="tab">
       <span>Download this tab:</span>
