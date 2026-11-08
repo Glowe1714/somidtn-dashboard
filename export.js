@@ -428,7 +428,7 @@
     B.push({ t: 'h1', text: 'Leaders and contacts' });
     B.push({ t: 'table', head: ['Role', 'Details'], widths: [1.6, 6], rows: [['County mayor', p.county_mayor], ['Economic development', p.ed_leader], ['City leaders', p.city_leaders], ['State legislators', p.state_legislators]].filter((r) => r[1]) });
     const emp = (s.rowsOf('sp_employers') || []).filter((e) => e.shown && e.county === c).sort((x, y) => (y.employees ?? -1) - (x.employees ?? -1));
-    if (emp.length) { B.push({ t: 'h1', text: 'Major employers' }); B.push({ t: 'table', head: ['Company', 'Industry', 'Employees', 'Status', 'Source'], widths: [2.2, 2.2, 1, 2, 2.2], rows: emp.map((e) => [e.company, e.industry, e.employees != null ? s.int(e.employees) : (e.employees_note || '—'), e.status, e.source_url]) }); }
+    if (emp.length) { B.push({ t: 'h1', text: 'Major employers' }); B.push({ t: 'table', head: ['Company', 'Industry', 'Employees', 'Notes', 'Status', 'Source'], widths: [1.8, 1.6, 0.9, 2.6, 1.6, 1.9], rows: emp.map((e) => [e.company, e.industry, e.employees != null ? s.int(e.employees) : (e.employees_note || '—'), e.notes || '—', e.status, e.source_url]) }); }
     const cut = (s.spF() || {}).window_start || '0000';
     const pr = (s.rowsOf('projects') || []).filter((r) => r.county === c && String(r.announced || '') >= cut);
     if (pr.length) { B.push({ t: 'h1', text: 'Announced projects (last 24 months)' }); B.push({ t: 'table', head: ['Project', 'Sector', 'Jobs', 'Investment', 'Announced'], widths: [2.4, 2.4, 0.8, 1, 1.2], rows: pr.map((r) => [r.project, r.sector, r.jobs != null ? s.int(r.jobs) : 'Not stated', r.investment_m != null ? '$' + s.f1(r.investment_m) + 'M' : 'Not stated', s.dayFmt(r.announced)]) }); }

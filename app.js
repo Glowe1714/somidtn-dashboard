@@ -752,6 +752,7 @@
           employees: shown ? (c && c.employees != null ? c.employees : e.employees) : null,
           employees_note: shown ? ((c && c.employees_note) || (e.employees == null ? e.employees_text : null)) : null,
           source_url: (webOk && c.source_url) || e.source_url || null, checked: c ? c.checked : null, sheet_row: e.sheet_row,
+          notes: shown ? (e.notes || null) : null,
         };
       });
     },
@@ -1482,13 +1483,14 @@
     el.appendChild(h('p', 'sm-note', shown.length + ' employer' + (shown.length === 1 ? '' : 's') + ' listed. ' + (waiting.length ? waiting.length + ' more in the Sheet are waiting for a web source (' + Object.entries(byC).sort((a, b) => b[1] - a[1]).map(([c, n]) => c + ' ' + n).join(', ') + ').' : 'Every Sheet row has a source.')));
     if (!shown.length) return;
     const box = h('div', 'sm-tablebox'), t = h('table', 'sm-table'), hr = h('tr');
-    ['County', 'Company', 'Industry', 'Employees', 'Status', 'Source'].forEach((x) => hr.appendChild(h('th', null, x)));
+    ['County', 'Company', 'Industry', 'Employees', 'Notes', 'Status', 'Source'].forEach((x) => hr.appendChild(h('th', null, x)));
     const th = h('thead'); th.appendChild(hr); t.appendChild(th);
     const tb = h('tbody');
     shown.sort((a, b) => a.county.localeCompare(b.county) || ((b.employees ?? -1) - (a.employees ?? -1))).forEach((e) => {
       const tr = h('tr');
       tr.appendChild(h('td', null, e.county)); tr.appendChild(h('td', 'sm-wrap', e.company)); tr.appendChild(h('td', 'sm-wrap', e.industry || '—'));
       tr.appendChild(h('td', null, e.employees != null ? int(e.employees) : (e.employees_note || '—')));
+      tr.appendChild(h('td', 'sm-wrap', e.notes || '—'));
       tr.appendChild(h('td', 'sm-wrap', e.status));
       const s = h('td'); if (e.source_url) s.appendChild(link(e.source_url, 'Source ↗')); else s.textContent = '—'; tr.appendChild(s);
       tb.appendChild(tr);
