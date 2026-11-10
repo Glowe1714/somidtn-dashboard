@@ -587,6 +587,29 @@
       </div>
     </div>
     <div class="sm-more"><a href="https://www.bea.gov/data/by-place-county-metro-local" target="_blank" rel="noopener">Learn more: BEA county data ↗</a><a href="https://www.bls.gov/cew/" target="_blank" rel="noopener">BLS QCEW ↗</a></div>
+    <h2 class="sm-h2">Small business &amp; entrepreneurship</h2>
+    <p class="sm-note">How many people are starting businesses, how many work for themselves, and how many local employers there are, per 1,000 residents, with Tennessee and the U.S. for comparison. Sources: U.S. Census Bureau Business Formation Statistics (business applications), Nonemployer Statistics (solo businesses), County Business Patterns (employer locations and their size) and Business Dynamics Statistics (new employer locations), with Census Vintage 2025 population estimates. Each measure uses its newest published year, so the years differ. For 20-year trends and comparisons with rural counties nationally, see <a href="https://www.drdellgines.com/rural-entrepreneurship.html" target="_blank" rel="noopener">Dr. Dell Gines&rsquo; Rural Economic Data &#8599;</a>.</p>
+    <div class="sm-grid">
+      <div class="sm-card" id="card-sb-apps">
+        <h3>Startup activity: business applications</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+        <p class="sm-note">Applications for a new business tax ID per 1,000 residents, <span data-draw="sb_year" data-source="smallbiz" data-field="apps_year" data-row="0">—</span>, with the change in applications since 2019 in parentheses. Dashed line: Tennessee. Not every application becomes a business with employees, and Census adds a small amount of statistical noise to county counts to protect confidentiality.</p>
+        <div class="sm-chart" data-draw="sb_apps" data-source="smallbiz"></div>
+      </div>
+      <div class="sm-card" id="card-sb-openings">
+        <h3>New employer locations opened</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+        <p class="sm-note">New business locations with employees opened per 1,000 residents each year, <span data-draw="sb_oyears" data-source="smallbiz" data-field="openings_years" data-row="0">—</span> average. Dashed line: Tennessee.</p>
+        <div class="sm-chart" data-draw="sb_openings" data-source="smallbiz"></div>
+      </div>
+    </div>
+    <div class="sm-card" id="card-sb-table">
+      <h3>Small business at a glance</h3>
+      <div class="sm-tbtns" data-dl="card"><span>Download:</span> <button class="sm-btn sm-btn-sm" type="button" data-fmt="csv">CSV</button> <button class="sm-btn sm-btn-sm" type="button" data-fmt="xlsx">Excel</button></div>
+      <p class="sm-note">&ldquo;Solo&rdquo; businesses have no employees: self-employed people and side businesses that file business taxes. &ldquo;Employers&rdquo; are business locations with employees; &ldquo;Under 20 workers&rdquo; is the share of them with fewer than 20. &ldquo;All&rdquo; adds the two. &ldquo;Openings&rdquo; are new employer locations. Per 1,000 residents unless noted. A dash means Census did not publish the number.</p>
+      <div class="sm-tablebox" data-draw="sb_table" data-source="smallbiz"></div>
+    </div>
+
   </section>
 
   <!-- ================= U.S. ECONOMY (EconVitals) ================= -->

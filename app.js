@@ -1328,6 +1328,40 @@
       .map((r) => ({ label: r.county, value: r.est, text: int(r.est) + (r.est_chg == null ? '' : ' (' + sgnInt(r.est_chg) + ')'), county: r.county, tip: int(r.est) + ' in ' + r.quarter })), { onClick: (r) => openCounty(r.county) });
   });
 
+  /* small business & entrepreneurship (Census BFS, NES, CBP, BDS; Vintage 2025 population) */
+  const sbRows = () => { const r = rowsOf('smallbiz'); return r ? r.filter((x) => x.county !== 'Tennessee' && x.county !== 'United States') : null; };
+  const sbRef = (name) => (rowsOf('smallbiz') || []).find((x) => x.county === name) || {};
+  valueDraw('sb_year', str); valueDraw('sb_oyears', (v) => String(v).replace('-', ' to '));
+  dash.draw('sb_apps', (el) => {
+    if (pending(el, ['smallbiz'])) return;
+    const tn = sbRef('Tennessee'), us = sbRef('United States');
+    hbars(el, sbRows().filter((r) => r.apps_per_1k != null).sort((a, b) => b.apps_per_1k - a.apps_per_1k)
+      .map((r) => ({ label: r.county, value: r.apps_per_1k, text: f1(r.apps_per_1k) + (r.apps_chg_since_2019_pct == null ? '' : ' (' + sgn(r.apps_chg_since_2019_pct, 0) + '%)'), county: r.county,
+        tip: int(r.apps) + ' applications in ' + r.apps_year + ', ' + f1(r.apps_per_1k) + ' per 1,000 residents' + (r.apps_2019 != null ? '; ' + int(r.apps_2019) + ' in 2019' : '') })),
+      { onClick: (r) => openCounty(r.county), aria: 'Business applications per 1,000 residents by county', ref: { value: tn.apps_per_1k, label: 'Tennessee ' + f1(tn.apps_per_1k) + ' · U.S. ' + f1(us.apps_per_1k) } });
+  });
+  dash.draw('sb_openings', (el) => {
+    if (pending(el, ['smallbiz'])) return;
+    const tn = sbRef('Tennessee'), us = sbRef('United States');
+    hbars(el, sbRows().filter((r) => r.openings_per_1k != null).sort((a, b) => b.openings_per_1k - a.openings_per_1k)
+      .map((r) => ({ label: r.county, value: r.openings_per_1k, text: f2(r.openings_per_1k), county: r.county,
+        tip: 'About ' + int(r.openings_avg) + ' new employer locations a year, ' + String(r.openings_years).replace('-', ' to ') })),
+      { onClick: (r) => openCounty(r.county), fmt: f2, aria: 'New employer locations opened per 1,000 residents by county', ref: { value: tn.openings_per_1k, label: 'Tennessee ' + f2(tn.openings_per_1k) + ' · U.S. ' + f2(us.openings_per_1k) } });
+  });
+  dash.draw('sb_table', (el) => {
+    if (pending(el, ['smallbiz'])) return;
+    const all = rowsOf('smallbiz'), y = all[0] || {};
+    const pc = (v) => (v == null ? null : sgn(v, 0) + '%');
+    const one = (v) => (v == null ? null : f1(v));
+    const oy = String(y.openings_years).replace('-', '–');
+    miniTable(el, ['County', 'Applications ' + y.apps_year, 'Applications per 1,000', 'Applications vs 2019', 'Solo per 1,000 (' + y.solo_year + ')', 'Solo vs 2019',
+      'Employers per 1,000 (' + y.employer_year + ')', 'Under 20 workers (' + y.employer_year + ')', 'All per 1,000 (' + y.employer_year + ')', 'Openings per 1,000 a year (' + oy + ')'],
+      all.map((r) => [r.county, r.apps == null ? null : int(r.apps), one(r.apps_per_1k), pc(r.apps_chg_since_2019_pct), one(r.solo_per_1k), pc(r.solo_chg_since_2019_pct),
+        one(r.employer_per_1k), r.small_estab_share == null ? null : f1(r.small_estab_share) + '%', one(r.businesses_per_1k), r.openings_per_1k == null ? null : f2(r.openings_per_1k)]));
+    const rows = el.querySelectorAll('tbody tr');
+    rows.forEach((tr, i) => { if (all[i] && (all[i].county === 'Tennessee' || all[i].county === 'United States')) tr.classList.add('sm-row-ref'); });
+  });
+
   /* U.S. economy (EconVitals) */
   const evRows = (g) => { const r = rowsOf('econvitals'); return r ? r.filter((x) => x.group === g).sort((a, b) => a.order - b.order) : null; };
   dash.draw('ev_glance', (el) => {
