@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-11T18:18:18Z",
+ "generated_at": "2026-11-12T18:18:47Z",
  "artifact": "https://claude.ai/artifact/1yMiEiZHEbm1kT9HW8fcMC",
  "datasets": [
   {
@@ -18,8 +18,8 @@
    "title": "Action items",
    "description": "Strategic action items and steps from the SMTN Daily Dashboard.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "6febc7a748ba304101145addca0470ce",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -51,8 +51,8 @@
    "title": "State awards to the region (2026)",
    "description": "Grants TNECD announced in 2026 for places in the 13 counties (site development, infrastructure planning, historic courthouses, downtown improvement and local broadband awards), each with its TNECD press release.",
    "kind": "file",
-   "updated_at": "2026-11-11T17:09:42Z",
-   "updated_by": "Claude press-release watch, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "b80fb051a3dda6f7bd18ead022e499e2",
    "fetched_at": "2026-11-07T23:00:54Z"
@@ -73,143 +73,143 @@
    "title": "Bedford housing permits",
    "description": "New private housing units authorized by building permits, Bedford County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047003",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_coffee",
    "title": "Coffee housing permits",
    "description": "New private housing units authorized by building permits, Coffee County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047031",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_franklin",
    "title": "Franklin housing permits",
    "description": "New private housing units authorized by building permits, Franklin County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047051",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_giles",
    "title": "Giles housing permits",
    "description": "New private housing units authorized by building permits, Giles County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047055",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_hickman",
    "title": "Hickman housing permits",
    "description": "New private housing units authorized by building permits, Hickman County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047081",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_lawrence",
    "title": "Lawrence housing permits",
    "description": "New private housing units authorized by building permits, Lawrence County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047099",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_lewis",
    "title": "Lewis housing permits",
    "description": "New private housing units authorized by building permits, Lewis County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047101",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_lincoln",
    "title": "Lincoln housing permits",
    "description": "New private housing units authorized by building permits, Lincoln County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047103",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_marshall",
    "title": "Marshall housing permits",
    "description": "New private housing units authorized by building permits, Marshall County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047117",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_maury",
    "title": "Maury housing permits",
    "description": "New private housing units authorized by building permits, Maury County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047119",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_moore",
    "title": "Moore housing permits",
    "description": "New private housing units authorized by building permits, Moore County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047127",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_perry",
    "title": "Perry housing permits",
    "description": "New private housing units authorized by building permits, Perry County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047135",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "bp_wayne",
    "title": "Wayne housing permits",
    "description": "New private housing units authorized by building permits, Wayne County (Census).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BPPRIV047181",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "calendar",
@@ -249,8 +249,8 @@
    "title": "County income, poverty & GDP",
    "description": "Median household income and poverty rate (Census SAIPE), per-capita personal income (BEA CAINC1) and real GDP (BEA CAGDP9, thousands of 2017 dollars) for the 13 counties and Tennessee. Pulled from the Census and BEA APIs without changes.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh (Census SAIPE and BEA), checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T11:19:30Z",
+   "updated_by": "Claude daily refresh (Census SAIPE and BEA), checked 2026-11-12, no change",
    "stale_after_hours": 9000,
    "source_blob": "4c5b27be973567f5b6ea8aa906063271",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -260,22 +260,22 @@
    "title": "CPI inflation, 12 months",
    "description": "Consumer Price Index for all urban consumers, percent change from a year ago.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "CPIAUCSL",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "econvitals",
    "title": "EconVitals U.S. economy",
    "description": "National headline numbers, GDP nowcasts, job gains by sector and Treasury yields from EconVitals' public data files (public domain, CC0), copied without changes.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh (EconVitals data generated 2026-11-10T23:10:46+00:00)",
+   "updated_at": "2026-11-12T11:19:30Z",
+   "updated_by": "Claude daily refresh (EconVitals data generated 2026-11-11T23:10:56+00:00)",
    "stale_after_hours": 48,
-   "source_blob": "28c465025bfd0ade9d0e2fa824d569b3",
-   "fetched_at": "2026-11-11T13:23:02Z"
+   "source_blob": "1aa3b7c9a736431c525238beddb5b841",
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "edu_colleges",
@@ -293,30 +293,30 @@
    "title": "Employer web checks",
    "description": "Monthly web checks of the employer Sheet, one county a day on the 1st to 13th of each month: status (confirmed, changed, closed, not_found), employee count when a dated source states one, the source link and date, and when it was checked.",
    "kind": "file",
-   "updated_at": "2026-11-11T12:39:21Z",
-   "updated_by": "Claude monthly employer check (Moore County)",
+   "updated_at": "2026-11-12T12:41:00Z",
+   "updated_by": "Claude monthly employer check (Perry County)",
    "stale_after_hours": null,
-   "source_blob": "ea84aa3fee1c13bee1fe4ad9740a5dd9",
-   "fetched_at": "2026-11-11T13:23:02Z"
+   "source_blob": "196b976f755413567aaa0267351f66d9",
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "employers",
    "title": "Employer Sheet (notebook research)",
    "description": "Rows from Greg Lowe's employer Google Sheet (County, Company, Industry, Employees, Source link), copied without judgment. Each row is flagged for whether it is in the 13 counties, has a web link, or repeats an earlier row. The dashboard shows a row only when it has a web source.",
    "kind": "file",
-   "updated_at": "2026-11-11T12:38:05Z",
-   "updated_by": "Claude daily Sheet sync (sheet rows 87 | in the 13 counties 87 | with a web link 79 | outside the region 0), checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T12:40:00Z",
+   "updated_by": "Claude daily Sheet sync (sheet rows 87 | in the 13 counties 87 | with a web link 79 | outside the region 0), checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "ee1880af7571ea592baeff0053612949",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "events",
    "title": "Events & windows",
    "description": "Upcoming events and application windows from the SMTN Daily Dashboard.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "7eebfd7ad1384f25e9b309a4d80a194f",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -337,11 +337,11 @@
    "title": "Fed funds target, upper",
    "description": "Federal funds target range, upper limit, daily.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "DFEDTARU",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "grad_rates",
@@ -359,8 +359,8 @@
    "title": "Intelligence briefs",
    "description": "Verified news and intelligence items from the SMTN Daily Dashboard.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "4963c95caa1cf13120393e4642b35709",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -370,8 +370,8 @@
    "title": "County unemployment (BLS LAUS)",
    "description": "Monthly unemployment rate and civilian labor force, not seasonally adjusted, for the 13 counties and Tennessee, last 25 months. Pulled from the BLS API without changes (the same data FRED republishes).",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh (BLS LAUS through 2026-09), checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T11:19:30Z",
+   "updated_by": "Claude daily refresh (BLS LAUS through 2026-09), checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "c8edd1ed982330cb93f39370facf5bd7",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -381,132 +381,132 @@
    "title": "Market tape (EconVitals)",
    "description": "Treasury yields, inflation pricing, VIX, NFCI, currencies, commodity futures, the S&P 500, the Fed funds target with CME FedWatch odds for the next meeting, U.S. inflation measures and central-bank and economy figures for 10 economies, copied without changes from EconVitals' public data file (public domain, CC0).",
    "kind": "file",
-   "updated_at": "2026-11-11T12:18:18Z",
-   "updated_by": "Claude daily refresh (EconVitals data generated 2026-11-11T11:44:37+00:00)",
+   "updated_at": "2026-11-12T12:17:05Z",
+   "updated_by": "Claude daily refresh (EconVitals data generated 2026-11-11T23:10:56+00:00)",
    "stale_after_hours": 48,
-   "source_blob": "1d068cdeb01f351b165325028581f214",
-   "fetched_at": "2026-11-11T13:23:02Z"
+   "source_blob": "b75b75ca38e50644c0568616018513fb",
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_debt",
    "title": "Federal debt, % of GDP",
    "description": "Total public debt as a percent of GDP, quarterly, the latest 4 quarters.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "GFDEGDQ188S",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_deficit",
    "title": "Federal surplus or deficit, % of GDP",
    "description": "Federal surplus or deficit (-) as a percent of GDP, fiscal years, the latest 70.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "FYFSGDA188S",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_dgs10",
    "title": "10-year Treasury yield (history)",
    "description": "10-year Treasury constant-maturity yield, daily, about the last year.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "DGS10",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_dgs2",
    "title": "2-year Treasury yield",
    "description": "2-year Treasury constant-maturity yield, daily, about the last year.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "DGS2",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_dgs30",
    "title": "30-year Treasury yield",
    "description": "30-year Treasury constant-maturity yield, daily, about the last year.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "DGS30",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_hy",
    "title": "High-yield corporate spread",
    "description": "ICE BofA US High Yield Index option-adjusted spread, percentage points, daily, about the last year.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BAMLH0A0HYM2",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_ig",
    "title": "Investment-grade corporate spread",
    "description": "ICE BofA US Corporate Index option-adjusted spread, percentage points, daily, about the last year.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "BAMLC0A0CM",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_outlays",
    "title": "Federal outlays, % of GDP",
    "description": "Federal net outlays as a percent of GDP, fiscal years, the latest 70.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "FYONGDA188S",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mk_receipts",
    "title": "Federal receipts, % of GDP",
    "description": "Federal receipts as a percent of GDP, fiscal years, the latest 70.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "FYFRGDA188S",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "mortgage30",
    "title": "30-year mortgage rate",
    "description": "Freddie Mac 30-year fixed mortgage average, weekly.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "MORTGAGE30US",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "nash_mfg",
    "title": "Nashville metro mfg jobs",
    "description": "Manufacturing employment in the Nashville-Davidson--Murfreesboro--Franklin metro area (includes Maury County), thousands, seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "NASH947MFG",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "notebooks",
@@ -524,162 +524,162 @@
    "title": "Bedford population",
    "description": "Resident population in thousands, Bedford County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNBEDF3POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_coffee",
    "title": "Coffee population",
    "description": "Resident population in thousands, Coffee County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNCOFF1POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_franklin",
    "title": "Franklin population",
    "description": "Resident population in thousands, Franklin County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNFRAN1POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_giles",
    "title": "Giles population",
    "description": "Resident population in thousands, Giles County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNGILE5POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_hickman",
    "title": "Hickman population",
    "description": "Resident population in thousands, Hickman County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNHICK1POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_lawrence",
    "title": "Lawrence population",
    "description": "Resident population in thousands, Lawrence County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNLAWR9POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_lewis",
    "title": "Lewis population",
    "description": "Resident population in thousands, Lewis County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNLEWI1POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_lincoln",
    "title": "Lincoln population",
    "description": "Resident population in thousands, Lincoln County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNLINC3POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_marshall",
    "title": "Marshall population",
    "description": "Resident population in thousands, Marshall County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNMARS7POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_maury",
    "title": "Maury population",
    "description": "Resident population in thousands, Maury County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNMAUR0POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_moore",
    "title": "Moore population",
    "description": "Resident population in thousands, Moore County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNMOOR7POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_perry",
    "title": "Perry population",
    "description": "Resident population in thousands, Perry County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNPERR5POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "pop_wayne",
    "title": "Wayne population",
    "description": "Resident population in thousands, Wayne County (Census estimates, July 1).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNWAYN1POP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "programs",
    "title": "Grants & state programs",
    "description": "Statewide programs and grant opportunities from the SMTN Daily Dashboard, each with its source link.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:52:31Z",
+   "updated_by": "Claude daily news sweep",
    "stale_after_hours": 48,
-   "source_blob": "155fb8308f4ab19d455d402ec27fef29",
-   "fetched_at": "2026-11-07T20:53:43Z"
+   "source_blob": "5a764105af0ccd5591ecef79743123eb",
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "projects",
    "title": "Announced projects",
    "description": "Verified economic development announcements carried over from Greg's SMTN Daily Dashboard (Nov 4, 2026 edition), each with its source link.",
    "kind": "file",
-   "updated_at": "2026-11-11T17:09:42Z",
-   "updated_by": "Claude press-release watch, checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "051423590156be5cf3445b9ba81f36c6",
    "fetched_at": "2026-11-07T23:00:54Z"
@@ -689,8 +689,8 @@
    "title": "County manufacturing (QCEW)",
    "description": "BLS Quarterly Census of Employment and Wages: private manufacturing jobs, change from a year earlier, plants, average weekly wage and location quotient, plus all private jobs and private establishments (current quarter and the same quarter a year earlier), for the 13 counties and Tennessee. Copied from the BLS data files without changes.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh (BLS QCEW Q1 2026), checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T11:19:30Z",
+   "updated_by": "Claude daily refresh (BLS QCEW Q1 2026), checked 2026-11-12, no change",
    "stale_after_hours": 2400,
    "source_blob": "1706ee3ce2f22dadf670af377bb50c1d",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -700,8 +700,8 @@
    "title": "Manufacturing industries (QCEW)",
    "description": "BLS QCEW private jobs, plants and weekly wage by 3-digit manufacturing industry (NAICS 311-339) for each county, where BLS publishes them.",
    "kind": "file",
-   "updated_at": "2026-11-11T11:26:09Z",
-   "updated_by": "Claude daily refresh (BLS QCEW Q1 2026), checked 2026-11-11, no change",
+   "updated_at": "2026-11-12T11:19:30Z",
+   "updated_by": "Claude daily refresh (BLS QCEW Q1 2026), checked 2026-11-12, no change",
    "stale_after_hours": 2400,
    "source_blob": "1c802318fcb2bb4c05752fe30db3df48",
    "fetched_at": "2026-11-07T20:53:43Z"
@@ -711,11 +711,11 @@
    "title": "AI Frontier Radar (Greg's sheet)",
    "description": "The 60 newest rows of the 'AI Frontier Radar' tab of Greg's Daily Brief Google Sheet (date, lab or source, headline, impact, link), copied as written through the sheet's public CSV export. Not re-verified by Claude.",
    "kind": "file",
-   "updated_at": "2026-11-11T17:42:08Z",
-   "updated_by": "Claude daily news (copied AI Frontier Radar sheet, newest row 2026-11-11)",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep",
    "stale_after_hours": 48,
-   "source_blob": "37d33ff0d188157a8702a5fbcc1a42be",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "source_blob": "b07497f9b8d54d5127a6ba94209ec246",
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "resources",
@@ -744,8 +744,8 @@
    "title": "Stories of interest",
    "description": "Verified stories in six categories (ECD & Workforce, Industry & Infrastructure, Economy & Markets, AI & Agent Tech, Health & Longevity, Non-Obvious Trends), each with publisher, date, a short factual summary, a 'why it matters' note for Southern Middle Tennessee economic development, and the source link. Only stories whose facts appear on a retrieved source page are added.",
    "kind": "file",
-   "updated_at": "2026-11-11T17:43:17Z",
-   "updated_by": "Claude daily news (verified sources)",
+   "updated_at": "2026-11-12T17:11:31Z",
+   "updated_by": "Claude daily news sweep, checked 2026-11-12, no change",
    "stale_after_hours": 48,
    "source_blob": "83aa01d291f7ef883e4d6b1ddde40a04",
    "fetched_at": "2026-11-11T18:18:18Z"
@@ -755,66 +755,66 @@
    "title": "TN initial jobless claims",
    "description": "Weekly initial unemployment insurance claims in Tennessee (U.S. DOL).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNICLAIMS",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tn_leih",
    "title": "TN leisure & hospitality jobs",
    "description": "Tennessee leisure and hospitality employment, thousands, seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNLEIH",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tn_mfg",
    "title": "TN manufacturing jobs",
    "description": "Tennessee manufacturing employment, thousands, seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNMFG",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tn_mfg_wage",
    "title": "TN factory hourly pay",
    "description": "Average hourly earnings of all manufacturing employees in Tennessee, not seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "SMU47000003000000003",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tn_nonfarm",
    "title": "TN nonfarm jobs",
    "description": "Tennessee total nonfarm employment, thousands, seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNNA",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tn_urn",
    "title": "Tennessee unemployment",
    "description": "Tennessee unemployment rate, seasonally adjusted (BLS LAUS).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "TNUR",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "tourism_county",
@@ -832,33 +832,33 @@
    "title": "U.S. manufacturing jobs",
    "description": "U.S. manufacturing employment, thousands, seasonally adjusted (BLS CES).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "MANEMP",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "us_urn",
    "title": "U.S. unemployment",
    "description": "U.S. unemployment rate, seasonally adjusted (BLS CPS).",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "UNRATE",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "ust10",
    "title": "10-year Treasury yield",
    "description": "10-year Treasury constant-maturity yield, daily.",
    "kind": "fred",
-   "updated_at": "2026-11-11T18:18:18Z",
+   "updated_at": "2026-11-12T18:18:47Z",
    "updated_by": "FRED public download",
    "stale_after_hours": null,
    "series_id": "DGS10",
-   "fetched_at": "2026-11-11T18:18:18Z"
+   "fetched_at": "2026-11-12T18:18:47Z"
   },
   {
    "id": "warn",
