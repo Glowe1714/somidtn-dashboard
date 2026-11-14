@@ -1362,6 +1362,68 @@
     rows.forEach((tr, i) => { if (all[i] && (all[i].county === 'Tennessee' || all[i].county === 'United States')) tr.classList.add('sm-row-ref'); });
   });
 
+  /* college outcomes (U.S. Department of Education College Scorecard) */
+  const scRows = (k) => (rowsOf('scorecard') || []).filter((r) => r.kind === k);
+  const scMeta = () => scRows('meta')[0] || null;
+  const scUsd = (v) => (v == null ? null : usd(v));
+  const scPct = (v) => (v == null ? null : f1(v) + '%');
+  const scCred = (c) => String(c || '').replace('Undergraduate Certificate or Diploma', 'Certificate').replace("Associate's Degree", 'Associate').replace("Bachelor's Degree", "Bachelor's").replace('Post-baccalaureate Certificate', 'Post-bacc. certificate');
+  let scSchool = 'All';
+  dash.draw('sc_note', (el) => {
+    const m = scMeta();
+    if (!m) { el.textContent = dash.data('scorecard').status === 'error' ? 'Failed to load' : '—'; return; }
+    const L = m.labels;
+    el.textContent = 'U.S. Department of Education College Scorecard, data updated ' + m.updated + '. All ' + scRows('school').length + ' schools with a main campus in the 13 counties, including three small private for-profit schools. '
+      + 'Pay figures are median earnings of former students who received federal student aid and were working, earned in ' + L.earn_1yr.earned + ' and shown in ' + L.earn_1yr.dollars + ' dollars; students without federal aid are not counted. '
+      + 'A dash means the Department did not publish the number (too few students, or it does not apply).';
+  });
+  dash.draw('sc_schools_note', (el) => {
+    const m = scMeta();
+    if (!m) { el.textContent = '—'; return; }
+    const L = m.labels, y = (s) => String(s).replace('Fall ', 'fall ');
+    el.textContent = 'Undergraduates: ' + y(L.enroll) + '. Finish rate: full-time, first-time students who finished within 150% of normal time (6 years for a bachelor’s, 3 for an associate degree), averaged over the newest starting classes (' + y(L.comp_l4) + ' at two-year schools and TCATs, ' + y(L.comp_4) + ' at four-year schools). '
+      + 'Came back: full-time, first-time students who returned the next fall (' + y(L.ret) + ' starters). Yearly cost after aid: average cost after grants and scholarships, including books and living costs, for full-time first-time students with federal aid, ' + L.price + '. '
+      + 'Pell share: undergraduates with a Pell Grant, ' + L.pell + '. Median debt: federal loans of graduates, ' + L.debt + '. Pay 1 year after finishing: ' + L.earn_1yr.cohort + ' graduates. Pay 10 years after starting: students who started in ' + L.earn_10yr.cohort + ', whether or not they finished.';
+  });
+  dash.draw('sc_schools', (el) => {
+    if (pending(el, ['scorecard'])) return;
+    const rows = scRows('school');
+    miniTable(el, ['School', 'County', 'Type', 'Mostly awards', 'Undergrads', 'Finish rate', 'Came back 2nd year', 'Yearly cost after aid', 'Pell share', 'Median debt', 'Pay 1 yr after finishing', 'Pay 10 yrs after starting'],
+      rows.map((r) => [r.school, r.county, r.type, r.mostly, r.undergrads == null ? null : int(r.undergrads), scPct(r.completion_pct), scPct(r.retention_pct), scUsd(r.net_price), scPct(r.pell_pct), scUsd(r.median_debt), scUsd(r.earn_1yr), scUsd(r.earn_10yr_entry)]));
+    el.querySelectorAll('tbody tr').forEach((tr, i) => {
+      const td = tr.firstChild, r = rows[i];
+      if (td && r && r.source_url) { td.replaceChildren(link(r.source_url, r.school + ' ↗')); }
+    });
+  });
+  dash.draw('sc_prog_note', (el) => {
+    const m = scMeta();
+    if (!m) { el.textContent = '—'; return; }
+    const L = m.labels, all = scRows('program'), withPay = all.filter((r) => r.earn_1yr != null);
+    el.textContent = 'Median pay 1 year after finishing, for ' + L.prog_1yr.cohort + ' graduates (earned in ' + L.prog_1yr.earned + ', ' + L.prog_1yr.dollars + ' dollars). “U.S.” is the national median for the same program and credential. '
+      + 'Pay 5 years after is for ' + L.prog_5yr.cohort + ' graduates. Graduates: credentials awarded in ' + L.awards + '. Only ' + withPay.length + ' of the ' + all.length + ' programs listed have published pay; the rest had too few graduates.';
+  });
+  dash.draw('sc_programs', (el) => {
+    if (pending(el, ['scorecard'])) return;
+    const all = scRows('program').filter((r) => r.earn_1yr != null);
+    const schools = [...new Set(all.map((r) => r.school))];
+    if (scSchool !== 'All' && !schools.includes(scSchool)) scSchool = 'All';
+    const bar = h('div', 'sm-calbar');
+    const lab = h('label', null, 'School ');
+    const sel = h('select', 'sm-calsel');
+    sel.setAttribute('aria-label', 'Show programs for one school');
+    ['All', ...schools].forEach((s) => { const o = h('option', null, s === 'All' ? 'All schools' : s); o.value = s; sel.appendChild(o); });
+    sel.value = scSchool;
+    sel.addEventListener('change', () => { scSchool = sel.value; dash.draw('sc_programs'); });
+    lab.appendChild(sel); bar.appendChild(lab); el.appendChild(bar);
+    const rows = all.filter((r) => scSchool === 'All' || r.school === scSchool).sort((a, b) => b.earn_1yr - a.earn_1yr);
+    const box = h('div', 'sm-tablebox');
+    el.appendChild(box);
+    const diff = (r) => (r.earn_1yr_us ? sgnInt(Math.round((r.earn_1yr / r.earn_1yr_us - 1) * 100)) + '%' : null);
+    miniTable(box, ['Program', 'Credential', 'School', 'Graduates', 'Pay 1 yr after', 'U.S. median', 'vs U.S.', 'Pay 5 yrs after'],
+      rows.map((r) => [r.program, scCred(r.credential), r.school, r.awards == null ? null : int(r.awards), scUsd(r.earn_1yr), scUsd(r.earn_1yr_us), diff(r), scUsd(r.earn_5yr)]));
+    box.querySelectorAll('tbody tr').forEach((tr) => { const td = tr.firstChild; if (td) td.className = 'sm-wrap'; });
+  });
+
   /* U.S. economy (EconVitals) */
   const evRows = (g) => { const r = rowsOf('econvitals'); return r ? r.filter((x) => x.group === g).sort((a, b) => a.order - b.order) : null; };
   dash.draw('ev_glance', (el) => {
@@ -2664,7 +2726,7 @@
   }
 
   /* ---------- site search ---------- */
-  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers', 'awards', 'calendar'];
+  const SEARCH_SETS = ['counties', 'projects', 'programs', 'events', 'intel', 'warn', 'stories', 'radar_feed', 'resources', 'edu_colleges', 'notebooks', 'actions', 'sp_employers', 'awards', 'calendar', 'scorecard'];
   function searchIndex() {
     const items = [];
     const add = (type, title, fields, go, url) => { const text = fields.filter((x) => x != null && x !== '').map(String).join(' · '); items.push({ type, title: String(title || ''), text, go, url, hay: (title + ' ' + text).toLowerCase() }); };
@@ -2699,6 +2761,9 @@
     (rowsOf('edu_colleges') || []).forEach((r) => {
       if (seen.has(r.institution)) return; seen.add(r.institution);
       add('College or TCAT', r.institution, [r.type, r.city, r.county ? r.county + ' County' : null], { tab: 'education' }, r.source_url);
+    });
+    (rowsOf('scorecard') || []).filter((r) => r.kind === 'program' && r.earn_1yr != null).forEach((r) => {
+      add('Program pay (College Scorecard)', r.program + ', ' + r.school, [scCred(r.credential), 'median pay 1 year after finishing ' + usd(r.earn_1yr), r.earn_1yr_us ? 'U.S. ' + usd(r.earn_1yr_us) : null, r.county + ' County'], { tab: 'education' }, r.source_url);
     });
     return items;
   }

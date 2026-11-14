@@ -225,3 +225,8 @@ a.sm-btn { display: inline-block; text-decoration: none; }
 /* small business table: Tennessee and U.S. reference rows */
 .sm-table tr.sm-row-ref td { font-weight: 600; background: var(--color-bg); }
 #card-sb-table .sm-table th { white-space: normal; vertical-align: bottom; min-width: 4.5em; }
+
+#card-sc-schools .sm-table th, #card-sc-programs .sm-table th { white-space: normal; vertical-align: bottom; min-width: 4.5em; }
+#card-sc-programs .sm-table td.sm-wrap { min-width: 14rem; }
+#card-sc-programs .sm-calbar { margin-bottom: 8px; }
+#card-sc-schools .sm-table th:nth-child(-n+4), #card-sc-schools .sm-table td:nth-child(-n+4), #card-sc-programs .sm-table th:nth-child(-n+3), #card-sc-programs .sm-table td:nth-child(-n+3) { text-align: left; }
