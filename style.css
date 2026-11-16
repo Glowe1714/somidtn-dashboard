@@ -230,3 +230,5 @@ a.sm-btn { display: inline-block; text-decoration: none; }
 #card-sc-programs .sm-table td.sm-wrap { min-width: 14rem; }
 #card-sc-programs .sm-calbar { margin-bottom: 8px; }
 #card-sc-schools .sm-table th:nth-child(-n+4), #card-sc-schools .sm-table td:nth-child(-n+4), #card-sc-programs .sm-table th:nth-child(-n+3), #card-sc-programs .sm-table td:nth-child(-n+3) { text-align: left; }
+.sm-pill.sm-ev { font-size: 10.5px; }
+.sm-pill.sm-ev-weak { border-style: dashed; }

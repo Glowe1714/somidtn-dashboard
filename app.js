@@ -805,6 +805,33 @@
   const selCounty = () => dash.params().county || 'Marshall';
   const h = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
   const link = (url, text) => { const a = h('a', null, text); a.href = url; a.target = '_blank'; a.rel = 'noopener'; return a; };
+  /* evidence labels: what kind of source backs each item */
+  const EV_OFFICIAL = /(\.gov|\.mil|\.tn\.us)$|^(tnecd\.com|tva\.com|tbr\.edu|tcatpulaski\.edu|tcathohenwald\.edu|tcatshelbyville\.edu|cis\.tennessee\.edu)$/;
+  const EV_ORG = /^(anthropic\.com|platform\.claude\.com|news\.gm\.com|cloud\.google\.com|blog\.google|openai\.com|nexusatspringhill\.com|coffeetn\.com|sedc\.org|swtdd\.org|tennvalleycorridor\.org|tnelectric\.org|mtida\.org|mauryalliance\.com|econvitals\.org)$/;
+  const EV_JOURNAL = /^(frontiersin\.org|nature\.com|jamanetwork\.com|thelancet\.com|nejm\.org|bmj\.com|pubmed\.ncbi\.nlm\.nih\.gov)$/;
+  const EV_NEWS = /^(wsmv\.com|newschannel5\.com|wkrn\.com|wjhl\.com|wcyb\.com|wfae\.org|tennessean\.com|tennesseelookout\.com|timesfreepress\.com|techcrunch\.com|foxnews\.com|business-standard\.com|industryweek\.com|cbtnews\.com|areadevelopment\.com|executivebiz\.com|lewisherald\.com|maurycountysource\.com|wksr\.com|wjjm\.com|t-g\.com|tullahomanews\.com|manchestertimes\.com|heraldchronicle\.com|elkvalleytimes\.com|thelynchburgtimes\.com|bedfordcountypost\.com|columbiadailyherald\.com|newschannel9\.com|supplychaindive\.com|reuters\.com|apnews\.com)$/;
+  const EV_HELP = { 'Official source': 'From a government agency or public institution', "Organization's own site": 'From the company or organization the item is about',
+    'Research journal': 'Published research', 'News report': 'From a news outlet; not confirmed here by an official source', 'Organizer listing': 'From the organizer’s own calendar',
+    'Per Greg Lowe': 'Greg Lowe’s own information; not independently checked', 'Other source': 'Newsletter, blog, aggregator or other site: treat with care' };
+  function evKind(ds, r) {
+    let host = '';
+    try { host = new URL(r.source_url || r.url || '').hostname.toLowerCase().replace(/^www\./, ''); } catch (e) { host = ''; }
+    if (/Greg Lowe/.test([r.source_name, r.jobs_label, r.note, r.county_note].filter(Boolean).join(' '))) return 'Per Greg Lowe';
+    if (ds === 'calendar') return r.source_type === 'Local news' ? 'News report' : 'Organizer listing';
+    if (!host) return null;
+    if (EV_OFFICIAL.test(host)) return 'Official source';
+    if (EV_ORG.test(host)) return "Organization's own site";
+    if (EV_JOURNAL.test(host)) return 'Research journal';
+    if (EV_NEWS.test(host)) return 'News report';
+    return 'Other source';
+  }
+  function evTag(ds, r) {
+    const k = evKind(ds, r);
+    if (!k) return document.createTextNode('');
+    const s = h('span', 'sm-pill sm-ev' + (k === 'Other source' ? ' sm-ev-weak' : ''), k);
+    s.title = EV_HELP[k] || '';
+    return s;
+  }
   const W0 = (el) => Math.max(240, Math.floor(el.clientWidth || el.getBoundingClientRect().width || 320));
 
   function pending(el, ids_) {
@@ -1161,7 +1188,7 @@
     const top = h('div', 'sm-item-top');
     top.appendChild(h('span', 'sm-item-title', r.headline));
     top.appendChild(h('span', 'sm-pill', r.topic));
-    li.appendChild(top);
+    top.appendChild(evTag('intel', r)); li.appendChild(top);
     li.appendChild(h('span', 'sm-item-meta', dayFmt(r.date)));
     const det = h('details');
     det.appendChild(h('summary', null, 'Read more'));
@@ -1252,7 +1279,7 @@
       const top = h('div', 'sm-item-top');
       top.appendChild(h('span', 'sm-item-title', r.company + ' · ' + int(r.workers) + ' workers'));
       top.appendChild(h('span', 'sm-pill ' + (r.action === 'Closure' ? 'late' : 'soon'), r.action));
-      li.appendChild(top);
+      top.appendChild(evTag('warn', r)); li.appendChild(top);
       const meta = h('span', 'sm-item-meta', r.city + ', ' + r.county + ' County · notice ' + dayFmt(r.notice_date) + ' · effective ' + dayFmt(r.effective_date) + ' · ');
       if (r.source_url) meta.appendChild(link(r.source_url, 'Source ↗'));
       li.appendChild(meta);
@@ -1845,7 +1872,7 @@
     const top = h('div', 'sm-item-top');
     top.appendChild(h('span', 'sm-item-title', r.program));
     top.appendChild(h('span', 'sm-pill', r.agency));
-    li.appendChild(top);
+    top.appendChild(evTag('programs', r)); li.appendChild(top);
     li.appendChild(h('span', 'sm-item-meta', (r.amount_label || '') + (r.deadline ? ' · Deadline ' + dayFmt(r.deadline) : '')));
     const det = h('details');
     det.appendChild(h('summary', null, 'Read more'));
@@ -2096,7 +2123,7 @@
       const top = h('div', 'sm-item-top');
       top.appendChild(catPill(r.category, NEWS_CATS.indexOf(r.category)));
       top.appendChild(h('span', 'sm-item-meta', newsDate(r.date)));
-      li.appendChild(top);
+      top.appendChild(evTag('stories', r)); li.appendChild(top);
       const t = h('div', 'sm-story-title');
       t.appendChild(r.source_url ? link(r.source_url, r.headline + ' ↗') : document.createTextNode(r.headline));
       li.appendChild(t);
@@ -2120,7 +2147,7 @@
       const top = h('div', 'sm-item-top');
       top.appendChild(catPill(r.lab || 'Radar', -1));
       top.appendChild(h('span', 'sm-item-meta', newsDate(r.date)));
-      li.appendChild(top);
+      top.appendChild(evTag('radar_feed', r)); li.appendChild(top);
       const t = h('div', 'sm-story-title');
       t.appendChild(r.url ? link(r.url, r.title + ' ↗') : document.createTextNode(r.title));
       li.appendChild(t);
@@ -2128,7 +2155,10 @@
       if (!r.url && r.source_note) li.appendChild(h('span', 'sm-item-meta', 'Source noted: ' + r.source_note));
       return li;
     };
-    const list = rows.slice().sort(byDateDesc);
+    const weak = (r) => /single source/i.test([r.title, r.impact, r.source_note].filter(Boolean).join(' '));
+    const hidden = rows.filter(weak).length;
+    const list = rows.filter((r) => !weak(r)).sort(byDateDesc);
+    if (hidden) el.appendChild(h('li', 'sm-note', hidden + (hidden === 1 ? ' entry' : ' entries') + ' marked “single source” in your briefing Sheet ' + (hidden === 1 ? 'is' : 'are') + ' hidden until a second source confirms ' + (hidden === 1 ? 'it' : 'them') + '.'));
     list.slice(0, 12).forEach((r) => el.appendChild(item(r)));
     if (list.length > 12) {
       const li = h('li', 'sm-story-more');
@@ -2340,7 +2370,7 @@
     const top = h('div', 'sm-item-top');
     top.appendChild(h('span', 'sm-item-title', r.project));
     top.appendChild(h('span', 'sm-pill', r.county));
-    d.appendChild(top);
+    top.appendChild(evTag('projects', r)); d.appendChild(top);
     d.appendChild(h('span', 'sm-item-meta', r.location + ' · ' + r.sector));
     d.appendChild(h('span', 'sm-big', r.investment_label));
     d.appendChild(h('span', 'sm-item-meta', 'Jobs: ' + r.jobs_label));
@@ -2363,7 +2393,7 @@
       const top = h('div', 'sm-item-top');
       top.appendChild(h('span', 'sm-item-title', r.project + ' · ' + r.investment_label));
       top.appendChild(h('span', 'sm-pill', r.county));
-      li.appendChild(top);
+      top.appendChild(evTag('projects', r)); li.appendChild(top);
       li.appendChild(h('span', 'sm-item-meta', r.location + ' · Jobs: ' + r.jobs_label));
       li.appendChild(h('p', null, r.summary));
       const det = h('details');
@@ -2484,7 +2514,7 @@
         const d = daysUntil(r.deadline);
         top.appendChild(h('span', 'sm-pill ' + (d < 0 ? 'late' : d <= 7 ? 'late' : d <= 21 ? 'soon' : ''), d < 0 ? 'Past due' : 'Due ' + parseDay(r.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }) + ' · ' + d + ' days'));
       } else top.appendChild(h('span', 'sm-pill', r.window || r.urgency));
-      li.appendChild(top);
+      top.appendChild(evTag('actions', r)); li.appendChild(top);
       li.appendChild(h('p', null, r.summary));
       const det = h('details');
       det.appendChild(h('summary', null, 'Steps'));
@@ -2506,7 +2536,7 @@
       const top = h('div', 'sm-item-top');
       top.appendChild(h('span', 'sm-item-title', r.event));
       top.appendChild(h('span', 'sm-pill', r.county));
-      li.appendChild(top);
+      top.appendChild(evTag('events', r)); li.appendChild(top);
       const meta = h('span', 'sm-item-meta', dayFmt(r.date) + (r.end_date ? ' – ' + dayFmt(r.end_date) : '') + ' · ' + r.location + ' · ');
       if (r.source_url) meta.appendChild(link(r.source_url, 'Source ↗'));
       li.appendChild(meta);
@@ -2626,7 +2656,7 @@
         pills.appendChild(catPill(r.category, CAL_CATS.indexOf(r.category)));
         pills.appendChild(h('span', 'sm-pill', r.county === 'Statewide' ? 'Statewide' : r.county + ' Co.'));
         top.appendChild(pills);
-        li.appendChild(top);
+        pills.appendChild(evTag('calendar', r)); li.appendChild(top);
         const when = r.end ? dayFmt(r.start) + ' – ' + dayFmt(r.end) : dayFmt(r.start);
         const place = r.city && !(r.venue || '').includes(r.city) ? r.city : null;
         const meta = h('span', 'sm-item-meta', [when, r.time, r.venue, place].filter(Boolean).join(' · ') + ' · ');
@@ -2691,7 +2721,7 @@
       tr.appendChild(h('td', null, r.program));
       tr.appendChild(h('td', null, r.amount_label || (r.amount != null ? usd(r.amount) : '—')));
       tr.appendChild(h('td', 'sm-wrap', r.purpose));
-      const s = h('td'); if (r.source_url) s.appendChild(link(r.source_url, 'Source ↗')); else s.textContent = '—'; tr.appendChild(s);
+      const s = h('td'); if (r.source_url) { s.appendChild(link(r.source_url, 'Source ↗')); s.appendChild(document.createTextNode(' ')); s.appendChild(evTag('awards', r)); } else s.textContent = '—'; tr.appendChild(s);
       tb.appendChild(tr);
     });
     t.appendChild(tb); box.appendChild(t); el.replaceChildren(box);
